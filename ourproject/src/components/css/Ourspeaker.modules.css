@@ -1,0 +1,85 @@
+.ProfilePicture {
+    height: 30rem;
+    width: 100%;
+    transition: 0.5s;
+}
+
+.pcard {
+    height: 26rem;
+    width: 100%;
+    /* margin: 50px; */
+    box-shadow: 0px 0px 20px rgb(243, 241, 241);
+    border-radius: 25px;
+    overflow: hidden;
+    position: relative;
+}
+
+.ProfileName {
+    height: 65px;
+    width: 100%;
+    border-radius: 20px;
+    padding: 6px;
+    position: absolute;
+    background: #ebfffe;
+    background: -webkit-linear-gradient(101deg, #d8fcfa 0%, #fff6eb 100%);
+    background: linear-gradient(101deg, #ebfffe 0%, #fff6eb 100%);
+    color: #000000;
+    bottom: 0;
+    transition: 0.5s;
+}
+
+.pcard:hover {
+    cursor: pointer;
+
+
+}
+
+.pcard:hover .ProfileName {
+    height: 140px;
+
+}
+
+.pcard:hover.ProfileName ul {
+    visibility: visible;
+}
+
+.pcard:hover.ProfileName .ProfilePicture {
+    transform: scale(1.1);
+}
+
+.ProfileName ul li a:hover {
+    text-shadow: 3px 2px 5px #0b0b0b;
+}
+
+/* SOCIAL ICON */
+.ProfileName ul {
+    display: flex;
+    width: 100%;
+    padding: 0;
+    margin-top: 13px;
+    background-color: #ff9b24;
+    position: absolute;
+    left: 0;
+    transition: all 0.5s ease 0s;
+}
+
+
+.ProfileName ul li {
+    margin-left: 20px;
+    list-style: none;
+    display: inline-block;
+}
+
+.ProfileName ul li a {
+    display: block;
+    padding: 20px;
+    font-size: 20px;
+    color: #fff;
+    transition: all 0.3s ease 0s;
+    text-decoration: none;
+}
+
+.ProfileName.ul li a:hover {
+    color: #ff9b24;
+    background-color: #f7f5ec;
+}

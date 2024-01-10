@@ -1,0 +1,57 @@
+/* Register page */
+
+.sign-cont {
+    height: 650px;
+}
+
+.sign-clum {
+    margin-top: 140px;
+    background: rgba(255, 255, 255, 0.5);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 5px;
+}
+
+.sign-clum {
+    margin-left: 350px;
+    height: 570px;
+    width: 500px;
+}
+
+
+.sign-form {
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-top: 30px;
+}
+
+.sign-form input {
+    background-color: rgb(184, 237, 237);
+}
+
+
+.sign-lnk {
+    color: #00bbae;
+}
+
+.sign-lnk:hover {
+    color: #ff9b24;
+
+}
+
+
+.sign-buttons {
+    background-color: #0eada3;
+    margin-left: 40px;
+    border-radius: 5px;
+}
+
+.sign-buttons button {
+    color: white;
+}
+
+.sign-buttons:hover {
+    background-color: #ff9b24;
+    color: white;
+}

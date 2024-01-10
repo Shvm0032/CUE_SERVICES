@@ -1,0 +1,21 @@
+.dashboard .nav-link {
+    width: 100% !important;
+    height: 40px !important;
+    color: black;
+    margin-bottom: 14px !important;
+    /* width: 200px !important; */
+    /* Adjust the width as needed */
+}
+
+
+.dashboard .nav-link:active {
+    background-color: #ff9b24!important;
+    /* Set your desired background color */
+    color: #ffffff !important;
+    /* Set your desired text color */
+}
+.dashboard .nav-link:hover{
+    background-color:#ff9b24 !important;
+    color: #ffffff;
+}
+

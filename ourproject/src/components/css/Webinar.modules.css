@@ -1,0 +1,332 @@
+.back {
+    background: #F4F6F6;
+    padding-top: 50px;
+    padding-bottom: 60px;
+}
+
+.jj {
+    border-radius: 15px !important;
+    border: 2px !important;
+    width: 220px !important;
+    margin-top: 30px !important;
+    padding-top: 8px;
+}
+
+.SearchBar {
+    margin-top: 30px;
+}
+
+
+.SearchBar button {
+    border-radius: 15px !important;
+    width: 220px !important;
+    background-color: #00bbae !important;
+}
+
+
+.cont {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 100px 50px;
+    /* padding: 100px 50px; */
+}
+
+.cont .card1 {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    width: 370px;
+    height: 300px;
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 35px 80px rgba(0, 0, 0, 0.15);
+    transition: 0.5s
+}
+
+.cont .card1:hover {
+    height: 400px;
+}
+
+.cont .card1 .imbx {
+    position: absolute;
+    top: 20px;
+    width: 330px;
+    height: 220px;
+    background: #000000;
+    border-radius: 12px;
+    transition: 0.5s;
+    overflow: hidden;
+}
+
+.cont .card1:hover .imbx {
+    top: -100px;
+    scale: 0.75;
+    box-shadow: 0 35px 80px rgba(0, 0, 0, 0.15);
+}
+
+.cont .card1 .imbx img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    margin-left: 0%;
+    height: 100%;
+    object-fit: cover;
+}
+
+
+.cont .card1 .content1 {
+    position: absolute;
+    top: 250px;
+    width: 100%;
+    padding: 0 30px;
+    text-align: center;
+    height: 30px;
+    overflow: hidden;
+    transition: 0.5s;
+}
+
+.cont .card1:hover .content1 {
+    height: 250px;
+    top: 130px;
+}
+
+.cont .card1 .content1 h3 {
+    font-size: 1.5em;
+    font-weight: 700;
+}
+
+.cont .card1 .content1 a {
+    position: relative;
+    top: 15px;
+    display: inline-block;
+    padding: 12px 25px;
+    background: var(--theam--color-3);
+    color: #fff;
+    font-weight: 500;
+    text-decoration: none;
+    border-radius: 8px;
+}
+
+.imh {
+    height: 16px;
+    width: 16px;
+}
+
+.rback {
+    background: #faf8ef;
+    margin-top: 0px;
+    padding-bottom: 30px;
+    border-radius: 8px;
+
+}
+
+.center {
+    text-align: center;
+}
+
+.pagination {
+    display: inline-block;
+}
+
+.pagination a {
+    color: black;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+    transition: background-color .3s;
+    border: 1px solid #ddd;
+    margin: 0 4px;
+}
+
+.pagination a.active {
+    background-color: #4CAF50;
+    color: white;
+    border: 1px solid #4CAF50;
+}
+
+.pagination a:hover:not(.active) {
+    background-color: #ddd;
+}
+
+
+
+
+.newsCard {
+    position: relative;
+    width: 100%;
+    height: 450px;
+    /* margin: 5rem auto; */
+    background-color: #ebfffe;
+    color: #fff;
+    overflow: hidden;
+    border-radius: 20px;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+}
+
+.newsCaption {
+    position: absolute;
+    top: auto;
+    bottom: 0;
+    /* opacity: .6; */
+    left: 0;
+    width: 100%;
+    min-height: 76%;
+    color: #000000;
+    background-color: #ebfffe;
+    padding: 20px;
+    -webkit-transform: translateY(38%);
+    transform: translateY(38%);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    /* -webkit-transition: opacity 0.1s 0.3s, -webkit-transform 0.4s;
+    transition: opacity 0.1s 0.3s, -webkit-transform 0.4s; */
+    transition: transform 0.4s, opacity 0.1s 0.3s;
+    transition: transform 0.4s, opacity 0.1s 0.3s, -webkit-transform 0.4s;
+}
+
+.newsCaption-title {
+
+    overflow: hidden;
+    width: 100%;
+    height: 50px;
+    margin-top: 0px;
+
+}
+.newsCaption-title:hover {
+    color: #00bbae;
+}
+
+.newsCaption-content {
+    margin: 0;
+}
+
+.newsCaption-link {
+    color: #000000;
+    text-decoration: underline;
+    /* opacity: .8; */
+    -webkit-transition-property: opacity;
+    transition-property: opacity;
+    -webkit-transition-duration: 0.15s;
+    transition-duration: 0.15s;
+    -webkit-transition-timing-function: cubic-bezier(0.39, 0.58, 0.57, 1);
+    transition-timing-function: cubic-bezier(0.39, 0.58, 0.57, 1);
+}
+
+.newsCaption-link:hover {
+    opacity: 0.65;
+}
+
+.news-Slide-up:hover .newsCaption {
+    color: #00bbae;
+    /* opacity: .6; */
+    -webkit-transform: translateY(0px);
+    transform: translateY(0px);
+    -webkit-transition: opacity 0.1s, -webkit-transform 0.4s;
+    transition: opacity 0.1s, -webkit-transform 0.4s;
+    transition: transform 0.4s, opacity 0.1s;
+    transition: transform 0.4s, opacity 0.1s, -webkit-transform 0.4s;
+}
+
+.course-img {
+    width: 100%;
+    border-radius: 20px;
+    transform-origin: center;
+    padding: 20px;
+    transform: scale(var(--img-scale));
+    transition: transform 0.4s ease-in-out;
+}
+
+
+/* read more button */
+.animated-button {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 15px;
+    border: 4px solid;
+    border-color: transparent;
+    font-size: 16px;
+    background-color: inherit;
+    /* border-radius: 100px; */
+    font-weight: 600;
+    color: #00bbae;
+    box-shadow: 0 0 0 2px #00bbae;
+    cursor: pointer;
+    overflow: hidden;
+    transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.animated-button svg {
+    position: absolute;
+    width: 24px;
+    fill: #00bbae;
+    z-index: 9;
+    transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.animated-button .arr-1 {
+    right: 16px;
+}
+
+.animated-button .arr-2 {
+    left: -25%;
+}
+
+.animated-button .circle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 20px;
+    height: 20px;
+    background-color: #00bbae;
+    border-radius: 50%;
+    opacity: 0;
+    transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.animated-button .text {
+    position: relative;
+    z-index: 1;
+    transform: translateX(-12px);
+    transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.animated-button:hover {
+    box-shadow: 0 0 0 12px transparent;
+    color: #fff;
+    border-radius: 12px;
+}
+
+.animated-button:hover .arr-1 {
+    right: -25%;
+}
+
+.animated-button:hover .arr-2 {
+    left: 16px;
+}
+
+.animated-button:hover .text {
+    transform: translateX(12px);
+}
+
+.animated-button:hover svg {
+    fill: #fff;
+}
+
+.animated-button:active {
+    scale: 0.95;
+    box-shadow: 0 0 0 4px #00bbae;
+}
+
+.animated-button:hover .circle {
+    width: 220px;
+    height: 220px;
+    opacity: 1;
+}

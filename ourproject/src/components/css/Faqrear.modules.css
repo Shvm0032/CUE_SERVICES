@@ -1,0 +1,84 @@
+
+/* Style the Headings that are used to open and close the accordion panel */
+.Faq-Accordion {
+    background-color: #eee;
+    color: #444;
+    cursor: pointer;
+    padding: 18px;
+    margin: 0;
+    font-weight: 300;
+}
+
+/* Change color of the heading and icon (on hover and click) */
+.Faq-active,
+.Faq-Accordion:hover,
+.Faq-Accordion:hover::after {
+    background-color: #ffecd6;
+    color: rgb(11, 11, 11);
+}
+
+/* Add "plus" sign (+) after Accordion */
+.Faq-Accordion::after {
+    content: '\002B';
+    color: #777;
+    font-weight: bold;
+    float: right;
+}
+
+/* Add "minus" sign (-) after Accordion (when accordion is active) */
+.Faq-active::after {
+    content: "\2212";
+    color: white;
+}
+
+/* Style the accordion panel */
+.Faq-Accordion-panel {
+    display: inline-flex;
+    align-items: center;
+    gap:20px;
+    padding: 0 18px;
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.2s ease-out;
+}
+.nav-pills button {
+    width: 100%;
+    color: black;
+    margin-bottom: 25px;
+    /* width: 200px !important; */
+    /* Adjust the width as needed */
+}
+
+.nav-pills .nav-link.active {
+    background-color: #ff9b24 !important;
+    /* Set your desired background color */
+    color: #ffffff !important;
+    border: none;
+    /* Set your desired text color */
+}
+.nav-pills .nav-link:hover {
+    background-color: #ff9b24 !important;
+    /* Set your desired background color */
+    color: #ffffff !important;
+    border: none;
+    /* Set your desired text color */
+}
+
+
+
+
+
+.cd-faq__items {
+    /* // on mibile, faq contents slides in from the right */
+    position: fixed;
+    height: 100%;
+    width: 90%;
+    top: 0;
+    right: 0;
+    transform: translateZ(0) translateX(100%);
+    transition: transform .3s;
+}
+
+.cd-faq__items--slide-in {
+    transform: translateX(0);
+}

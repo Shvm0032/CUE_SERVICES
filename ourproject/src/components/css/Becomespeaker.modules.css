@@ -1,0 +1,22 @@
+.animation {
+    border: 2px dotted rgb(249, 138, 11);
+    padding: 20px;
+    border-radius: 10px;
+    background-color: #cbf5f3;
+    transition: transform 0.5s, box-shadow 0.5S;
+    
+    
+}
+
+.animation:active{
+    transform: translateX(4px) translateY(4px);
+    
+    box-shadow: 0 0 0 rgb(249, 138, 11);
+}
+
+.animation:hover{
+    border:2px solid black;
+    box-shadow: 8px 8px 0px rgb(249, 138, 11);
+    background: 2px #fff  ;
+    transition: 0.5s;
+}
