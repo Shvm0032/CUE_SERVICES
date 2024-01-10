@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 
+
 app.use(express.json());
 app.use(express.static("public"))
 // Use the express.urlencoded() middleware to parse URL-encoded bodies
@@ -15,6 +16,7 @@ const stripe = require('stripe')('sk_test_51OGHZSSA3p9Dwv0NOucSSfsRcoPoVUuczA2Uh
 app.use(cors());
 const hostname = '127.0.1';
 const port = 8000;
+const secretKey = process.env.JWT_SECRET_KEY || 'eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiQWRtaW4iLCJJc3N1ZXIiOiJJc3N1ZXIiLCJVc2VybmFtZSI6IkphdmFJblVzZSIsImV4cCI6MTcwNDg4ODQ3NSwiaWF0IjoxNzA0ODg4NDc1fQ.qgAX2SXjLzNplSOL67ILmVR4a68q9_WPP7vKFcXI4oE';
 
 
 app.use(cors());
@@ -37,6 +39,7 @@ app.use(cors());
 // app.use('/api/logout', RouterPath);//15
  
 app.use(RouterPath)
+
 
 
 app.post('/api/create-checkout-session', async (req, res) => {

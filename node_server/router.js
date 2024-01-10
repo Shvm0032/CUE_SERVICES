@@ -8,6 +8,11 @@ const nodemailer = require('nodemailer');
 const multer = require('multer');
 const { log } = require("console");
 const { title } = require("process");
+const dotenv = require('dotenv');
+const jwt = require('jsonwebtoken');
+
+dotenv.config();
+
 var filename = "";
 var filet = "";
 const storage = multer.diskStorage({
@@ -81,8 +86,18 @@ Router.post('/api/getLogin', (req, res) => {
         }
         if (data.length > 0) {
             
+            let jwtSecretKey = process.env.JWT_SECRET_KEY;
+            let dataToken = {
+                time: Date(),
+                userId:  data[0].id,
+            }
+         
+            const token = jwt.sign(dataToken, jwtSecretKey);
+         
+           // res.send(token);
+
             req.session.user = data[0].email
-            return res.json({ status: "success" });
+            return res.json({ status: "success", token });
         } else {
             return res.json({ status: "No record Existed" });
         }
@@ -156,6 +171,11 @@ Router.get("/api/Speaker", (req, res) => {
         }
     });
 });
+
+
+
+
+
 
 Router.delete("/api/delete_speaker", (req, res) => {
     console.log(req.query.id, "<<>>")
