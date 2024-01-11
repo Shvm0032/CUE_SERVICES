@@ -44,7 +44,7 @@ Router.use(session({
 
 // admin login
 
-Router.post('/api/admin_login', (req, res) => {
+Router.post('/api/admin_login',(req, res) => {
     const { username, password } = req.body;
 
     // Basic validation

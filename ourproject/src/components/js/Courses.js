@@ -12,7 +12,7 @@ export default function Cources({ course }) {
   const dispatch = useDispatch();
 
   const handleAddToCart = () => {
-    dispatch(addToCart(course));
+    //dispatch(addToCart(course));
   };
 
 
@@ -66,7 +66,7 @@ export default function Cources({ course }) {
                       </div>
                     </div>
                     <div className='d-flex ps-3'>
-                    <Link to={`/course/${course.id}`}>
+                    <Link to={`/course/${course?.id}`}>
                         <button className="animated-button" >
                           <svg viewBox="0 0 24 24" className="arr-2" xmlns="http://www.w3.org/2000/svg">
                             <path
