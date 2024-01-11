@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { loadStripe } from '@stripe/stripe-js';
 import { Link, useParams } from 'react-router-dom';
 import { useEffect } from 'react';
-
+// import http from "../utils/http-client";
 function CardSummary() {
     const { course, payment } = useParams()
     console.log(course, payment)
