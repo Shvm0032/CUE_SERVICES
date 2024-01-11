@@ -46,7 +46,7 @@ export default function Navbar() {
                                             <NavLink to={'/'} end className={getActiveClass}>Home</NavLink>
                                         </li>
                                         <li class="nav-item">
-                                            <NavLink to={'/About'} end className={getActiveClass}>Register</NavLink>
+                                            <NavLink to={'/About'} end className={getActiveClass}>About</NavLink>
                                         </li>
                                         <li class="nav-item dropdown"> {/* Webinar dropdown */}
                                             <NavLink to={'/course'} end className={getActiveClass}>Industry</NavLink>
