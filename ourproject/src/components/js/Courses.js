@@ -8,7 +8,7 @@ import { addToCart } from '../../redux/cartSlice';
 
 
 export default function Cources({ course }) {
-  
+
   const dispatch = useDispatch();
 
   const handleAddToCart = () => {
@@ -22,6 +22,7 @@ export default function Cources({ course }) {
       <section className="WaveHeaderBox">
         <div className='row  faq-heads'>
           <div className='row faq-headers p-5'>
+            
             <div className='col-md-12 faq mains'>
               <h2 className="mt-5 pt-5 " style={{ fontSize: "80px", marginTop: '20px', fontWeight: '600' }}>Programs</h2>
               <Link to='#' className='faq-lnk-main'><i class="fa-solid fa-house" style={{ "color": "#719dea;" }}></i> CuService - Programs </Link>

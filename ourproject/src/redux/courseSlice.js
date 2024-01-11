@@ -1,9 +1,10 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
+import http from "../utils/http-client";
 
 export const fetchCourses = createAsyncThunk('courses/fetchCourses', async () => {
     try {
-        const response = await axios.get('http://localhost:8000/api/Course');
+        const response = await http.get('/coursesData');
         return response.data;
     } catch (error) {
         throw error;

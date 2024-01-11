@@ -92,7 +92,7 @@ Router.post('/api/getLogin', (req, res) => {
                 userId:  data[0].id,
             }
          
-            const token = jwt.sign(dataToken, jwtSecretKey, {expiresIn: 120});
+            const token = jwt.sign(dataToken, jwtSecretKey, {expiresIn: 7200});
          
            // res.send(token);
 
@@ -166,9 +166,9 @@ Router.delete("/api/delete_course", (req, res) => {
 Router.get('/api/coursesData', (req, res) => {
     const query = `
     SELECT *
-    FROM course_detail 
-    INNER JOIN speaker_info  ON course_detail.speaker = speaker_info.speaker_id
-    INNER JOIN selling_options ON course_detail.selling_option = selling_options.selling_option_id;
+FROM course_detail
+LEFT OUTER JOIN speaker_info ON course_detail.speaker = speaker_info.speaker_id;
+;
   `;
 
     sqlDbconnect.query(query, (error, results) => {
