@@ -1,48 +1,24 @@
-import React, { useState, useEffect } from 'react';
 import '../css/Dashboard.modules.css';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import toast from 'react-hot-toast';
+import authService from '../../services/auth.service';
 
 function Dashboard() {
 
   const [user, setUser] = useState(null);
-  const navigate = useNavigate();
-
 
   useEffect(() => {
-    // Fetch user information from the server
-    fetch('http://127.0.1:8000/api/Registration')
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          setUser(data.user);
-        }
-      })
-      .catch(error => console.error('Error fetching user information:', error));
+    fetchProfile();
   }, []);
 
-
-
-  const handleLogout = () => {
-    // Logout request to the server
-    fetch('http://127.0.1:8000/api/logout', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          // Redirect to login page after successful logout
-          navigate('/login');
-        } else {
-          console.error('Logout failed:', data.message);
-        }
-      })
-      .catch(error => console.error('Error during logout:', error));
-  };
-
-  
+  const fetchProfile = async () => {
+    try {
+      const result = await authService.profile();
+      setUser(result.data)
+    } catch (error) {
+      toast.error(error.data.message);
+    }
+  }
 
   const countries = ['india', 'spain', 'france', 'argentina', 'pakistan', 'russia'];
 
@@ -60,7 +36,9 @@ function Dashboard() {
             <div className='row p-2'>
               <div className=' d-flex border-bottom flex-column justify-content-center align-items-center mt-3 mb-3 '>
                 <img src='images/img1.jpg' className='  rounded-circle' style={{ width: '150px', height: '150px' }} />
-                <h4 className='mt-3'>{user ? user.email : 'Loading...'}</h4>
+                <h4 className='mt-3'>{user?._id}</h4>
+                <h4 className='mt-3'>{user?.name}</h4>
+                <h4 className='mt-3'>{user?.email}</h4>
               </div>
             </div>
             <div class="nav dashboard flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
@@ -69,7 +47,7 @@ function Dashboard() {
               <button class="nav-link text-start border-bottom" id="v-pills-messages-tab" data-bs-toggle="pill" data-bs-target="#v-pills-messages" type="button" role="tab" aria-controls="v-pills-messages" aria-selected="false"><i class="fa-solid fa-heart"></i>&emsp;Wishlist</button>
               <button class="nav-link text-start border-bottom" id="v-pills-profile-tab" data-bs-toggle="pill" data-bs-target="#v-pills-profile" type="button" role="tab" aria-controls="v-pills-profile" aria-selected="false"><i class="fa-solid fa-user"></i>&emsp;Profile </button>
               {/* <button class="nav-link text-start border-bottom" id="v-pills-settings-tab" data-bs-toggle="pill" data-bs-target="#v-pills-settings" type="button" role="tab" aria-controls="v-pills-settings" aria-selected="false"onClick={handleLogout} ><i class="fa-solid fa-right-from-bracket"></i>&emsp;Logout</button> */}
-              <button className='nav-link ' onClick={handleLogout}>Logout</button>
+              <button className='nav-link ' >Logout</button>
             </div>
 
 

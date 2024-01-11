@@ -1,13 +1,27 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App from './App';
+
 import reportWebVitals from './reportWebVitals';
+import AppRouter from './app.router';
+import { BrowserRouter } from 'react-router-dom';
+import Navbar from './components/js/Navbar';
+import Footer from './components/js/Footer';
+import { Toaster } from 'react-hot-toast';
+import { Provider } from 'react-redux';
+import store from './redux/store';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+    <Provider store={store}>
+      <BrowserRouter>
+        <Navbar></Navbar>
+        <AppRouter />
+        <Toaster />
+        <Footer />
+      </BrowserRouter>
+    </Provider>
   </React.StrictMode>
 );
 
