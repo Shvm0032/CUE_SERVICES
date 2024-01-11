@@ -162,6 +162,54 @@ Router.delete("/api/delete_course", (req, res) => {
     });
 })
 
+Router.post("/api/Course_add", upload.single("file"), (req, res) => {
+    try {
+        const { industry, speaker, name, description, duration, time, cstdate, fields } = req.body;
+        const filename = req.file.filename; // Assuming your file is uploaded correctly
+
+        const fieldsData = JSON.parse(fields);
+        
+        // Extracting selling options data from fieldsData
+        const sellingOptions = fieldsData.map(option => ({
+
+
+           
+            // category: option.category,
+            // name: option.name,
+            // price: option.price
+        }));
+        // Inserting data into the database, including the new selling_option column
+        sqlDbconnect.query(`INSERT INTO course_detail (industries, speaker, description, title, date, time, duration, course_thumbail, selling_option) VALUES ('${industry}','${speaker}','${description}','${name}', '${cstdate}' , '${time}', '${duration}', '${filename}', '${JSON.stringify(sellingOptions)}')`, (err, rows) => {
+            if (!err) {
+                console.log(rows)
+                // Fetching the inserted row including selling_option
+                sqlDbconnect.query(`SELECT * FROM course_detail WHERE id = ${rows.insertId}`, (err, fetchedRow) => {
+                    if (!err) {
+                        const fetchedSellingOptions = JSON.parse(fetchedRow[0].selling_option);
+                        // Sending response to the client
+                        res.status(200).json({ rows, fetchedSellingOptions });
+                    } else {
+                        console.log(err);
+                        res.status(500).json({ error: 'Internal Server Error' });
+                    }
+                });
+            } else {
+                console.log(err);
+                res.status(500).json({ error: 'Internal Server Error' });
+            }
+        });
+
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+// end courses
+
+
+
+// all speaker components 
+
 Router.get("/api/Speaker", (req, res) => {
     sqlDbconnect.query("SELECT * FROM speaker_info", (err, rows) => {
         if (!err) {
@@ -172,6 +220,23 @@ Router.get("/api/Speaker", (req, res) => {
     });
 });
 
+Router.post("/api/Speaker_add", upload.single("file"), (req, res) => {
+    // insert data in contact form
+    const username = req.body.name;
+    const phone = req.body.phone;
+    const email = req.body.email;
+    const bio = req.body.bio;
+    console.log(req.body, "<<<<")
+    console.log("File Name is =  " + filename)
+    sqlDbconnect.query(`INSERT INTO speaker_info (name, email, phone_no, bio, images) VALUES ('${username}','${email}', '${phone}' , '${bio}', '${filename}')`, (err, rows) => {
+        if (!err) {
+            res.send(rows);
+        } else {
+            console.log(err);
+        }
+    });
+
+});
 
 
 
@@ -187,6 +252,62 @@ Router.delete("/api/delete_speaker", (req, res) => {
         }
     });
 })
+
+// edit speaker
+Router.get("/api/edit/:id", (req, res) => {
+    const id = req.params.id;
+
+    const query = "SELECT * FROM speaker_info WHERE id = ?";
+
+    sqlDbconnect.query(query, [id], (err, result) => {
+        if (err) return res.json({ Error: err });
+        return res.json(result);
+    });
+});
+
+// update speaker
+Router.put('/api/update_speaker/:id', upload.single('image'), async (req, res) => {
+    const { id } = req.params;
+    const { name, email, phone_no, bio, designation, experience } = req.body;
+
+    // Handle file upload
+    const image = req.file ? req.file.originalname : null;
+
+    // Update speaker data in the database
+    const updateQuery = `
+        UPDATE speaker_info
+        SET name=?, email=?, phone_no=?, bio=?, designation=?, experience=?, images=?
+        WHERE id=?
+    `;
+
+    sqlDbconnect.query(
+        updateQuery,
+        [name, email, phone_no, bio, designation, experience, image, id],
+        (err, result) => {
+            if (err) {
+                console.error('Error updating speaker:', err);
+                return res.status(500).json({ error: 'Internal Server Error' });
+            }
+
+            // Check if the update was successful
+            if (result.affectedRows === 0) {
+                return res.status(404).json({ error: 'Speaker not found' });
+            }
+
+            // Respond with success
+            res.status(200).json({ success: true, message: 'Speaker updated successfully' });
+        }
+    );
+});
+
+
+// end speaker component
+
+
+// start copan
+
+
+
 Router.get("/api/Coupan", (req, res) => {
     sqlDbconnect.query("SELECT * FROM sales_promotion_coupon", (err, rows) => {
         if (!err) {
@@ -196,6 +317,60 @@ Router.get("/api/Coupan", (req, res) => {
         }
     });
 });
+
+
+// edit copon
+Router.get("/api/cu_edit/:id", (req, res) => {
+    const id = req.params.id;
+    const query = "SELECT * FROM sales_promotion_coupon WHERE id = ?";
+
+    sqlDbconnect.query(query, [id], (err, result) => {
+        if (err) return res.json({ error: err.message });
+        return res.json(result);
+    });
+});
+
+// update coppan
+Router.put('/api/update_Coupon/:id', (req, res) => {
+    const { id } = req.params;
+    const { coupon_code, discount, start_date, expire_date, coupons_status, coupons_limit } = req.body;
+
+    const updateQuery = `
+      UPDATE sales_promotion_coupon
+      SET coupon_code=?, discount=?, start_date=?, expire_date=?, coupons_status=?, coupons_limit=?
+      WHERE id=?
+    `;
+
+    sqlDbconnect.query(
+        updateQuery,
+        [coupon_code, discount, start_date, expire_date, coupons_status, coupons_limit, id],
+        (err, result) => {
+            if (err) {
+                console.error('Error updating coupon:', err);
+                return res.status(500).json({ error: 'Internal Server Error' });
+            }
+
+            if (result.affectedRows === 0) {
+                return res.status(404).json({ error: 'Coupon not found' });
+            }
+
+            res.status(200).json({ success: true, message: 'Coupon updated successfully' });
+        }
+    );
+});
+
+// delet coopan
+Router.delete("/api/delete_Coupans", (req, res) => {
+    console.log(req.query.id, "<<>>")
+    sqlDbconnect.query(`DELETE FROM sales_promotion_coupon WHERE id = "${req.query.id}"`, (err, rows) => {
+        if (!err) {
+            res.send(rows);
+        } else {
+            console.log(err);
+        }
+    });
+})
+
 Router.post('/api/InsertCoupons', (req, res) => {
     const { couponName, discountType, startDate, expiryDate, coupanlimit, status } = req.body;
 
@@ -212,16 +387,8 @@ Router.post('/api/InsertCoupons', (req, res) => {
 });
 
 
-Router.delete("/api/delete_Coupans", (req, res) => {
-    console.log(req.query.id, "<<>>")
-    sqlDbconnect.query(`DELETE FROM sales_promotion_coupon WHERE id = "${req.query.id}"`, (err, rows) => {
-        if (!err) {
-            res.send(rows);
-        } else {
-            console.log(err);
-        }
-    });
-})
+// end copon
+
 
 
 Router.get("/api/Industary", (req, res) => {
@@ -234,6 +401,9 @@ Router.get("/api/Industary", (req, res) => {
     });
 });
 
+
+// start faq category
+
 Router.get("/api/Faq_Category", (req, res) => {
     sqlDbconnect.query("SELECT * FROM faq_category", (err, rows) => {
         if (!err) {
@@ -244,6 +414,63 @@ Router.get("/api/Faq_Category", (req, res) => {
     });
 });
 
+// edit faq category
+
+Router.post('/api/Add_Category', (req, res) => {
+    const { category } = req.body;
+
+    // Check if category is provided
+    if (!category) {
+        return res.status(400).json({ success: false, error: 'Category is required' });
+    }
+
+    const sql = 'INSERT INTO faq_category (category) VALUES (?)';
+    sqlDbconnect.query(sql, [category], (err, result) => {
+        if (err) {
+            console.error('Error inserting data into MySQL:', err);
+            return res.status(500).json({ success: false, error: 'Internal Server Error', errorMessage: err.message });
+        } else {
+            console.log('Data inserted successfully');
+            return res.json({ success: true, message: 'Data inserted successfully' });
+        }
+    });
+});
+
+// update category
+Router.put('/api/Update_Category/:id', (req, res) => {
+    try {
+        const categoryId = req.params.id;
+        const { category } = req.body;
+
+        if (!category || typeof category !== 'string') {
+            return res.status(400).json({ error: 'Invalid category data' });
+        }
+
+        const query = 'UPDATE faq_category SET category = ? WHERE id = ?';
+
+        sqlDbconnect.query(query, [category, categoryId], (error, result) => {
+            if (error) {
+                console.error('Error updating category:', error);
+                res.status(500).json({ error: 'Internal Server Error' });
+            } else {
+                if (result.affectedRows > 0) {
+                    res.json({ success: true, message: 'Category updated successfully' });
+                } else {
+                    res.status(404).json({ error: 'Category not found or no changes made' });
+                }
+            }
+        });
+    } catch (error) {
+        console.error('Error updating category:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+// end faq category
+
+
+// start faq question
+
 Router.get("/api/Faq_Question", (req, res) => {
     sqlDbconnect.query("SELECT * FROM faq", (err, rows) => {
         if (!err) {
@@ -253,6 +480,42 @@ Router.get("/api/Faq_Question", (req, res) => {
         }
     });
 });
+
+
+Router.post('/api/Add_question', (req, res) => {
+    const { question, answer, category_id } = req.body;
+
+
+    const sql = 'INSERT INTO faq (category_id,question,answer) VALUES (?,?,?)';
+    sqlDbconnect.query(sql, [category_id,question,answer], (err, result) => {
+        if (err) {
+            console.error('Error inserting data into MySQL:', err);
+            return res.status(500).json({ success: false, error: 'Internal Server Error', errorMessage: err.message });
+        } else {
+            console.log('Data inserted successfully');
+            return res.json({ success: true, message: 'Data inserted successfully' });
+        }
+    });
+});
+
+// edit and update  question
+Router.put('/api/Update_Question/:id', (req, res) => {
+    const { category_id, question, answer } = req.body;
+    const { id } = req.params;
+    const sql = 'UPDATE faq SET category_id=?, question=?, answer=? WHERE id=?';
+    sqlDbconnect.query(sql, [category_id, question, answer, id], (err, result) => {
+      if (err) {
+        console.error('Error updating data in MySQL:', err);
+        res.status(500).json({ success: false, error: 'Internal Server Error', errorMessage: err.message });
+      } else {
+        res.json({ success: true, message: 'Data updated successfully' });
+      }
+    });
+  });
+
+//   end faq question
+
+
 Router.get("/api/Order_Details", (req, res) => {
     sqlDbconnect.query("SELECT * FROM order_details", (err, rows) => {
         console.log(rows)
@@ -264,28 +527,80 @@ Router.get("/api/Order_Details", (req, res) => {
     });
 });
 
-Router.get("/api/Selling", (req, res) => {
 
-    const query = req.query.id;
-    console.log(query, "<<")
-    sqlDbconnect.query(`SELECT * FROM selling_options WHERE cid = ${query}`, (err, rows) => {
-        console.log(rows)
-        if (!err) {
-            sqlDbconnect.query(`SELECT * FROM Course_detail WHERE id = ${query}`, (er, row) => {
-                console.log(row)
-                if (!er) {
+// Selling_option
 
-                    res.send([row, rows]);
-                } else {
-                    console.log(er);
-                }
-            });
 
+Router.post('/api/AddSellingOption', (req, res) => {
+    const { category, name, price } = req.body;
+
+    const sql = 'INSERT INTO selling_options (selling_category, name, price) VALUES (?, ?, ?)';
+    sqlDbconnect.query(sql, [category, name, price], (err, result) => {
+        if (err) {
+            console.error('Error inserting data into MySQL:', err);
+            res.status(500).json({ success: false, error: err.message });
         } else {
-            console.log(err);
+            console.log('Data inserted successfully');
+            res.json({ success: true, message: 'Data inserted successfully' });
         }
     });
-})
+});
+
+// Endpoint to get all selling options
+Router.get('/api/GetsellingOptions', (req, res) => {
+    const sql = 'SELECT * FROM selling_options';
+    sqlDbconnect.query(sql, (err, result) => {
+        if (err) {
+            console.error('Error fetching data from MySQL:', err);
+            res.status(500).json({ success: false, error: err.message });
+        } else {
+            res.json(result);
+        }
+    });
+});
+
+
+// edit selling coopan
+
+Router.get("/api/selling_edit/:id", (req, res) => {
+    const id = req.params.id;
+    const query = "SELECT * FROM selling_options WHERE id = ?";
+
+    sqlDbconnect.query(query, [id], (err, result) => {
+        if (err) return res.json({ error: err.message });
+        return res.json(result);
+    });
+});
+
+
+
+
+Router.put('/api/update_option/:id', (req, res) => {
+    const { id } = req.params;
+    const { selling_category, name, price } = req.body;
+  
+//   og the request body for debugging
+console.log('Received data:', selling_category, name, price);
+  
+    const updateQuery = `
+      UPDATE selling_options
+      SET selling_category=?, name=?, price=?
+      WHERE id=?`;
+  
+    sqlDbconnect.query(updateQuery, [selling_category, name, price, id], (err, result) => {
+      if (err) {
+        console.error('Error updating selling_option', err);
+        return res.status(500).json({ error: 'Internal Server Error' });
+      }
+  
+      if (result.affectedRows === 0) {
+        return res.status(404).json({ error: 'Selling option not found' });
+      }
+  
+      res.status(200).json({ success: true, message: 'Selling option updated successfully' });
+    });
+  });
+// end selling option
 
 Router.get("/api/Testimonial", (req, res) => {
     sqlDbconnect.query("SELECT * FROM testimonial", (err, rows) => {
@@ -345,77 +660,52 @@ Router.post('/api/NewRegistration', (req, res) => {
     });
 });
 
-Router.post("/api/Course_add", upload.single("file"), (req, res) => {
+// Router.post("/api/Course_add", upload.single("file"), (req, res) => {
 
-    function makeString(val) {
-        const fields = JSON.parse(req.body.fields);
-        console.log(fields, "here are the fields")
-        let str = `INSERT INTO selling_options (selling_category, name, price, status, cid) VALUES`
-        for (let i = 0; i < fields.length; i++) {
-            if (i === 0) {
-                str += ` ('${fields[i].category}','${fields[i].name}','${fields[i].price}', '${true}' , '${val}')`
-            } else {
-                str += `, ('${fields[i].category}','${fields[i].name}','${fields[i].price}', '${true}' , '${val}')`
-            }
+//     function makeString(val) {
+//         const fields = JSON.parse(req.body.fields);
+//         console.log(fields, "here are the fields")
+//         let str = `INSERT INTO selling_options (selling_category, name, price, status, cid) VALUES`
+//         for (let i = 0; i < fields.length; i++) {
+//             if (i === 0) {
+//                 str += ` ('${fields[i].category}','${fields[i].name}','${fields[i].price}', '${true}' , '${val}')`
+//             } else {
+//                 str += `, ('${fields[i].category}','${fields[i].name}','${fields[i].price}', '${true}' , '${val}')`
+//             }
 
-        }
-        console.log(str)
-        return str;
-    }
+//         }
+//         console.log(str)
+//         return str;
+//     }
 
-    console.log(req.body, filename, "<<>>", filet)
-    try {
-        sqlDbconnect.query(`INSERT INTO course_detail (industries, speaker, title, date, time, duration, course_thumbail) VALUES ('${req.body.industry}','${req.body.speaker}','${req.body.name}', '${req.body.cstdate}' , '${req.body.time}', '${req.body.duration}', '${filename}')`, (err, rows) => {
-            if (!err) {
-                console.log(rows)
-                sqlDbconnect.query(makeString(rows.insertId), (err, row) => {
-                    if (!err) {
+//     console.log(req.body, filename, "<<>>", filet)
+//     try {
+//         sqlDbconnect.query(`INSERT INTO course_detail (industries, speaker, title, date, time, duration, course_thumbail) VALUES ('${req.body.industry}','${req.body.speaker}','${req.body.name}', '${req.body.cstdate}' , '${req.body.time}', '${req.body.duration}', '${filename}')`, (err, rows) => {
+//             if (!err) {
+//                 console.log(rows)
+//                 sqlDbconnect.query(makeString(rows.insertId), (err, row) => {
+//                     if (!err) {
 
-                        res.status(200).json({ rows, row });
-                    } else {
-                        console.log(err);
-                    }
-                });
-            } else {
-                console.log(err);
-            }
-        });
-
-
-    } catch (err) {
-        console.log(err)
-    }
-
-})
-
-Router.post("/api/Speaker_add", upload.single("file"), (req, res) => {
-    // insert data in contact form
-    const username = req.body.name;
-    const phone = req.body.phone;
-    const email = req.body.email;
-    const bio = req.body.bio;
-    console.log(req.body, "<<<<")
-    console.log("File Name is =  " + filename)
-    sqlDbconnect.query(`INSERT INTO speaker_info (name, email, phone_no, bio, images) VALUES ('${username}','${email}', '${phone}' , '${bio}', '${filename}')`, (err, rows) => {
-        if (!err) {
-            res.send(rows);
-        } else {
-            console.log(err);
-        }
-    });
-
-});
+//                         res.status(200).json({ rows, row });
+//                     } else {
+//                         console.log(err);
+//                     }
+//                 });
+//             } else {
+//                 console.log(err);
+//             }
+//         });
 
 
-Router.get("", (req, res) => {
-    sqlDbconnect.query("SELECT * FROM sales_promotion_coupon", (err, rows) => {
-        if (!err) {
-            res.send(rows);
-        } else {
-            console.log(err);
-        }
-    });
-});
+//     } catch (err) {
+//         console.log(err)
+//     }
+
+// })
+
+
+
+
 
 Router.get("/api/User_message", (req, res) => {
     sqlDbconnect.query("SELECT * FROM user_message", (err, rows) => {
