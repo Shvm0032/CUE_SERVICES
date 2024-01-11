@@ -1,4 +1,5 @@
 import http from "../utils/http-client";
+import { jwtDecode } from "jwt-decode";
 
 const login = (data) => {
     return http.post('/getLogin', data, {
@@ -20,26 +21,29 @@ const profile = () => {
 }
 
 const logout = () => {
-    return http.get('/logout', null, {
-        transformResponse: [(result) => {
-            localStorage.removeItem('authUser');
-            return JSON.parse(result);
-        }]
-    });
+    localStorage.removeItem('authUser');
+    // return http.get('/logout', null, {
+    //     transformResponse: [(result) => {
+    //         localStorage.removeItem('authUser');
+    //         return JSON.parse(result);
+    //     }]
+    // });
 }
 
 const getAuthUser = () => {
-    // let token = localStorage.getItem("authUser");
+    let token = localStorage.getItem("authUser");
+    if (!token){
+        return null;
+    }
+    let decodedToken = jwtDecode(token);
+    console.log("Decoded Token", decodedToken);
+    let currentDate = new Date();
 
-    // let decodedToken = jwt_decode(token);
-    // console.log("Decoded Token", decodedToken);
-    // let currentDate = new Date();
-
-    // // JWT exp is in seconds
-    // if (decodedToken.exp * 1000 < currentDate.getTime()) {
-    //     localStorage.removeItem('authUser');
-    //     return null;
-    // }
+    // JWT exp is in seconds
+    if (decodedToken.exp * 1000 < currentDate.getTime()) {
+        localStorage.removeItem('authUser');
+        return null;
+    }
     return JSON.parse(localStorage.getItem('authUser'));
 }
 
