@@ -1,21 +1,19 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import '../css/Webinar.modules.css'
-export default function Webinar() {
-  var [Cources, setCources] = useState([]);
-  var getData = async () => {
-    try {
-      var res = await axios.get("http://localhost:8000/api/Course");
-      console.log(res);
-      setCources(res.data);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  }
-  useEffect(() => {
-    getData();
-  }, []);
+import { useDispatch } from 'react-redux';
+import { addToCart } from '../../redux/cartSlice';
+
+
+
+
+export default function Cources({ course }) {
+  
+  const dispatch = useDispatch();
+
+  const handleAddToCart = () => {
+    dispatch(addToCart(course));
+  };
 
 
   return (
@@ -37,12 +35,12 @@ export default function Webinar() {
       <section style={{ paddingTop: '110px' }}>
         <div className='container '>
           <div className='row mb-5 p-4'>
-            {Cources.map((Cources) => (
+           
 
-              <div key={Cources.id} className='col-lg-4 col-md-6 col-12 mb-5'>
+              <div className='col-lg-4 col-md-6 col-12 mb-5'>
                 <div className='newsCard news-Slide-up '>
                   <div className='img-div'>
-                    <img src={`http://127.0.0.1:8000/${Cources.course_thumbail}`} className='course-img' alt="" />
+                    <img src='' className='course-img' alt="" />
                   </div>
                   <div className='newsCaption'>
                     <div className='d-flex'>
@@ -50,24 +48,24 @@ export default function Webinar() {
                         <i class="fas fa-chalkboard-teacher fa-lg" style={{ color: '#00bbae' }}></i>&emsp; Herry bahi is grate
                       </p>
                       <p className='newsCaption-content mb-2 ms-5'>
-                        <i class="fas fa-chalkboard-teacher fa-lg" style={{ color: '#00bbae' }}></i>&emsp; {Cources.date}
+                        <i class="fas fa-chalkboard-teacher fa-lg" style={{ color: '#00bbae' }}></i>&emsp;
                       </p>
                     </div>
                     <div className='newsCaption-title'>
-                      <h5>{Cources.title}</h5>
+                      <h5></h5>
                     </div>
                     <div className="row  mt-0">
                       <div className="p-3">
                         <div className="d-flex justify-content-center align-items-center p-3 text-center mstt">
-                          <div className="col border-end boder-4"><h6>Time<br />{Cources.time}</h6></div>
+                          <div className="col border-end boder-4"><h6>Time<br /></h6></div>
                           {/* <div className="col border-end boder-4"><h6>Date<br /></h6></div> */}
-                          <div className="col"><h6>Duration <br />{Cources.duration}</h6>
+                          <div className="col"><h6>Duration <br /></h6>
                           </div>
                         </div>
                       </div>
                     </div>
                     <div className='d-flex ps-3'>
-                      <Link to={`/Course_Detail/${Cources.id}`}>
+                    <Link to={`/course/${course.id}`}>
                         <button className="animated-button" >
                           <svg viewBox="0 0 24 24" className="arr-2" xmlns="http://www.w3.org/2000/svg">
                             <path
@@ -88,7 +86,7 @@ export default function Webinar() {
                   </div>
                 </div>
               </div>
-            ))}
+           
 
           </div>
 

@@ -2,17 +2,17 @@ import React, { useState } from 'react';
 import '../css/Login.modules.css';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-
+import authService from "../../services/auth.service";
 function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
     const navigate = useNavigate()
 
-    function handleSubmit(event) {
+    async function handleSubmit(event) {
         event.preventDefault();
 
-        axios.post('http://127.0.1:8000/api/getLogin', { email, password })
+        await authService.login({ email, password })
             .then(res => {
                 if (res.data.status === "success") {
 

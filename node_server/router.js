@@ -144,6 +144,7 @@ Router.get("/api/Course", (req, res) => {
         }
     });
 });
+
 Router.delete("/api/delete_course", (req, res) => {
     console.log(req.query.id, "<<>>")
     sqlDbconnect.query(`DELETE FROM course_detail WHERE id = "${req.query.id}"`, (err, rows) => {
@@ -160,7 +161,28 @@ Router.delete("/api/delete_course", (req, res) => {
             console.log(err);
         }
     });
-})
+});
+
+Router.get('/api/coursesData', (req, res) => {
+    const query = `
+    SELECT *
+    FROM course_detail 
+    INNER JOIN speaker_info  ON course_detail.speaker = speaker_info.speaker_id
+    INNER JOIN selling_options ON course_detail.selling_option = selling_options.selling_option_id;
+  `;
+
+    sqlDbconnect.query(query, (error, results) => {
+        if (error) {
+            console.error(error);
+            res.status(500).send('Internal Server Error');
+        } else {
+            res.json(results);
+            
+        }
+    });
+});
+
+
 
 Router.post("/api/Course_add", upload.single("file"), (req, res) => {
     try {
