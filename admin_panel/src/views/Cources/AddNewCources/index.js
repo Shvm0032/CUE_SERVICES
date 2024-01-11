@@ -18,6 +18,7 @@ const modules = {
     ],
 };
 
+
 export default function AddCourse() {
     const [formFields, setFormFields] = useState([
         { category: '', name: '', price: '' },
@@ -97,59 +98,66 @@ export default function AddCourse() {
         let data = [...sellingOptions];
         data[index][event.target.name] = event.target.value;
         setSellingOptions(data);
+        console.log(event.target.name, 'data--------');
 
         console.log("Fields Data:", formFields);
     }
 
     function submitForm(e) {
-        e.preventDefault()
+        e.preventDefault();
 
         console.log("Selling Options:", sellingOptions);
-        const result = Object.groupBy(sellingOptions, ({ selling_category }) =>selling_category);
-var lp=result["Live Options"]
-var ssp=result["Super Saver Options"]
-var rc=result["Recording & Combos"]
+        const result = Object.groupBy(sellingOptions, ({ selling_category }) => selling_category);
+        var lp = result["Live Options"]
+        var ssp = result["Super Saver Options"]
+        var rc = result["Recording & Combos"]
 
-/*console.log("Live Option")
-console.log(lp)
-console.log("SS Option")
-console.log(ssp)
-console.log("Recording")
-console.log(rc)*/
-
-
-var l1=[]
-lp.forEach(row=>{
-    var a={"id":row.id,"scat":row.selling_category,"price":row.price}
-    l1.push(a)
-})
-var l2=[]
-ssp.forEach(row=>{
-    var a={"id":row.id,"scat":row.selling_category,"price":row.price}
-    l2.push(a)
-})
-
-var l3=[]
-rc.forEach(row=>{
-    var a={"id":row.id,"scat":row.selling_category,"price":row.price}
-    l3.push(a)
-})
+        /*console.log("Live Option")
+        console.log(lp)
+        console.log("SS Option")
+        console.log(ssp)
+        console.log("Recording")
+        console.log(rc)*/
 
 
-var newMap = new Map([
-    ['l1', lp],
-    ['l2', ssp],
-    ['l3', rc],
-]);
+        var l1 = []
+        lp.forEach(row => {
+            var a = { "id": row.id, "scat": row.selling_category, "price": row.price }
+            l1.push(a)
+        })
+        var l2 = []
+        ssp.forEach(row => {
+            var a = { "id": row.id, "scat": row.selling_category, "price": row.price }
+            l2.push(a)
+        })
 
-console.log(newMap);
-// var res = arr.get('key2');
-// console.log(res);
+        var l3 = []
+        rc.forEach(row => {
+            var a = { "id": row.id, "scat": row.selling_category, "price": row.price }
+            l3.push(a)
+        })
 
-console.log("Pussing data")
-console.log(l1)
+
+        var newMap = new Map([
+            ['l1', lp],
+            ['l2', ssp],
+            ['l3', rc],
+        ]);
+
+        console.log(newMap);
+        // var res = arr.get('key2');
+        // console.log(res);
+
+        console.log("Pussing data")
+        console.log(l1)
 
         //console.log(result)
+
+        let selling = sellingOptions.map((ele) => ({ 
+            category: ele.selling_category,
+            name:ele.name,
+            price:ele.price
+        }))
         const data = new FormData();
         data.append('industry', Course.Industary);
         data.append('speaker', Course.Speaker);
@@ -158,7 +166,7 @@ console.log(l1)
         data.append('duration', Course.Duration);
         data.append('time', Course.Time);
         data.append('cstdate', Course.CSTDate);
-        data.append('fields', JSON.stringify(formFields));
+        data.append('fields', JSON.stringify(selling));
         data.append('file', filedata);
 
         axios.post('http://localhost:8000/api/Course_add', data)
@@ -303,9 +311,9 @@ console.log(l1)
                                             <tbody>
                                                 {sellingOptions.map((option, index) => (
                                                     <tr key={option.id}>
-                                                        <td>{option.selling_category}</td>
-                                                        <td><input type='text' className='form-control' value={option.name} onChange={(e) => handleSellingOptionChange(e, index)} /></td>
-                                                        <td><input type='text' className='form-control' value={option.price} onChange={(e) => handleSellingOptionChange(e, index)} /></td>
+                                                        <td><input type='hidden' name="category[]" value={option.selling_category} />{option.selling_category}</td>
+                                                        <td><input type='text' className='form-control' name="name" value={option.name} onChange={(e) => handleSellingOptionChange(e, index)} /></td>
+                                                        <td><input type='text' className='form-control' name="price" value={option.price} onChange={(e) => handleSellingOptionChange(e, index)} /></td>
                                                     </tr>
                                                 ))}
                                             </tbody>

@@ -186,22 +186,19 @@ Router.get('/api/coursesData', (req, res) => {
 
 Router.post("/api/Course_add", upload.single("file"), (req, res) => {
     try {
+        console.log(req.body,'req.body');
         const { industry, speaker, name, description, duration, time, cstdate, fields } = req.body;
         const filename = req.file.filename; // Assuming your file is uploaded correctly
-
         const fieldsData = JSON.parse(fields);
-        
+        console.log('fieldsData');
         // Extracting selling options data from fieldsData
         const sellingOptions = fieldsData.map(option => ({
-
-
-           
-            // category: option.category,
-            // name: option.name,
-            // price: option.price
+            category: option.category,
+            name: option.name,
+            price: option.price
         }));
         // Inserting data into the database, including the new selling_option column
-        sqlDbconnect.query(`INSERT INTO course_detail (industries, speaker, description, title, date, time, duration, course_thumbail, selling_option) VALUES ('${industry}','${speaker}','${description}','${name}', '${cstdate}' , '${time}', '${duration}', '${filename}', '${JSON.stringify(sellingOptions)}')`, (err, rows) => {
+        sqlDbconnect.query(`INSERT INTO course_detail (industries, speaker, description, title, date, time, duration, course_thumbail, selling_option) VALUES ('${industry}','${speaker}','${description}','${name}','${cstdate}','${time}', '${duration}', '${filename}', '${JSON.stringify(sellingOptions)}')`, (err, rows) => {
             if (!err) {
                 console.log(rows)
                 // Fetching the inserted row including selling_option
