@@ -1,21 +1,13 @@
 import React from 'react';
 import toast from 'react-hot-toast';
-import { Link, NavLink, useNavigate } from 'react-router-dom';
-import authService from '../../services/auth.service';
+import { Link, NavLink,  } from 'react-router-dom';
+
 export default function Navbar() {
-    const navigate = useNavigate();
-    const authUser = authService.getAuthUser();
+    
 
     const getActiveClass = ({ isActive }) => isActive ? 'nav-link active' : 'nav-link';
 
-    const handleLogout = async () => {
-        try {
-            await authService.logout();
-            navigate('/');
-        } catch (error) {
-            toast.error(error.data.message);
-        }
-    }
+    
 
     return (
         <>  <div className='sticky-top'>
@@ -48,14 +40,8 @@ export default function Navbar() {
                     <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
 
                         <ul class="navbar-nav d-flex  justify-content-end ms-auto mb-2 mb-lg-0">
-                            {
-                                authUser
-                                    ?
-                                    <li className="nav-item">
-                                        <Link to={'#'} onClick={handleLogout} className="nav-link active">Logout</Link>
-                                    </li>
-                                    :
-                                    <>
+                           
+                                   
                                         <li class="nav-item">
                                             <NavLink to={'/'} end className={getActiveClass}>Home</NavLink>
                                         </li>
@@ -118,8 +104,7 @@ export default function Navbar() {
                                         <li className="nav-item">
                                             <NavLink to={'/login'} end className={getActiveClass}>Log-In</NavLink>
                                         </li>
-                                    </>
-                            }
+                                   
                         </ul>
                         
                     </div>

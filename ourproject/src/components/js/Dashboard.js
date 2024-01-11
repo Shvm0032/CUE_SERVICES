@@ -2,8 +2,11 @@ import '../css/Dashboard.modules.css';
 import React, { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import authService from '../../services/auth.service';
+import { useNavigate } from 'react-router-dom';
 
 function Dashboard() {
+  const navigate = useNavigate();
+  const authUser = authService.getAuthUser();
 
   const [user, setUser] = useState(null);
 
@@ -20,6 +23,14 @@ function Dashboard() {
     }
   }
 
+  const handleLogout = async () => {
+    try {
+      await authService.logout();
+      navigate('/');
+    } catch (error) {
+      toast.error(error.data.message);
+    }
+  }
   const countries = ['india', 'spain', 'france', 'argentina', 'pakistan', 'russia'];
 
   return (
@@ -47,7 +58,7 @@ function Dashboard() {
               <button class="nav-link text-start border-bottom" id="v-pills-messages-tab" data-bs-toggle="pill" data-bs-target="#v-pills-messages" type="button" role="tab" aria-controls="v-pills-messages" aria-selected="false"><i class="fa-solid fa-heart"></i>&emsp;Wishlist</button>
               <button class="nav-link text-start border-bottom" id="v-pills-profile-tab" data-bs-toggle="pill" data-bs-target="#v-pills-profile" type="button" role="tab" aria-controls="v-pills-profile" aria-selected="false"><i class="fa-solid fa-user"></i>&emsp;Profile </button>
               {/* <button class="nav-link text-start border-bottom" id="v-pills-settings-tab" data-bs-toggle="pill" data-bs-target="#v-pills-settings" type="button" role="tab" aria-controls="v-pills-settings" aria-selected="false"onClick={handleLogout} ><i class="fa-solid fa-right-from-bracket"></i>&emsp;Logout</button> */}
-              <button className='nav-link ' >Logout</button>
+              <button className='nav-link ' onClick={handleLogout} >Logout</button>
             </div>
 
 

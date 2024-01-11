@@ -92,7 +92,7 @@ Router.post('/api/getLogin', (req, res) => {
                 userId:  data[0].id,
             }
          
-            const token = jwt.sign(dataToken, jwtSecretKey);
+            const token = jwt.sign(dataToken, jwtSecretKey, {expiresIn: 120});
          
            // res.send(token);
 
