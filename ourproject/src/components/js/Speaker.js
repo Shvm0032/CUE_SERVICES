@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
+import http from "../../utils/http-client";
 
 export default function Speaker() {
   const { id } = useParams();
@@ -9,7 +10,7 @@ export default function Speaker() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`http://127.0.1:8000/api/Selling?id=${id}`);
+        const response = await  http.get(`Selling?id=${id}`);
         const selectedSpeaker = response.data.find((item) => item.id === id);
         setSpeaker(selectedSpeaker);
         console.log(speaker)

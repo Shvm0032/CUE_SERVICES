@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import http from "../../utils/http-client";
 import '../css/Ourspeaker.modules.css';
 import { Link } from "react-router-dom";
+
 
 function Ourspeaker() {
     var [Speaker, setSpeaker] = useState([]);
     var getData = async () => {
         try {
-            var res = await axios.get("http://localhost:8000/api/Speaker");
-            console.log(res);
-            setSpeaker(res.data);
+            const res = await http.get("Speaker");
+            if(res?.data?.success){
+                setSpeaker(res.data.data);
+            }
         } catch (error) {
             console.error("Error fetching data:", error);
         }
