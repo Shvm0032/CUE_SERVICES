@@ -44,7 +44,7 @@ Router.use(session({
 
 // admin login
 
-Router.post('/api/admin_login',(req, res) => {
+Router.post('/api/admin_login', (req, res) => {
     const { username, password } = req.body;
 
     // Basic validation
@@ -82,24 +82,19 @@ Router.post('/api/getLogin', (req, res) => {
     sqlDbconnect.query(sqlQuery, [req.body.email, req.body.password], (err, data) => {
         if (err) {
             console.error(err);
-            return res.status(500).json({ error: 'Internal Server Error' });
+            return res.status(500).json({ success: false, error: 'Internal Server Error' });
         }
         if (data.length > 0) {
-            
+
             let jwtSecretKey = process.env.JWT_SECRET_KEY;
             let dataToken = {
                 time: Date(),
-                userId:  data[0].id,
+                userId: data[0].id,
             }
-         
-            const token = jwt.sign(dataToken, jwtSecretKey, {expiresIn: 7200});
-         
-           // res.send(token);
-
-            req.session.user = data[0].email
-            return res.json({ status: "success", token });
+            const token = jwt.sign(dataToken, jwtSecretKey, { expiresIn: 7200 });
+            return res.json({ success: true, data: token, message:"you are logged in." });
         } else {
-            return res.json({ status: "No record Existed" });
+            return res.json({ success: false, message: "No record Existed" });
         }
     });
 });
@@ -164,12 +159,7 @@ Router.delete("/api/delete_course", (req, res) => {
 });
 
 Router.get('/api/coursesData', (req, res) => {
-    const query = `
-    SELECT *
-FROM course_detail
-LEFT OUTER JOIN speaker_info ON course_detail.speaker = speaker_info.speaker_id;
-;
-  `;
+    const query = `SELECT * FROM course_detail LEFT OUTER JOIN speaker_info ON course_detail.speaker = speaker_info.speaker_id;`;
 
     sqlDbconnect.query(query, (error, results) => {
         if (error) {
@@ -177,7 +167,7 @@ LEFT OUTER JOIN speaker_info ON course_detail.speaker = speaker_info.speaker_id;
             res.status(500).send('Internal Server Error');
         } else {
             res.json(results);
-            
+
         }
     });
 });
@@ -186,7 +176,7 @@ LEFT OUTER JOIN speaker_info ON course_detail.speaker = speaker_info.speaker_id;
 
 Router.post("/api/Course_add", upload.single("file"), (req, res) => {
     try {
-        console.log(req.body,'req.body');
+        console.log(req.body, 'req.body');
         const { industry, speaker, name, description, duration, time, cstdate, fields } = req.body;
         const filename = req.file.filename; // Assuming your file is uploaded correctly
         const fieldsData = JSON.parse(fields);
@@ -506,7 +496,7 @@ Router.post('/api/Add_question', (req, res) => {
 
 
     const sql = 'INSERT INTO faq (category_id,question,answer) VALUES (?,?,?)';
-    sqlDbconnect.query(sql, [category_id,question,answer], (err, result) => {
+    sqlDbconnect.query(sql, [category_id, question, answer], (err, result) => {
         if (err) {
             console.error('Error inserting data into MySQL:', err);
             return res.status(500).json({ success: false, error: 'Internal Server Error', errorMessage: err.message });
@@ -523,14 +513,14 @@ Router.put('/api/Update_Question/:id', (req, res) => {
     const { id } = req.params;
     const sql = 'UPDATE faq SET category_id=?, question=?, answer=? WHERE id=?';
     sqlDbconnect.query(sql, [category_id, question, answer, id], (err, result) => {
-      if (err) {
-        console.error('Error updating data in MySQL:', err);
-        res.status(500).json({ success: false, error: 'Internal Server Error', errorMessage: err.message });
-      } else {
-        res.json({ success: true, message: 'Data updated successfully' });
-      }
+        if (err) {
+            console.error('Error updating data in MySQL:', err);
+            res.status(500).json({ success: false, error: 'Internal Server Error', errorMessage: err.message });
+        } else {
+            res.json({ success: true, message: 'Data updated successfully' });
+        }
     });
-  });
+});
 
 //   end faq question
 
@@ -597,28 +587,28 @@ Router.get("/api/selling_edit/:id", (req, res) => {
 Router.put('/api/update_option/:id', (req, res) => {
     const { id } = req.params;
     const { selling_category, name, price } = req.body;
-  
-//   og the request body for debugging
-console.log('Received data:', selling_category, name, price);
-  
+
+    //   og the request body for debugging
+    console.log('Received data:', selling_category, name, price);
+
     const updateQuery = `
       UPDATE selling_options
       SET selling_category=?, name=?, price=?
       WHERE id=?`;
-  
+
     sqlDbconnect.query(updateQuery, [selling_category, name, price, id], (err, result) => {
-      if (err) {
-        console.error('Error updating selling_option', err);
-        return res.status(500).json({ error: 'Internal Server Error' });
-      }
-  
-      if (result.affectedRows === 0) {
-        return res.status(404).json({ error: 'Selling option not found' });
-      }
-  
-      res.status(200).json({ success: true, message: 'Selling option updated successfully' });
+        if (err) {
+            console.error('Error updating selling_option', err);
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ error: 'Selling option not found' });
+        }
+
+        res.status(200).json({ success: true, message: 'Selling option updated successfully' });
     });
-  });
+});
 // end selling option
 
 Router.get("/api/Testimonial", (req, res) => {
@@ -796,13 +786,13 @@ Router.post("/api/course_added", (req, res) => {
                         }
                     });
                     let random = generator.generateMultiple(1, {
-                             length: 6,
-                            uppercase: false,
-                            numbers: true,
-                            symbols: true
-                   })[0];
-            
-               console.log(random)
+                        length: 6,
+                        uppercase: false,
+                        numbers: true,
+                        symbols: true
+                    })[0];
+
+                    console.log(random)
                     let mailDetails = {
                         from: 'itsyourabhay@gmail.com',
                         to: `${res[0].email}`,
@@ -823,7 +813,7 @@ Router.post("/api/course_added", (req, res) => {
                         </body>
                         </html>`
                     };
-            
+
                     mailTransporter.sendMail(mailDetails, function (err, data) {
                         if (err) {
                             console.log('Error Occurs');
@@ -832,15 +822,15 @@ Router.post("/api/course_added", (req, res) => {
                             console.log('Email sent successfully');
                             res.status(200).json({ success: "ueser message send succesfully", result: result, id: result.insertId });
                         }
-                    }) 
+                    })
 
-                   
+
                 } else {
                     console.log(er);
                     res.status(500).json({ success: "There is some error" });
                 }
             })
-           
+
         } else {
             console.log(err);
             res.status(500).json({ success: "There is some error" });
@@ -863,13 +853,13 @@ Router.post("/api/sending_email", (req, res) => {
             }
         });
         let random = generator.generateMultiple(1, {
-	             length: 6,
-            	uppercase: false,
-                numbers: true,
-                symbols: true
-       })[0];
+            length: 6,
+            uppercase: false,
+            numbers: true,
+            symbols: true
+        })[0];
 
-   console.log(random)
+        console.log(random)
         let mailDetails = {
             from: 'itsyourabhay@gmail.com',
             to: `${req.body.email}`,
@@ -1071,13 +1061,13 @@ Router.post("/api/Contact_Details", (req, res) => {
     const phone = req.body.phone;
     const email = req.body.email;
     const message = req.body.message;
-    sqlDbconnect.query('insert into contact_details(name,phone,email,message)values(?,?,?,?)', [username,phone,email,message],(err, result) => {
-        if(!err) {
+    sqlDbconnect.query('insert into contact_details(name,phone,email,message)values(?,?,?,?)', [username, phone, email, message], (err, result) => {
+        if (!err) {
             res.status(200).json({ success: "ueser message send succesfully" });
         } else {
             console.log(err);
-        }
-    });
+        }
+    });
 });
 
 
