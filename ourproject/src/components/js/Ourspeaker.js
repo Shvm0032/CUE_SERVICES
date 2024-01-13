@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import '../css/Ourspeaker.modules.css';
 import { Link } from "react-router-dom";
+
 function Ourspeaker() {
     var [Speaker, setSpeaker] = useState([]);
     var getData = async () => {

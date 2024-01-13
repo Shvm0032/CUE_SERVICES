@@ -84,7 +84,7 @@ function Contact() {
             <div className="col-lg-8  offset-lg-2 col-12">
                 <h2 className="fs-1 text-center my-4">Fill the form below so we can get to know  you and your needs better.</h2>
               <div className="row  bg-light  p-4 " style={{ borderRadius: '1.563rem' }}>
-                <p className="text-success text-center">{Returnmessage}</p>
+                
                 <form className="p-3" onSubmit={handleSubmit}>
 
                   <div className="mb-3 input-group-lg">
@@ -110,6 +110,7 @@ function Contact() {
                   <div className="col mt-2">
                     <button type="submit" className="btn btn-primary btn-lg mb-3">Submit</button>
                   </div>
+                  <p className="text-success text-center">{Returnmessage}</p>
 
                 </form>
               </div>

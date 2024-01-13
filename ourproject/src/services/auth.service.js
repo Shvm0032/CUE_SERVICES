@@ -5,8 +5,9 @@ const login = (data) => {
     return http.post('/getLogin', data, {
         transformResponse: [(result) => {
             const parsed = JSON.parse(result);
-            console.log(parsed);
-            localStorage.setItem('authUser', JSON.stringify(parsed));
+            if(parsed.success){
+                localStorage.setItem('authUser', JSON.stringify(parsed.data));
+            }
             return parsed;
         }]
     });

@@ -15,13 +15,11 @@ function Login() {
 
         await authService.login({ email, password })
             .then(res => {
-                if (res.data.status === "success") {
-
+                if (res.data.success) {
                     navigate('/Dashboard');
                 } else {
                     alert("Login failed. " + res.data.message);
                 }
-
                 console.log(res.data.status)
             })
             .catch(err => console.log(err));
