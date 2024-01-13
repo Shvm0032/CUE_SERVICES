@@ -222,8 +222,10 @@ Router.post("/api/Course_add", upload.single("file"), (req, res) => {
 Router.get("/api/Speaker", (req, res) => {
     sqlDbconnect.query("SELECT * FROM speaker_info", (err, rows) => {
         if (!err) {
-            res.send(rows);
+            return res.json({ success: true, data: rows, message:"you are logged in." });
+           // res.send(rows);
         } else {
+            return res.json({ success: false });
             console.log(err);
         }
     });
