@@ -31,9 +31,9 @@ function Login() {
             <section className="WaveHeaderBox">
                 <div className='row  faq-heads'>
                     <div className='row faq-headers p-5 mt-5'>
-                        <div className='col-md-12 faq mains'>
-                            <h1 className="mt-5 " style={{ fontSize: "80px", marginBottom: "5px", fontWeight: '500' }}>Login</h1>
-                            <Link to='#' className='faq-lnk-main'><i class="fa-solid fa-house" style={{ "color": "#719dea;" }}></i> CuService </Link>
+                        <div className='col-md-12 faq mains '>
+                            <h1 className="mt-5  text-white" style={{ fontSize: "80px", marginBottom: "5px", fontWeight: '500' }}>Login</h1>
+                            <Link to='/' className='text-white'><i class="fa-solid fa-house" style={{ "color": "#719dea;" }}></i> CuService - Login</Link>
                         </div>
                     </div>
                     <div className='wave wave1'></div>
@@ -44,7 +44,7 @@ function Login() {
             <section>
                 <div className="container" style={{ paddingTop: '10px' }}>
                     <div className='d-flex justify-content-center align-items-center'>
-                        <div className='row Form-Container align-item-center p-5'>
+                        <div className='row Form-Container shadow align-item-center p-5'>
                             <div className='col'>
                                 <p className='fs-3 fw-bold' >Sign in to your account</p>
                                 <form onSubmit={handleSubmit}>
@@ -70,8 +70,8 @@ function Login() {
                                         />
                                     </div>
                                     
-                                    <button className='btn log-buttons'>Login</button>
-                                    
+                                    <button className='btn log-buttons'>Login</button><br/>
+                                    <Link to='/register ' className='text-secondary text-center'>Not a member?<span className='text-primary'>Create your new Account</span></Link>
                                 </form>
                                 
                             </div>

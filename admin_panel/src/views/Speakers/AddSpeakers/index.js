@@ -20,34 +20,12 @@ const modules = {
 
 export default function AddSpeakers() {
 
-  const [value, setValue] = useState('');
-  const [formValue, setFormValue] = useState({ name: '', phone: '', email: '', bio: '', image: '' });
+  
+  const [formValue, setFormValue] = useState({ name: '', phone: '', email: '', bio: '', image: '', designation: '', experience:'' });
   const [Returnmessage, setReturnmessage] = useState();
   const [filedata, setFiledata] = useState([])
   
-  // const handleInput = (e) => {
-  //   const { name, value } = e.target;
-  //   setFormValue({ ...formValue, [name]: value });
-  // }
-  // console.log(formValue)
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   const allInputvalue = { username: formValue.username, email: formValue.email, phone: formValue.phone, bio: formValue.bio, image: formValue.image };
-  //   console.log(allInputvalue);
-  //   let res = await fetch("http://localhost:8000/api/Speaker_add", {
-  //     method: "POST",
-  //     headers: { 'content-type': 'application/json' },
-  //     body: JSON.stringify(allInputvalue)
-  //   });
-
-  
-  //   let resjson = await res.json();
-  //   if (res.status === 200) {
-  //     setReturnmessage(resjson.success);
-  //   } else {
-  //     setReturnmessage("Some error occure");
-  //   }
-  // }
+ 
   console.log(formValue, filedata)
   function submitForm(e){
     e.preventDefault()
@@ -55,6 +33,8 @@ export default function AddSpeakers() {
     data.append('name', formValue.name);
     data.append('email', formValue.email);
     data.append('phone', formValue.phone);
+    data.append('designation', formValue.designation);
+    data.append('experience', formValue.experience);
     data.append('bio', formValue.bio);
    
    data.append("file", filedata)
@@ -92,6 +72,14 @@ export default function AddSpeakers() {
                 <div className='row'>
                   <div className='col-2'><label>Phone Number:</label></div>
                   <div className='col'> <input type="text" className="form-control" name='phone'  onChange={(e)=>{setFormValue((pre)=>({...pre, phone: e.target.value}))}} placeholder="Phone Number" /></div>
+                </div><br />
+                <div className='row'>
+                  <div className='col-2'><label>Designation:</label></div>
+                  <div className='col'> <input type="text" className="form-control" name='designation' onChange={(e) => { setFormValue((pre) => ({ ...pre, designation: e.target.value })) }} placeholder="Designation" /></div>
+                </div><br />
+                <div className='row'>
+                  <div className='col-2'><label>Experience:</label></div>
+                  <div className='col'> <input type="text" className="form-control" name='experience' onChange={(e) => { setFormValue((pre) => ({ ...pre, experience: e.target.value })) }} placeholder="Working Experience"/></div>
                 </div><br />
                 <div className='row'>
                   <div className='col-2 mt-3'><label>Speaker Image :</label></div>

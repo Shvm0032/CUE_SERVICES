@@ -92,7 +92,7 @@ Router.post('/api/getLogin', (req, res) => {
                 userId: data[0].id,
             }
             const token = jwt.sign(dataToken, jwtSecretKey, { expiresIn: 7200 });
-            return res.json({ success: true, data: token, message:"you are logged in." });
+            return res.json({ success: true, data: token, message: "you are logged in." });
         } else {
             return res.json({ success: false, message: "No record Existed" });
         }
@@ -235,9 +235,11 @@ Router.post("/api/Speaker_add", upload.single("file"), (req, res) => {
     const phone = req.body.phone;
     const email = req.body.email;
     const bio = req.body.bio;
+    const designation = req.body.designation;
+    const experience = req.body.experience;
     console.log(req.body, "<<<<")
     console.log("File Name is =  " + filename)
-    sqlDbconnect.query(`INSERT INTO speaker_info (name, email, phone_no, bio, images) VALUES ('${username}','${email}', '${phone}' , '${bio}', '${filename}')`, (err, rows) => {
+    sqlDbconnect.query(`INSERT INTO speaker_info (name, email, phone_no, bio, images ,designation ,experience) VALUES ('${username}','${email}','${phone}','${bio}','${filename}','${designation}',${experience})`, (err, rows) => {
         if (!err) {
             res.send(rows);
         } else {
@@ -253,7 +255,7 @@ Router.post("/api/Speaker_add", upload.single("file"), (req, res) => {
 
 Router.delete("/api/delete_speaker", (req, res) => {
     console.log(req.query.id, "<<>>")
-    sqlDbconnect.query(`DELETE FROM speaker_info WHERE id = "${req.query.id}"`, (err, rows) => {
+    sqlDbconnect.query(`DELETE FROM speaker_info WHERE speaker_id = "${req.query.id}"`, (err, rows) => {
         if (!err) {
             res.send(rows);
         } else {
@@ -263,10 +265,10 @@ Router.delete("/api/delete_speaker", (req, res) => {
 })
 
 // edit speaker
-Router.get("/api/edit/:id", (req, res) => {
+Router.get("/api/edit/:speaker_id", (req, res) => {
     const id = req.params.id;
 
-    const query = "SELECT * FROM speaker_info WHERE id = ?";
+    const query = "SELECT * FROM speaker_info WHERE speaker_id = ?";
 
     sqlDbconnect.query(query, [id], (err, result) => {
         if (err) return res.json({ Error: err });
@@ -275,7 +277,7 @@ Router.get("/api/edit/:id", (req, res) => {
 });
 
 // update speaker
-Router.put('/api/update_speaker/:id', upload.single('image'), async (req, res) => {
+Router.put('/api/update_speaker/:speaker_id', upload.single('image'), async (req, res) => {
     const { id } = req.params;
     const { name, email, phone_no, bio, designation, experience } = req.body;
 
@@ -286,7 +288,7 @@ Router.put('/api/update_speaker/:id', upload.single('image'), async (req, res) =
     const updateQuery = `
         UPDATE speaker_info
         SET name=?, email=?, phone_no=?, bio=?, designation=?, experience=?, images=?
-        WHERE id=?
+        WHERE speaker_id=?
     `;
 
     sqlDbconnect.query(

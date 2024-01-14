@@ -1,5 +1,4 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
 import http from "../utils/http-client";
 
 export const fetchCourses = createAsyncThunk('courses/fetchCourses', async () => {
@@ -13,9 +12,11 @@ export const fetchCourses = createAsyncThunk('courses/fetchCourses', async () =>
 
 const courseSlice = createSlice({
     name: 'course',
-    initialState: { courses: [
-        
-    ], status: 'idle', error: null },
+    initialState: {
+        courses: [],
+        status: 'idle',
+        error: null
+    },
     reducers: {},
     extraReducers: (builder) => {
         builder

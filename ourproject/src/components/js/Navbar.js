@@ -1,13 +1,13 @@
 import React from 'react';
 import toast from 'react-hot-toast';
-import { Link, NavLink,  } from 'react-router-dom';
+import { Link, NavLink, } from 'react-router-dom';
 
 export default function Navbar() {
-    
+
 
     const getActiveClass = ({ isActive }) => isActive ? 'nav-link active' : 'nav-link';
 
-    
+
 
     return (
         <>  <div className='sticky-top'>
@@ -40,73 +40,73 @@ export default function Navbar() {
                     <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
 
                         <ul class="navbar-nav d-flex  justify-content-end ms-auto mb-2 mb-lg-0">
-                           
-                                   
-                                        <li class="nav-item">
-                                            <NavLink to={'/'} end className={getActiveClass}>Home</NavLink>
-                                        </li>
-                                        <li class="nav-item">
-                                            <NavLink to={'/About'} end className={getActiveClass}>About</NavLink>
-                                        </li>
-                                        <li class="nav-item dropdown"> {/* Webinar dropdown */}
-                                            <NavLink to={'/course'} end className={getActiveClass}>Industry</NavLink>
-                                            <div class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink">
-                                                <div className='d-flex p-2'>
-                                                    <div className='col p-2 text-center'>
-                                                        <NavLink to={'/course'} end className={getActiveClass}>Human Resource</NavLink>
-                                                        <NavLink to={'/course'} end className={getActiveClass}>Payroll & Taxation</NavLink>
-                                                        <NavLink to={'/course'} end className={getActiveClass}>BFSI & Accounting</NavLink>
-                                                        <NavLink to={'/course'} end className={getActiveClass}>Housing & Construction</NavLink>
 
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </li>
 
-                                        <li class="nav-item dropdown ">{/* SPEAKER DROPDOWN */}
-                                            <NavLink to={'/course'} end className={getActiveClass}>Webinar</NavLink>
-                                            <ul class="dropdown-menu dropdown-menu-dark p-3 " aria-labelledby="navbarDarkDropdownMenuLink">
-                                                <li><NavLink to={'/course'} end className={getActiveClass}>Live</NavLink></li>
-                                                <li><NavLink to={'/course'} end className={getActiveClass}>On Demand</NavLink></li>
-                                                <li><NavLink to={'/course'} end className={getActiveClass}>e Transcript</NavLink></li>
-                                            </ul>
-                                        </li>
-                                        <li class="nav-item">
+                            <li class="nav-item">
+                                <NavLink to={'/'} end className={getActiveClass}>Home</NavLink>
+                            </li>
+                            <li class="nav-item">
+                                <NavLink to={'/About'} end className={getActiveClass}>About</NavLink>
+                            </li>
+                            <li class="nav-item dropdown"> {/* Webinar dropdown */}
+                                <NavLink to={'/course'} end className={getActiveClass}>Industry</NavLink>
+                                <div class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink">
+                                    <div className='d-flex p-2'>
+                                        <div className='col p-2 text-center'>
+                                            <NavLink to={'/course'} end className={getActiveClass}>Human Resource</NavLink>
+                                            <NavLink to={'/course'} end className={getActiveClass}>Payroll & Taxation</NavLink>
+                                            <NavLink to={'/course'} end className={getActiveClass}>BFSI & Accounting</NavLink>
+                                            <NavLink to={'/course'} end className={getActiveClass}>Housing & Construction</NavLink>
 
-                                            <NavLink to={'/Ourspeaker'} end className={getActiveClass}>Speakers</NavLink>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
 
-                                        </li>
+                            <li class="nav-item dropdown ">{/* SPEAKER DROPDOWN */}
+                                <NavLink to={'/course'} end className={getActiveClass}>Webinar</NavLink>
+                                <ul class="dropdown-menu dropdown-menu-dark p-3 " aria-labelledby="navbarDarkDropdownMenuLink">
+                                    <li><NavLink to={'/course'} end className={getActiveClass}>Live</NavLink></li>
+                                    <li><NavLink to={'/course'} end className={getActiveClass}>On Demand</NavLink></li>
+                                    <li><NavLink to={'/course'} end className={getActiveClass}>e Transcript</NavLink></li>
+                                </ul>
+                            </li>
+                            <li class="nav-item">
 
-                                        <li class="nav-item dropdown">{/* Help DROPDOWN */}
-                                            <Link class="nav-link dropdown-toggle" to="/course">
-                                                Help
-                                            </Link>
-                                            <ul class="dropdown-menu dropdown-menu-dark p-3" aria-labelledby="navbarDarkDropdownMenuLink ">
-                                                <li className='text-center'> <NavLink to={'/Contactus'} end className={getActiveClass}>Contact Us</NavLink></li>
-                                                <li className='text-center'> <NavLink to={'/Dashboard'} end className={getActiveClass}>Dashboard</NavLink></li>
-                                                <li className='text-center'> <NavLink to={'/Faqrear'} end className={getActiveClass}>FAQ</NavLink></li>
-                                            </ul>
-                                        </li>
-                                        <li class="nav-item">
-                                            <NavLink to={'/Add_cart'} end className={getActiveClass}>
-                                                <i class="fas fa-cart-arrow-down fa-2" style={{ color: '#ff9b24' }}></i> Cart
-                                            </NavLink>
+                                <NavLink to={'/Speakers'} end className={getActiveClass}>Speakers</NavLink>
 
-                                        </li>
-                                        <li className='nav-item'>
-                                            <button class="btn p-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasTop" aria-controls="offcanvasTop">
-                                                <i class="fas fa-search fa-lg" style={{ color: '#ff9b24' }}></i>
-                                            </button>
-                                        </li>
-                                        <li>
+                            </li>
 
-                                        </li>
-                                        <li className="nav-item">
-                                            <NavLink to={'/login'} end className={getActiveClass}>Log-In</NavLink>
-                                        </li>
-                                   
+                            <li class="nav-item dropdown">{/* Help DROPDOWN */}
+                                <Link class="nav-link dropdown-toggle" to="/course">
+                                    Help
+                                </Link>
+                                <ul class="dropdown-menu dropdown-menu-dark p-3" aria-labelledby="navbarDarkDropdownMenuLink ">
+                                    <li className='text-center'> <NavLink to={'/Contactus'} end className={getActiveClass}>Contact Us</NavLink></li>
+                                    <li className='text-center'> <NavLink to={'/Dashboard'} end className={getActiveClass}>Dashboard</NavLink></li>
+                                    <li className='text-center'> <NavLink to={'/Faqrear'} end className={getActiveClass}>FAQ</NavLink></li>
+                                </ul>
+                            </li>
+                            <li class="nav-item">
+                                <NavLink to={'/Add_cart'} end className={getActiveClass}>
+                                    <i class="fas fa-cart-arrow-down fa-2" style={{ color: '#ff9b24' }}></i> Cart
+                                </NavLink>
+
+                            </li>
+                            <li className='nav-item'>
+                                <button class="btn p-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasTop" aria-controls="offcanvasTop">
+                                    <i class="fas fa-search fa-lg" style={{ color: '#ff9b24' }}></i>
+                                </button>
+                            </li>
+                            <li>
+
+                            </li>
+                            <li className="nav-item">
+                                <NavLink to={'/login'} end className={getActiveClass}>Log-In</NavLink>
+                            </li>
+
                         </ul>
-                        
+
                     </div>
                 </div>
             </nav>
