@@ -1,20 +1,32 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
 import '../css/Webinar.modules.css'
-import { useDispatch } from 'react-redux';
-import { addToCart } from '../../redux/cartSlice';
+import React, { useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchCourses } from '../../redux/courseSlice'; 
 
 
 
-
-export default function Cources({ course }) {
-
+export default function Cources() {
+  
   const dispatch = useDispatch();
+  const courses = useSelector((state) => state.course.courses);
+  const status = useSelector((state) => state.course.status);
+  const error = useSelector((state) => state.course.error);
+ 
 
-  const handleAddToCart = () => {
-    //dispatch(addToCart(course));
-  };
+  useEffect(() => {
+    // Fetch courses data when the component mounts
+    dispatch(fetchCourses());
+  }, [dispatch]);
 
+  // Render based on the status
+  if (status === 'loading') {
+    return <p>Loading...</p>;
+  }
+
+  if (status === 'failed') {
+    return <p>Error: {error}</p>;
+  }
 
   return (
     <>
@@ -22,51 +34,49 @@ export default function Cources({ course }) {
       <section className="WaveHeaderBox">
         <div className='row  faq-heads'>
           <div className='row faq-headers p-5'>
-            
             <div className='col-md-12 faq mains'>
               <h2 className="mt-5 pt-5 " style={{ fontSize: "80px", marginTop: '20px', fontWeight: '600' }}>Programs</h2>
               <Link to='#' className='faq-lnk-main'><i class="fa-solid fa-house" style={{ "color": "#719dea;" }}></i> CuService - Programs </Link>
             </div>
             <div className='wave wave1'></div>
             <div className='wave wave5'></div>
-
           </div>
         </div>
       </section >
+
       <section style={{ paddingTop: '110px' }}>
         <div className='container '>
           <div className='row mb-5 p-4'>
-           
-
-              <div className='col-lg-4 col-md-6 col-12 mb-5'>
+            {courses.map((course) => (
+              <div className='col-lg-4 col-md-6 col-12 mb-5' key={course.id}>
                 <div className='newsCard news-Slide-up '>
                   <div className='img-div'>
-                    <img src='' className='course-img' alt="" />
+                    <img src={`/${course.course_thumbail}` } className='course-img' alt="" />
                   </div>
                   <div className='newsCaption'>
                     <div className='d-flex'>
-                      <p className='newsCaption-content mb-2'>
-                        <i class="fas fa-chalkboard-teacher fa-lg" style={{ color: '#00bbae' }}></i>&emsp; Herry bahi is grate
+                      <p className='newsCaption-content mb-2' >
+                        <i class="fas fa-chalkboard-teacher fa-lg" style={{ color: '#00bbae' }}></i>&emsp;{course.speaker}
                       </p>
                       <p className='newsCaption-content mb-2 ms-5'>
                         <i class="fas fa-chalkboard-teacher fa-lg" style={{ color: '#00bbae' }}></i>&emsp;
                       </p>
                     </div>
                     <div className='newsCaption-title'>
-                      <h5></h5>
+                      <h5>{course.title}</h5>
                     </div>
                     <div className="row  mt-0">
                       <div className="p-3">
                         <div className="d-flex justify-content-center align-items-center p-3 text-center mstt">
-                          <div className="col border-end boder-4"><h6>Time<br /></h6></div>
+                          <div className="col border-end boder-4"><h6>Time<br />{course.time}</h6></div>
                           {/* <div className="col border-end boder-4"><h6>Date<br /></h6></div> */}
-                          <div className="col"><h6>Duration <br /></h6>
+                          <div className="col"><h6>Duration <br />{course.duration}</h6>
                           </div>
                         </div>
                       </div>
                     </div>
                     <div className='d-flex ps-3'>
-                    <Link to={`/course/${course?.id}`}>
+                      <Link to={`/Course_Detail/${course?.id}`}>
                         <button className="animated-button" >
                           <svg viewBox="0 0 24 24" className="arr-2" xmlns="http://www.w3.org/2000/svg">
                             <path
@@ -87,7 +97,7 @@ export default function Cources({ course }) {
                   </div>
                 </div>
               </div>
-           
+            ))}
 
           </div>
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import '../css/About.modules.css';
@@ -55,16 +55,15 @@ function About() {
       <section className="WaveHeaderBox">
         <div className='row  faq-heads'>
           <div className='row faq-headers p-5 mt-5'>
-            <div className='col-md-12 faq mains'>
-              <h1 className=" pageHeading mt-5 " >About Us</h1>
-              <Link to='#' className='faq-lnk-main'><i class="fa-solid fa-house" style={{ "color": "#719dea;" }}></i> CuService - About-Us </Link>
+            <div className='col-md-12 faq mains '>
+              <h1 className="mt-5  text-white" style={{ fontSize: "80px", marginBottom: "5px", fontWeight: '500' }}>About Us</h1>
+              <Link to='/' className='text-white'><i class="fa-solid fa-house" style={{ "color": "#719dea;" }}></i> CuService - About Us</Link>
             </div>
-
           </div>
           <div className='wave wave1'></div>
           <div className='wave wave5'></div>
         </div>
-      </section >
+      </section >
 
       <section >
         <div className="container bg-white p-5">
@@ -91,7 +90,7 @@ function About() {
               </div>
 
             </div>
-            <div className=" col-xl-6 col-lg-6 col-12 ps-lg-5   " style={{ borderRadius: '20px' }}>
+            <div className=" col-xl-6 col-lg-6 col-12 ps-lg-5   " style={{ borderRadius: '20px', textAlign:'justify' }}>
               <h2 className="text-start">Welcome to CEU Services</h2>
               <h4><span >Enhance your skills with best Online courses</span> </h4>
               <p className=" text-start" >
@@ -122,6 +121,7 @@ function About() {
               </div>
               <div className="row mt-4">
                 <div className="col mt-2 text-center">
+                  <Link to='/Course'>
                   <button className="cta ms-lg-5 ">
                     <span>Start Learning</span>
                     <svg viewBox="0 0 13 10" height="10px" width="15px">
@@ -129,6 +129,7 @@ function About() {
                       <polyline points="8 1 12 5 8 9" />
                     </svg>
                   </button>
+                  </Link>
                 </div>
               </div>
             </div>
@@ -197,10 +198,10 @@ function About() {
         </div>
       </section>
 
-      <section className="bg-primary">
+      <section className="">
         <div className="container pt-5 mt-5 mb-5">
           <div className="row">
-            <div className="col-lg-6 col-12 p-4" style={{ borderRadius: '20px' }}>
+            <div className="col-lg-6 col-12 p-4" style={{ borderRadius: '20px', textAlign:'justify' }}>
               <h2 className="py-2">Friendly atmosphere for all </h2>
               <p className=" py-2">A Swiss follower of Jean-Jacques Rousseau’s belief in the inherent goodness of children helper.</p>
               <p>A Swiss follower of Jean-Jacques Rousseau’s belief in the inherent goodness of children helper.
@@ -280,7 +281,7 @@ function About() {
                         <div className="col-lg-3 col-md-3 col-12  p-lg-3 p-md-4 pb-0 ms-lg-0 ms-5">
                           <img className="rounded-circle shadow-1-strong mt-5" src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(10).webp" alt="avatar" style={{ width: '100px', height: '100px' }} />
                         </div>
-                        <div className="col-lg-9 col-md-9 col-12 p-lg-3 p-md-3 p-5 pt-0 text-start">
+                        <div className="col-lg-9 col-md-9 col-12 p-lg-3 p-md-3 p-5 pt-0 text-start" style={{textAlign:'justify'}}>
                           <h5 className="mt-3 text-dark">Maria Kate</h5>
                           <p className="text-darkj">Photographer</p>
                           <p className="text-dark">

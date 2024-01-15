@@ -1,5 +1,6 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { Link } from 'react-router-dom';
 import {
   removeFromCart,
   increaseQuantity,
@@ -28,6 +29,20 @@ const AddToCart = () => {
 
   return (
    <>
+      <section className="WaveHeaderBox">
+        <div className='row  faq-heads'>
+          <div className='row faq-headers p-5 mt-5'>
+            <div className='col-md-12 faq mains '>
+              <h1 className="mt-5  text-white" style={{ fontSize: "80px", marginBottom: "5px", fontWeight: '500' }}>Cart</h1>
+              <Link to='/' className='text-white'><i class="fa-solid fa-house" style={{ "color": "#719dea;" }}></i> CuService - Cart</Link>
+            </div>
+          </div>
+          <div className='wave wave1'></div>
+          <div className='wave wave5'></div>
+        </div>
+      </section >
+
+
       <div className="container px-3 my-5 clearfix">
         {/* Shopping cart table */}
         <div className="card">
@@ -93,9 +108,9 @@ const AddToCart = () => {
                 </div>
               </div>
             </div>
-            <div className="float-end">
-              <button type="button" className="btn btn-lg btn-default md-btn-flat mt-2 mr-3">Back to shopping</button>
-              <button type="button" className="btn btn-lg btn-primary mt-2">Checkout</button>
+            <div className=" d-flex justify-content-between">
+              <Link to='/course'> <button type="button" className="btn btn-lg btn-default md-btn-flat mt-2 mr-3">Back to shopping</button></Link> 
+              <Link to='/Checkout'><button type="button" className="btn btn-lg btn-primary mt-2">Checkout</button></Link> 
             </div>
           </div>
         </div>

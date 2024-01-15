@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-
+import '../css/Login.modules.css';
 export default function Register() {
 
     
@@ -113,6 +113,20 @@ export default function Register() {
 
     return (
         <>
+            <section className="WaveHeaderBox">
+                <div className='row  faq-heads'>
+                    <div className='row faq-headers p-5 mt-5'>
+                        <div className='col-md-12 faq mains '>
+                            <h1 className="mt-5  text-white" style={{ fontSize: "80px", marginBottom: "5px", fontWeight: '500' }}>Register</h1>
+                            <Link to='/' className='text-white'><i class="fa-solid fa-house" style={{ "color": "#719dea;" }}></i> CuService - Register</Link>
+                        </div>
+                    </div>
+                    <div className='wave wave1'></div>
+                    <div className='wave wave5'></div>
+                </div>
+            </section >
+
+
             <section style={{ padddingTop: '140px', paddingBottom: '300px' }}>
                 <div className='container '>
                     <div className='row '>
