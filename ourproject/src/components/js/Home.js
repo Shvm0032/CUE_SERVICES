@@ -236,7 +236,7 @@ const Home = () => {
               </div>
             </div>
             <div className="col-lg-6">
-              <div className="row">
+              <div className="row" style={{ textAlign: 'justify' }}>
                 <h2 className="text-start my-3 " style={{}}>Best for Level-up</h2>
                 <p className="text-start my-3  lh-base" style={{ lineHeight: "30px" }}>Being brave isn’t always a grand gesture sometimes it just means having a go attempting that difficult question, offering an answer in a lesson when you’re simply really trying new.</p>
               </div>

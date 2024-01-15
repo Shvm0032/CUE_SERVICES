@@ -28,8 +28,8 @@ function Contact() {
         <div className='row  faq-heads'>
           <div className='row faq-headers p-5 mt-5'>
             <div className='col-md-12 faq mains '>
-              <h1 className="mt-5 " style={{ fontSize: "80px", marginBottom: "5px", fontWeight: '500' }}>Contact Us</h1>
-              <Link to='/' className=''><i class="fa-solid fa-house" style={{ "color": "#719dea;" }}></i> CuService - Contact us</Link>
+              <h1 className="mt-5  text-white" style={{ fontSize: "80px", marginBottom: "5px", fontWeight: '500' }}>Contact Us</h1>
+              <Link to='/' className='text-white'><i class="fa-solid fa-house" style={{ "color": "#719dea;" }}></i> CuService - Contact us</Link>
             </div>
           </div>
           <div className='wave wave1'></div>

@@ -112,46 +112,46 @@ export default function AddCourse() {
         var ssp = result["Super Saver Options"]
         var rc = result["Recording & Combos"]
 
-        /*console.log("Live Option")
+        console.log("Live Option")
         console.log(lp)
         console.log("SS Option")
         console.log(ssp)
         console.log("Recording")
-        console.log(rc)*/
+        console.log(rc)
 
 
-        var l1 = []
-        lp.forEach(row => {
-            var a = { "id": row.id, "scat": row.selling_category, "price": row.price }
-            l1.push(a)
-        })
-        var l2 = []
-        ssp.forEach(row => {
-            var a = { "id": row.id, "scat": row.selling_category, "price": row.price }
-            l2.push(a)
-        })
+        // var l1 = []
+        // lp.forEach(row => {
+        //     var a = { "id": row.id, "scat": row.selling_category, "price": row.price }
+        //     l1.push(a)
+        // })
+        // var l2 = []
+        // ssp.forEach(row => {
+        //     var a = { "id": row.id, "scat": row.selling_category, "price": row.price }
+        //     l2.push(a)
+        // })
 
-        var l3 = []
-        rc.forEach(row => {
-            var a = { "id": row.id, "scat": row.selling_category, "price": row.price }
-            l3.push(a)
-        })
+        // var l3 = []
+        // rc.forEach(row => {
+        //     var a = { "id": row.id, "scat": row.selling_category, "price": row.price }
+        //     l3.push(a)
+        // })
 
 
-        var newMap = new Map([
-            ['l1', lp],
-            ['l2', ssp],
-            ['l3', rc],
-        ]);
+        // var newMap = new Map([
+        //     ['l1', lp],
+        //     ['l2', ssp],
+        //     ['l3', rc],
+        // ]);
 
-        console.log(newMap);
-        // var res = arr.get('key2');
-        // console.log(res);
+    //    console.log(newMap);
+    //     var res = arr.get('key2');
+    //     console.log(res);
 
         console.log("Pussing data")
-        console.log(l1)
+        // console.log(l1)
 
-        //console.log(result)
+        //     console.log(result)
 
         let selling = sellingOptions.map((ele) => ({ 
             category: ele.selling_category,
@@ -218,7 +218,7 @@ export default function AddCourse() {
                                             <option selected>Open this select menu</option>
 
                                             {speaker.map((ele) => (
-                                                <option key={ele.id} value={ele.name}>{ele.name}</option>
+                                                <option key={ele.id} value={ele.speaker_id}>{ele.name}</option>
                                             ))}
                                         </select>
                                     </div>

@@ -23,8 +23,10 @@
 }
 
 .log-buttons {
+    min-width:300px;
     background-color: #ff9b24;  
-    /* margin-left: 40px; */
+    margin-top: 35px;
+    margin-bottom: 20px;
     border-radius: 5px;
     color: #fff;
 }

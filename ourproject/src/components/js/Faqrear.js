@@ -13,17 +13,16 @@ const Accordion = () => {
         <div>
             <section className="WaveHeaderBox">
                 <div className='row  faq-heads'>
-                    <div className='row faq-headers p-5 '>
-                        <div className='col-md-12 faq mains'>
-                            <h1 className=" pageHeading mt-5 " >FAQ </h1>
-                            <Link to='#' className='faq-lnk-main'><i class="fa-solid fa-house" style={{ "color": "#719dea;" }}></i> CuService - About-Us </Link>
+                    <div className='row faq-headers p-5 mt-5'>
+                        <div className='col-md-12 faq mains '>
+                            <h1 className="mt-5  text-white" style={{ fontSize: "80px", marginBottom: "5px", fontWeight: '500' }}>FAQ</h1>
+                            <Link to='/' className='text-white'><i class="fa-solid fa-house" style={{ "color": "#719dea;" }}></i> CuService - FAQ</Link>
                         </div>
-
                     </div>
                     <div className='wave wave1'></div>
                     <div className='wave wave5'></div>
                 </div>
-            </section >
+            </section >
 
             <section style={{ paddingTop: '100px' }}>
 
