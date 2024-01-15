@@ -219,8 +219,9 @@ Router.post("/api/Course_add", upload.single("file"), (req, res) => {
 
 // all speaker components 
 
+
 Router.get("/api/Speaker", (req, res) => {
-    sqlDbconnect.query("SELECT * FROM speaker_info", (err, rows) => {
+    sqlDbconnect.query("SELECT * FROM speaker_info WHERE status IN (1,2)", (err, rows) => {
         if (!err) {
             return res.json({ success: true, data: rows, message:"you are logged in." });
            // res.send(rows);
@@ -267,13 +268,12 @@ Router.delete("/api/delete_speaker", (req, res) => {
 // edit speaker
 Router.get("/api/edit/:id", (req, res) => {
     const id = req.params.id;
-
-    const query = "SELECT * FROM speaker_info WHERE id = ?";
-
-    sqlDbconnect.query(query, [id], (err, result) => {
+    const query = "SELECT * FROM speaker_info WHERE speaker_id = ? AND status IN (?)";
+    sqlDbconnect.query(query, [id, [1, 2]], (err, result) => {
         if (err) return res.json({ Error: err });
         return res.json(result);
     });
+
 });
 
 // update speaker

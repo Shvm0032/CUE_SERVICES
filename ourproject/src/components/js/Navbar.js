@@ -1,9 +1,10 @@
 import React from 'react';
 import toast from 'react-hot-toast';
 import { Link, NavLink,  } from 'react-router-dom';
+import authService from '../../services/auth.service';
 
 export default function Navbar() {
-    
+    const authUser = authService.getAuthUser();
 
     const getActiveClass = ({ isActive }) => isActive ? 'nav-link active' : 'nav-link';
 
@@ -101,9 +102,12 @@ export default function Navbar() {
                                         <li>
 
                                         </li>
-                                        <li className="nav-item">
+                                        {
+                                            !authUser ? (<li className="nav-item">
                                             <NavLink to={'/login'} end className={getActiveClass}>Log-In</NavLink>
-                                        </li>
+                                        </li>) : null
+                                        }
+                                        
                                    
                         </ul>
                         

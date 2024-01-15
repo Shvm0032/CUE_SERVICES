@@ -11,7 +11,7 @@ export default function AllSpeakers() {
     try {
       var res = await axios.get("http://localhost:8000/api/Speaker");
       console.log(res);
-      setSpeakers(res.data);
+      setSpeakers(res.data.data);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -88,7 +88,7 @@ export default function AllSpeakers() {
                         <i className="fa-solid fa-trash-can"></i>&nbsp;Delete
                       </button>
                       &nbsp;&nbsp;
-                     <Link to= {`/Speakers/EditSpeakers/${row.id}`} className='btn btn-outline-success'>
+                     <Link to= {`/Speakers/EditSpeakers/${row.speaker_id}`} className='btn btn-outline-success'>
                         <i className="fa fa-edit"></i>&nbsp;Edit
                       </Link>
                     </td>
