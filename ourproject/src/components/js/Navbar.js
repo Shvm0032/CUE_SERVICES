@@ -40,35 +40,35 @@ export default function Navbar() {
                                 <Link class="nav-link mx-2" aria-current="page" to="/About">About</Link>
                             </li>
                             <li class="nav-item dropdown"> {/* Webinar dropdown */}
-                                <Link class="nav-link mx-2 dropdown-toggle" to="/Webinar" >
+                                <Link class="nav-link mx-2 dropdown-toggle" to="/course" >
                                     Industury
                                 </Link>
                                 <ul class="dropdown-menu col-4" aria-labelledby="navbarDarkDropdownMenuLink">
-                                    <li><Link class="dropdown-item  p-2" to="/Webinar">Human Resource</Link></li>
-                                    <li><Link class="dropdown-item  p-2" to="/Webinar">Payroll & Taxation</Link></li>
-                                    <li><Link class="dropdown-item  p-2" to="/Webinar">BFSI & Accounting</Link></li>
-                                    <li><Link class="dropdown-item p-2" to="/Webinar">Housing & Construction</Link></li>
+                                    <li><Link class="dropdown-item  p-2" to="/course">Human Resource</Link></li>
+                                    <li><Link class="dropdown-item  p-2" to="/course">Payroll & Taxation</Link></li>
+                                    <li><Link class="dropdown-item  p-2" to="/course">BFSI & Accounting</Link></li>
+                                    <li><Link class="dropdown-item p-2" to="/course">Housing & Construction</Link></li>
                                 </ul>
                             </li>
 
                             <li class="nav-item dropdown ">{/* SPEAKER DROPDOWN */}
-                                <Link class="nav-link dropdown-toggle" to="/Webinar">
+                                <Link class="nav-link dropdown-toggle" to="/course">
                                     Webinars
                                 </Link>
                                 <ul class="dropdown-menu p-3 " aria-labelledby="navbarDarkDropdownMenuLink">
-                                    <li><Link class="dropdown-item  p-2" to="/Webinar">Live</Link></li>
-                                    <li><Link class="dropdown-item  p-2" to="/Webinar">On Demand</Link></li>
-                                    <li><Link class="dropdown-item  p-2" to="/Webinar">e Transcript</Link></li>
+                                    <li><Link class="dropdown-item  p-2" to="/course">Live</Link></li>
+                                    <li><Link class="dropdown-item  p-2" to="/course">On Demand</Link></li>
+                                    <li><Link class="dropdown-item  p-2" to="/course">e Transcript</Link></li>
                                 </ul>
                             </li>
                             <li class="nav-item">
-                                <Link class="nav-link mx-2" to="/Ourspeaker" tabindex="-1" aria-disabled="true">
+                                <Link class="nav-link mx-2" to="/Speakers" tabindex="-1" aria-disabled="true">
                                     Speakers
                                 </Link>
                             </li>
 
                             <li class="nav-item dropdown">{/* Help DROPDOWN */}
-                                <Link class="nav-link mx-2 dropdown-toggle" to="/Webinar">
+                                <Link class="nav-link mx-2 dropdown-toggle" to="/">
                                     Help
                                 </Link>
                                 <ul class="dropdown-menu  p-3" aria-labelledby="navbarDarkDropdownMenuLink ">
@@ -87,7 +87,7 @@ export default function Navbar() {
                         </ul>
                         <ul className="navbar-nav ms-auto d-none d-lg-inline-flex">
                             <li>
-                                <Link class="nav-link mx-2  position-relative " to="/Cart" tabindex="-1" aria-disabled="true">
+                                <Link class="nav-link mx-2  position-relative " to="/Add_cart" tabindex="-1" aria-disabled="true">
                                     <button type="button" class="btn  d-inline-flex  position-relative">
                                         <i class="fas fa-cart-arrow-down fa-2 me-2 mt-1" style={{ color: '#ff9b24' }}></i>Cart
                                         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
