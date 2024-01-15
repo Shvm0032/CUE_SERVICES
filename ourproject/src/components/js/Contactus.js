@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import '../css/Contact.modules.css'
 import { Link } from "react-router-dom";
+import http from "../../utils/http-client";
 
 function Contact() {
   const [formValue, setFormValue] = useState({ username: '', phone: '', email: '', message: '' });
@@ -13,15 +14,10 @@ function Contact() {
     e.preventDefault();
     const allInputvalue = { username: formValue.username, email: formValue.email, phone: formValue.phone, message: formValue.message };
     // console.log(allInputvalue);
-    let res = await fetch("http://localhost:8000/api/user_message", {
-      method: "POST",
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify(allInputvalue)
-    });
-
-    let resjson = await res.json();
+    let res = await http.post("user_message", {...formValue});
+    //console.log(res);
     if (res.status === 200) {
-      setReturnmessage(resjson.success);
+      setReturnmessage(res.data.success);
     } else {
       setReturnmessage("Some error occure");
     }

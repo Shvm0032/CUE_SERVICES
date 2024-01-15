@@ -1,13 +1,14 @@
+
 import React from 'react';
 import {  useParams } from 'react-router-dom';
 import {  useSelector } from 'react-redux';
 import parse from 'html-react-parser';
 
+
 export default function Speaker() {
 
   const { id } = useParams();
   const speakers = useSelector((state) => state.speaker.speakers);
-
   // Find the speaker with the specified id
   const speaker = speakers.find((s) => s.speaker_id.toString() === id);
 
