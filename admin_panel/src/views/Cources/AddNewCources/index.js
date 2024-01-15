@@ -79,7 +79,8 @@ export default function AddCourse() {
         fetch('http://127.0.1:8000/api/speaker')
             .then(response => response.json())
             .then(data => {
-                setSpeaker(data);
+                console.log(data)
+                setSpeaker(data.data);
             })
             .catch(error => console.error('Error fetching speaker information:', error));
     }, []);

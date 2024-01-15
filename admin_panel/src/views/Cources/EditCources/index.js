@@ -60,7 +60,7 @@ export default function EditCources() {
       .then(response => response.json())
       .then(data => {
         console.log(data)
-        setSpeaker(data);
+        setSpeaker(data.data);
 
       })
       .catch(error => console.error('Error fetching user information:', error));
