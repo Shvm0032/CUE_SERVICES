@@ -11,6 +11,9 @@ const { title } = require("process");
 const dotenv = require('dotenv');
 const jwt = require('jsonwebtoken');
 
+
+
+
 dotenv.config();
 
 var filename = "";
@@ -638,10 +641,10 @@ Router.get("/api/Registration", (req, res) => {
 
 // Endpoint for user registration
 Router.post('/api/NewRegistration', (req, res) => {
-    const { firstName, lastName, username, email, password } = req.body;
+    const { firstName, lastName, username, email,phone,gender,pincode,address1,address2,country,state,city, password } = req.body;
 
     // Basic validation
-    if (!firstName || !lastName || !username || !email || !password) {
+    if (!firstName || !lastName || !username || !email ||!phone || !gender || !pincode || !address1 || !address2 || !country || !state || !city || !password) {
         return res.status(400).json({ success: false, message: 'All fields are required' });
     }
 
@@ -657,15 +660,15 @@ Router.post('/api/NewRegistration', (req, res) => {
         }
 
         // Insert user data into the "users" table
-        sqlDbconnect.query('INSERT INTO registration (fname, lname, uname, email, password) VALUES (?, ?, ?, ?, ?)',
-            [firstName, lastName, username, email, password],
+        sqlDbconnect.query('INSERT INTO registration (fname, lname, uname, email,phone,gender,pincode,address1,address2,country,state,city, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+            [firstName, lastName, username, email,phone,gender,pincode,address1,address2,country,state,city, password],
             (insertError) => {
                 if (insertError) {
                     console.error('Error inserting user data:', insertError);
                     return res.status(500).json({ success: false, message: 'Internal server error' });
                 }
 
-                console.log('User registered:', { firstName, lastName, username, email });
+                console.log('User registered:', { firstName, lastName, username, email,phone,gender,pincode,address1,address2,country,state,city });
 
                 // Respond with success
                 res.status(200).json({ success: true, message: 'Registration successful' });
@@ -1073,6 +1076,7 @@ Router.post("/api/Contact_Details", (req, res) => {
         }
     });
 });
+
 
 
 
