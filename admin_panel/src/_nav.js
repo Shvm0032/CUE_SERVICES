@@ -38,11 +38,11 @@ const _nav = [
         name: 'Add Cources',
         to: '/Cources/AddCourse',
       },
-      {
-        component: CNavItem,
-        name: 'EditCources',
-        to: '/Cources/EditCources',
-      },
+      // {
+      //   component: CNavItem,
+      //   name: 'EditCources',
+      //   to: '/Cources/EditCources',
+      // },
       
     ],
   },
@@ -87,11 +87,11 @@ const _nav = [
         to: '/Speakers/AddSpeakers',
       },
 
-      {
-        component: CNavItem,
-        name: 'EditSpeakers',
-        to: '/Speakers/EditSpeakers',
-      },
+      // {
+      //   component: CNavItem,
+      //   name: 'EditSpeakers',
+      //   to: '/Speakers/EditSpeakers',
+      // },
     ],
   },
   {
@@ -133,11 +133,11 @@ const _nav = [
         name: 'Add Coupans',
         to: '/Copons/AddCopon',
       },
-      {
-        component: CNavItem,
-        name: 'EditCopons',
-        to: '/Copons/EditCopons',
-      },
+//       {
+//         component: CNavItem,
+//         name: 'EditCopons',
+//         to: '/Copons/EditCopons',
+//       },
       
 
     ],
@@ -177,11 +177,11 @@ const _nav = [
         to: '/Selling_Option/AddSelling_option',
       },
 
-      {
-        component: CNavItem,
-        name: 'Edit Selling_Option',
-        to: '/Selling_Option/EditSelling_option',
-      },
+      // {
+      //   component: CNavItem,
+      //   name: 'Edit Selling_Option',
+      //   to: '/Selling_Option/EditSelling_option',
+      // },
       
     ],
   },
