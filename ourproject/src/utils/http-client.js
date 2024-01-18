@@ -8,7 +8,7 @@ const instance = axios.create({
 instance.interceptors.request.use((config) => {
     const authUser = authService.getAuthUser();
     if (authUser) {
-        config.headers['authorization'] = `Bearer ${authUser.access_token}`;
+        config.headers['authorization'] = `Bearer ${authUser}`;
     }
     return config;
 }, (error) => {

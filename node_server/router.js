@@ -14,6 +14,7 @@ const jwt = require('jsonwebtoken');
 
 
 
+
 dotenv.config();
 
 var filename = "";
@@ -226,8 +227,8 @@ Router.post("/api/Course_add", upload.single("file"), (req, res) => {
 Router.get("/api/Speaker", (req, res) => {
     sqlDbconnect.query("SELECT * FROM speaker_info WHERE status IN (1,2)", (err, rows) => {
         if (!err) {
-            return res.json({ success: true, data: rows, message:"you are logged in." });
-           // res.send(rows);
+            return res.json({ success: true, data: rows, message: "you are logged in." });
+            // res.send(rows);
         } else {
             return res.json({ success: false });
             console.log(err);
@@ -279,6 +280,32 @@ Router.get("/api/edit/:speaker_id", (req, res) => {
         return res.json(result);
     });
 
+});
+
+Router.get("/api/profile", (req, res) => {
+    let token = req.headers.authorization;
+    if (token && token.startsWith('Bearer ')) {
+        token = token.slice(7, token.length);
+    }
+    let jwtSecretKey = process.env.JWT_SECRET_KEY;
+    const decoded = jwt.verify(token, jwtSecretKey);
+
+    if (!decoded) {
+        return res.json([]);
+    }
+    //const jwt = require('jsonwebtoken');
+
+
+    const id = decoded.userId;
+    console.log(id, 'headers');
+    const query = "SELECT * FROM registration WHERE id = ?";
+
+    sqlDbconnect.query(query, [id], (err, result) => {
+        if (err) return res.json({ error: err.message });
+        console.log(result);
+        return res.json(result);
+    });
+  
 });
 
 // update speaker
@@ -629,22 +656,22 @@ Router.get("/api/Testimonial", (req, res) => {
 });
 
 
-Router.get("/api/Registration", (req, res) => {
-    sqlDbconnect.query("SELECT * FROM registration", (err, rows) => {
-        if (!err) {
-            res.send(rows);
-        } else {
-            console.log(err);
-        }
-    });
-});
+// Router.get("/api/Registration", (req, res) => {
+//     sqlDbconnect.query("SELECT * FROM registration", (err, rows) => {
+//         if (!err) {
+//             res.send(rows);
+//         } else {
+//             console.log(err);
+//         }
+//     });
+// });
 
 // Endpoint for user registration
 Router.post('/api/NewRegistration', (req, res) => {
-    const { firstName, lastName, username, email,phone,gender,pincode,address1,address2,country,state,city, password } = req.body;
+    const { firstName, lastName, username, email, phone, gender, pincode, address1, address2, country, state, city, password } = req.body;
 
     // Basic validation
-    if (!firstName || !lastName || !username || !email ||!phone || !gender || !pincode || !address1 || !address2 || !country || !state || !city || !password) {
+    if (!firstName || !lastName || !username || !email || !phone || !gender || !pincode || !address1 || !address2 || !country || !state || !city || !password) {
         return res.status(400).json({ success: false, message: 'All fields are required' });
     }
 
@@ -661,14 +688,14 @@ Router.post('/api/NewRegistration', (req, res) => {
 
         // Insert user data into the "users" table
         sqlDbconnect.query('INSERT INTO registration (fname, lname, uname, email,phone,gender,pincode,address1,address2,country,state,city, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-            [firstName, lastName, username, email,phone,gender,pincode,address1,address2,country,state,city, password],
+            [firstName, lastName, username, email, phone, gender, pincode, address1, address2, country, state, city, password],
             (insertError) => {
                 if (insertError) {
                     console.error('Error inserting user data:', insertError);
                     return res.status(500).json({ success: false, message: 'Internal server error' });
                 }
 
-                console.log('User registered:', { firstName, lastName, username, email,phone,gender,pincode,address1,address2,country,state,city });
+                console.log('User registered:', { firstName, lastName, username, email, phone, gender, pincode, address1, address2, country, state, city });
 
                 // Respond with success
                 res.status(200).json({ success: true, message: 'Registration successful' });
@@ -1076,6 +1103,63 @@ Router.post("/api/Contact_Details", (req, res) => {
         }
     });
 });
+
+
+// backend to dashboard profile //
+
+
+// Router.get('/api/profile/:userId', (req, res) => {
+//     const userId = req.params.userId;
+
+//     // Query database to get user profile data
+//     const sql = 'SELECT * FROM registration WHERE id = ?';
+//     sqlDbconnect.query(sql, [userId], (err, results) => {
+//         if (err) {
+//             console.error('Error fetching profile:', err);
+//             res.status(500).json({ error: 'Internal Server Error' });
+//         } else {
+//             if (results.length > 0) {
+//                 res.json(results[0]);
+//             } else {
+//                 res.status(404).json({ error: 'User not found' });
+//             }
+//         }
+//     });
+// });
+
+
+
+// Update Profile data
+
+Router.post('/api/updateprofile', upload.single('image'), (req, res) => {
+    let token = req.headers.authorization;
+    if (token && token.startsWith('Bearer ')) {
+        token = token.slice(7, token.length);
+    }
+    let jwtSecretKey = process.env.JWT_SECRET_KEY;
+    const decoded = jwt.verify(token, jwtSecretKey);
+
+    if (!decoded) {
+        return res.json([]);
+    }
+    //const jwt = require('jsonwebtoken');
+
+    const imagePath = req.file.path;
+    const id = decoded.userId;
+    const {  fname, lname, uname, email, phone, gender, pincode, address1, address2, country, state, city, password ,image} = req.body;
+    console.log(req.body,'-----');
+    sqlDbconnect.query('UPDATE registration  SET fname = ?, lname = ?, uname = ?, email = ?, phone = ?, gender = ?, pincode = ?, address1 = ?, address2 = ?, country = ?,state =?, city = ?, password = ?,image = ? WHERE id = ? ', [fname, lname, uname, email, phone, gender, pincode, address1, address2, country, state, city, password,image, id], (err, result) => {
+        if (err) {
+            console.error('Error updating profile:', err);
+            res.status(500).json({ message: 'Internal Server Error' });
+            return;
+        }
+        console.log(req.body);
+
+        res.status(200).json({result,  message: 'Profile updated successfully' });
+    });
+});
+
 
 
 

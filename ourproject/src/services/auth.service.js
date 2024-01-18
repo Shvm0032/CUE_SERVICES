@@ -18,7 +18,11 @@ const register = (data) => {
 }
 
 const profile = () => {
-    return http.get('/user');
+    return http.get('/profile');
+}
+
+const updateProfile = (data) => {
+    return http.post('/updateprofile', data);
 }
 
 const logout = () => {
@@ -53,7 +57,8 @@ const methods = {
     register,
     profile,
     logout,
-    getAuthUser
+    getAuthUser,
+    updateProfile
 }
 
 export default methods;
