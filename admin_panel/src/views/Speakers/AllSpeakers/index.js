@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 
 
 export default function AllSpeakers() {
-  var [Speakers, setSpeakers] = useState([]);
+  var [speakers, setSpeakers] = useState([]);
   var getData = async () => {
     try {
       var res = await axios.get("http://localhost:8000/api/Speaker");
@@ -28,7 +28,7 @@ export default function AllSpeakers() {
       var res = await axios.delete(`http://localhost:8000/api/delete_speaker?id=${r.id}`);
       console.log(res);
       if (res.status === 200) {
-        setSpeakers(Speakers.filter((ele) => { if (ele.id !== r.id) { return true } else { return false } }))
+        setSpeakers(speakers.filter((ele) => { if (ele.id !== r.id) { return true } else { return false } }))
       }
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -53,7 +53,7 @@ export default function AllSpeakers() {
             <h3>All Speakers </h3>
             <button onClick={exportPdf} className='ms-auto btn btn-outline-primary'><i className="fa-solid fa-file-pdf"></i> Convert to pdf</button>
           </div><br />
-          {Speakers.length > 0 ? (
+          {speakers.length > 0 ? (
             <table className="table table-striped table-hover table-responsive shadow" id='my-table'>
               <thead>
                 <tr className='table-dark'>
@@ -71,7 +71,7 @@ export default function AllSpeakers() {
                 </tr>
               </thead>
               <tbody>
-                {Speakers.map((row, index) => (
+                {speakers.map((row, index) => (
                   <tr key={index}>
                     <th >{row.id}</th>
                     <td>{row.name}</td>

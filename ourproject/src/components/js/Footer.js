@@ -37,16 +37,16 @@ export default function Footer() {
                 <h6 className="text-uppercase fw-bold">Products</h6>
                 <hr className="mb-4 mt-0 d-inline-block mx-auto" style={{ width: "60px", backgroundColor: '#7c4dff', height: "2px" }} />
                 <p>
-                  <a href="#!" className="text-dark">MDBootstrap</a>
+                  <a href="/course" className="text-dark">Industury</a>
                 </p>
                 <p>
-                  <a href="#!" className="text-dark">MDWordPress</a>
+                  <a href="/course" className="text-dark">Webinars</a>
                 </p>
                 <p>
-                  <a href="#!" className="text-dark">BrandFlow</a>
+                  <a href="/Speakers" className="text-dark">Speakers</a>
                 </p>
                 <p>
-                  <a href="#!" className="text-dark">Bootstrap Angular</a>
+                  <a href="/login" className="text-dark">Login</a>
                 </p>
               </div>
              
@@ -55,16 +55,16 @@ export default function Footer() {
                 <h6 className="text-uppercase fw-bold">Useful links</h6>
                 <hr className="mb-4 mt-0 d-inline-block mx-auto" style={{ width: "60px", backgroundColor: '#7c4dff', height: "2px" }} />
                 <p>
-                  <a href="#!" className="text-dark">Your Account</a>
+                  <a href="/login" className="text-dark">Login to your Account</a>
                 </p>
                 <p>
-                  <a href="#!" className="text-dark">Become an Affiliate</a>
+                  <a href="/register" className="text-dark">Register your Account</a>
                 </p>
                 <p>
-                  <a href="#!" className="text-dark">Shipping Rates</a>
+                  <a href="/Faqrear" className="text-dark">Term and Conditions</a>
                 </p>
                 <p>
-                  <a href="#!" className="text-dark">Help</a>
+                  <a href="/Contactus" className="text-dark">Help and Support</a>
                 </p>
               </div>
               
@@ -88,7 +88,7 @@ export default function Footer() {
             <img src='/img/wave-line.png' width={'100%'} height={'auto'} alt='' />
           </div>
           <div className="text-center p-3" >
-            <p> © 2020 Copyright :  <a className="text-dark" href="https://mdbootstrap.com/">MDBootstrap.com</a></p>
+            <p> © 2020 Copyright :  <a className="text-dark" href="https://mdbootstrap.com/"></a></p>
 
           </div>
           {/* Copyright */}

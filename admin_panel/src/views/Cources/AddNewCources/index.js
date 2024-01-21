@@ -79,7 +79,7 @@ export default function AddCourse() {
         fetch('http://127.0.1:8000/api/speaker')
             .then(response => response.json())
             .then(data => {
-                setSpeaker(data);
+                setSpeaker(data.data);
             })
             .catch(error => console.error('Error fetching speaker information:', error));
     }, []);
@@ -95,6 +95,7 @@ export default function AddCourse() {
     });
 
     const handleSellingOptionChange = (event, index) => {
+
         let data = [...sellingOptions];
         data[index][event.target.name] = event.target.value;
         setSellingOptions(data);
@@ -151,9 +152,10 @@ export default function AddCourse() {
         console.log("Pussing data")
         // console.log(l1)
 
-        //     console.log(result)
+        //console.log(sellingOptions)
 
         let selling = sellingOptions.map((ele) => ({ 
+            id: ele.id,
             category: ele.selling_category,
             name:ele.name,
             price:ele.price
@@ -168,7 +170,7 @@ export default function AddCourse() {
         data.append('cstdate', Course.CSTDate);
         data.append('fields', JSON.stringify(selling));
         data.append('file', filedata);
-
+        console.log(data,'data');
         axios.post('http://localhost:8000/api/Course_add', data)
             .then(data => console.log(data))
             .catch(error => console.error('Error:', error));
@@ -303,6 +305,7 @@ export default function AddCourse() {
                                         <table className='table  table-active table-hover'>
                                             <thead>
                                                 <tr className='fw-bold'>
+                                                    <td></td>
                                                     <td>Category</td>
                                                     <td>Name</td>
                                                     <td>Price</td>
@@ -311,6 +314,9 @@ export default function AddCourse() {
                                             <tbody>
                                                 {sellingOptions.map((option, index) => (
                                                     <tr key={option.id}>
+                                                        <td>
+                                                            <input type='hidden' name="id[]" value={option.id} />
+                                                        </td>
                                                         <td><input type='hidden' name="category[]" value={option.selling_category} />{option.selling_category}</td>
                                                         <td><input type='text' className='form-control' name="name" value={option.name} onChange={(e) => handleSellingOptionChange(e, index)} /></td>
                                                         <td><input type='text' className='form-control' name="price" value={option.price} onChange={(e) => handleSellingOptionChange(e, index)} /></td>

@@ -1,41 +1,82 @@
 import { createSlice } from '@reduxjs/toolkit';
+let unique_id = localStorage.getItem('unique_id');
 
 const cartSlice = createSlice({
     name: 'cart',
-    initialState: [],
+    initialState: {
+        items: [],
+        itemsInfo: unique_id ? JSON.parse(localStorage.getItem(unique_id)) || [] : []
+    },
     reducers: {
         addToCart: (state, action) => {
-            const { id, title, price } = action.payload;
-            const existingItem = state.find((item) => item.id === id);
+            const { items, course_id, course_title, totalPrice } = action.payload;
+            let unique_id = localStorage.getItem('unique_id');
 
-            if (existingItem) {
-                existingItem.quantity += 1;
+            if (unique_id) {
+                let cartCache = JSON.parse(localStorage.getItem(unique_id)) || [];
+
+                const existingCourseIndex = cartCache.findIndex(course => course.course_id === course_id);
+
+                if (existingCourseIndex !== -1) {
+                    cartCache[existingCourseIndex].courseItems = items;
+                    cartCache[existingCourseIndex].course_title = course_title;
+                    cartCache[existingCourseIndex].qty = 1;
+                    cartCache[existingCourseIndex].totalPrice = totalPrice;
+                } else {
+                    cartCache.push({
+                        course_title,
+                        course_id,
+                        qty: 1,
+                        totalPrice,
+                        courseItems: items
+                    });
+                }
+
+                localStorage.setItem(unique_id, JSON.stringify(cartCache));
+                state.itemsInfo = cartCache;
             } else {
-                state.push({ id, title, price, quantity: 1 });
+                console.log("No unique_id found. Unable to update cart.");
             }
         },
+
         removeFromCart: (state, action) => {
             const itemId = action.payload;
-            return state.filter((item) => item.id !== itemId);
+            state.itemsInfo = state.itemsInfo.filter((item) => item.course_id !== itemId);
+            localStorage.setItem(unique_id, JSON.stringify(state.itemsInfo));
         },
+
+        
+
         increaseQuantity: (state, action) => {
-            const itemId = action.payload;
-            const existingItem = state.find((item) => item.id === itemId);
+            const { course_id } = action.payload;
+            const itemToUpdate = state.itemsInfo.find((item) => item.course_id === course_id);
 
-            if (existingItem) {
-                existingItem.quantity += 1;
+            if (itemToUpdate) {
+
+                itemToUpdate.qty += 1;
+                itemToUpdate.totalPrice = itemToUpdate.qty * /* Your item price here */
+                localStorage.setItem(unique_id, JSON.stringify(state.itemsInfo));
             }
         },
+        
         decreaseQuantity: (state, action) => {
-            const itemId = action.payload;
-            const existingItem = state.find((item) => item.id === itemId);
+            const { course_id } = action.payload;
+            const itemToUpdate = state.itemsInfo.find((item) => item.course_id === course_id);
 
-            if (existingItem && existingItem.quantity > 1) {
-                existingItem.quantity -= 1;
+            if (itemToUpdate && itemToUpdate.qty > 1) {
+                itemToUpdate.qty -= 1;
+                itemToUpdate.totalPrice = itemToUpdate.qty * /* Your item price here */
+                localStorage.setItem(unique_id, JSON.stringify(state.itemsInfo));
             }
+        },
+       
+       
+        getAllSavedValues(state) {
+            return state.items;
         },
     },
 });
 
-export const { addToCart, removeFromCart, increaseQuantity, decreaseQuantity } = cartSlice.actions;
+export const { addToCart, removeFromCart, increaseQuantity, decreaseQuantity, getAllSavedValues } = cartSlice.actions;
+export const selectCartItems = (state) => state.cart.itemsInfo;
 export default cartSlice.reducer;
