@@ -15,6 +15,7 @@ const jwt = require('jsonwebtoken');
 
 
 
+
 dotenv.config();
 
 var filename = "";
@@ -656,17 +657,17 @@ Router.get("/api/Testimonial", (req, res) => {
 });
 
 
-// Router.get("/api/Registration", (req, res) => {
-//     sqlDbconnect.query("SELECT * FROM registration", (err, rows) => {
-//         if (!err) {
-//             res.send(rows);
-//         } else {
-//             console.log(err);
-//         }
-//     });
-// });
-
+Router.get("/api/Registration", (req, res) => {
+    sqlDbconnect.query("SELECT * FROM registration", (err, rows) => {
+        if (!err) {
+            res.send(rows);
+        } else {
+            console.log(err);
+        }
+    });
+});
 // Endpoint for user registration
+
 Router.post('/api/NewRegistration', (req, res) => {
     const { firstName, lastName, username, email, phone, gender, pincode, address1, address2, country, state, city, password } = req.body;
 
@@ -957,6 +958,41 @@ Router.post("/api/user_info", (req, res) => {
     });
 });
 
+// profile editor//
+
+
+
+Router.post('/api/save-image', async (req, res) => {
+    try {
+        let token = req.headers.authorization;
+        if (token && token.startsWith('Bearer ')) {
+            token = token.slice(7, token.length);
+        }
+        let jwtSecretKey = process.env.JWT_SECRET_KEY;
+        const decoded = jwt.verify(token, jwtSecretKey);
+    
+        if (!decoded) {
+            return res.json([]);
+        }
+      const id = decoded.userId;
+      const { image_content }  = req.body;
+      console.log(image_content,'image_content');
+      sqlDbconnect.query(`UPDATE registration SET image = "${image_content}" WHERE id =${id}`, (err, results) => {
+        if (err) {
+          console.error('Error saving image to MySQL:', err);
+          res.status(500).send('Internal Server Error');
+        } else {
+          console.log('Image saved to MySQL successfully');
+          res.status(200).send('Image saved successfully');
+        }
+      });
+    } catch (error) {
+      console.error('Error processing image:', error);
+      res.status(500).send('Internal Server Error');
+    }
+  });
+
+
 
 Router.get("/api/payment_success", (req, res) => {
     console.log(req.body, "<<<< Yaha")
@@ -1131,7 +1167,7 @@ Router.post("/api/Contact_Details", (req, res) => {
 
 // Update Profile data
 
-Router.post('/api/updateprofile', upload.single('image'), (req, res) => {
+Router.post('/api/updateprofile', (req, res) => {
     let token = req.headers.authorization;
     if (token && token.startsWith('Bearer ')) {
         token = token.slice(7, token.length);
@@ -1148,7 +1184,7 @@ Router.post('/api/updateprofile', upload.single('image'), (req, res) => {
     const id = decoded.userId;
     const {  fname, lname, uname, email, phone, gender, pincode, address1, address2, country, state, city, password ,image} = req.body;
     console.log(req.body,'-----');
-    sqlDbconnect.query('UPDATE registration  SET fname = ?, lname = ?, uname = ?, email = ?, phone = ?, gender = ?, pincode = ?, address1 = ?, address2 = ?, country = ?,state =?, city = ?, password = ?,image = ? WHERE id = ? ', [fname, lname, uname, email, phone, gender, pincode, address1, address2, country, state, city, password,image, id], (err, result) => {
+    sqlDbconnect.query('UPDATE registration  SET fname = ?, lname = ?, uname = ?, email = ?, phone = ?, gender = ?, pincode = ?, address1 = ?, address2 = ?, country = ?,state =?, city = ?, password = ? WHERE id = ? ', [fname, lname, uname, email, phone, gender, pincode, address1, address2, country, state, city, password, id], (err, result) => {
         if (err) {
             console.error('Error updating profile:', err);
             res.status(500).json({ message: 'Internal Server Error' });
@@ -1159,6 +1195,7 @@ Router.post('/api/updateprofile', upload.single('image'), (req, res) => {
         res.status(200).json({result,  message: 'Profile updated successfully' });
     });
 });
+
 
 
 
