@@ -19,7 +19,10 @@
     "express": "^4.18.2",
     "express-session": "^1.17.3",
     "generate-password": "^1.7.1",
+
+
     "html-pdf": "^3.0.1",
+
     "html-react-parser": "^5.1.0",
     "install": "^0.13.0",
     "jsonwebtoken": "^9.0.2",
