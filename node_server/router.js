@@ -25,9 +25,9 @@ const storage = multer.diskStorage({
         return cb(null, "./public")
     },
     filename: function (req, file, cb) {
-        filename = file.originalname
-        filet = file
-        return cb(null, file.originalname)
+        filename = crypto.randomBytes(10).toString('hex')+'_'+file.originalname
+        //file = file;
+        return cb(null, filename)
     }
 })
 
@@ -231,20 +231,28 @@ Router.get("/api/edit/:course_id", (req, res) => {
 });
 
 
-Router.put('/api/update/:course_id', upload.single('thumbnail'), async (req, res) => {
+Router.put('/api/update/:course_id', upload.single('file'), async (req, res) => {
     const courseId = req.params.course_id;
-    const { industries, speaker, title, description, duration, time, date } = req.body;
-    const course_thumbnail = req.file ? req.file.buffer : null; // Assuming 'thumbnail' is the name of the file input in your form
-  
+    const { industry, speaker, title, description, duration, time, date, fields } = req.body;
+    //const course_thumbnail = req.course_thumbnail ? req.course_thumbnail.buffer : null; // Assuming 'thumbnail' is the name of the file input in your form
+    const course_thumbnail = req?.file?.filename; 
     const updateCourseQuery = `
       UPDATE course_detail
-      SET Industries = ?, speaker = ?, title = ?, description = ?, duration = ?, time = ?, date = ?, course_thumbnail = ?
+      SET industries = ?, speaker = ?, title = ?, description = ?, duration = ?, time = ?, date = ?, course_thumbnail = ?, selling_option = ?
       WHERE id = ?
     `;
-  
+    const fieldsData = JSON.parse(fields);
+    console.log(req.body, 'fieldsData');
+    console.log(req.file,'thumbnail')
+    // Extracting selling options data from fieldsData
+    const sellingOptions = fieldsData.map(option => ({
+        category: option.category,
+        name: option.name,
+        price: option.price
+    }));
     try {
       await sqlDbconnect.query(updateCourseQuery, [
-        industries,
+        industry,
         speaker,
         title,
         description,
@@ -252,18 +260,21 @@ Router.put('/api/update/:course_id', upload.single('thumbnail'), async (req, res
         time,
         date,
         course_thumbnail,
-        courseId,
+        JSON.stringify(sellingOptions),
+        courseId
       ]);
-  
+      
       // Insert or update selling options as needed
-      const updateSellingOptionsQuery = `
-        REPLACE INTO selling_options ( category, name, price)
-        VALUES ( ?, ?, ?)
-      `;
+    //   const updateSellingOptionsQuery = `
+    //     REPLACE INTO selling_options ( category, name, price)
+    //     VALUES ( ?, ?, ?)
+    //   `;
+
+
   
-      req.body.sellingOptions.forEach(async (option) => {
-        await sqlDbconnect.query(updateSellingOptionsQuery, [courseId, option.category, option.name, option.price]);
-      });
+    //   req.body.sellingOptions.forEach(async (option) => {
+    //     await sqlDbconnect.query(updateSellingOptionsQuery, [courseId, option.category, option.name, option.price]);
+    //   });
   
       res.status(200).send('Course updated successfully!');
     } catch (error) {
@@ -341,8 +352,9 @@ Router.delete("/api/delete_speaker", (req, res) => {
 })
 
 // edit speaker
-Router.get("/api/edit/:speaker_id", (req, res) => {
+Router.get("/api/speaker/edit/:speaker_id", (req, res) => {
     const id = req.params.speaker_id;
+    console.log(id,'id');
     const query = "SELECT * FROM speaker_info WHERE speaker_id = ? AND status IN (?)";
     sqlDbconnect.query(query, [id, [1, 2]], (err, result) => {
         if (err) return res.json({ Error: err });

@@ -105,7 +105,7 @@ const EditCourseDetail = () => {
       data.append('title', course.Title);
       data.append('description', course.Description);
       data.append('duration', course.Duration);
-      data.append('course_thumbnail', course.Thumbnail); // Make sure 'Thumbnail' is a File object
+      data.append('file', course.Thumbnail); // Make sure 'Thumbnail' is a File object
       data.append('time', course.Time);
       data.append('date', course.Date);
       data.append('fields', JSON.stringify(sellingOptions));

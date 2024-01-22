@@ -25,10 +25,10 @@ export default function AllSpeakers() {
     console.log("hii")
     console.log(r)
     try {
-      var res = await axios.delete(`http://localhost:8000/api/delete_speaker?id=${r.id}`);
+      var res = await axios.delete(`http://localhost:8000/api/delete_speaker?id=${r.speaker_id}`);
       console.log(res);
       if (res.status === 200) {
-        setSpeakers(Speakers.filter((ele) => { if (ele.id !== r.id) { return true } else { return false } }))
+        setSpeakers(Speakers.filter((ele) => { if (ele.speaker_id !== r.speaker_id) { return true } else { return false } }))
       }
     } catch (error) {
       console.error("Error fetching data:", error);

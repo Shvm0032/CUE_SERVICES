@@ -38,7 +38,7 @@ const EditSpeakersComponent = () => {
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
-    axios.get(`http://localhost:8000/api/edit/${speaker_id}`)
+    axios.get(`http://localhost:8000/api/speaker/edit/${speaker_id}`)
       .then((res) => {
         setName(res.data[0].name);
         setEmail(res.data[0].email);
