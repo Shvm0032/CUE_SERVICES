@@ -50,7 +50,8 @@
     "react-router": "^6.21.1",
     "react-router-dom": "^6.21.1",
     "redux": "4.2.1",
-    "simplebar-react": "^2.4.3"
+    "simplebar-react": "^2.4.3",
+    "start": "^5.1.0"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^5.16.5",

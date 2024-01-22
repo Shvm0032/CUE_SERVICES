@@ -15,6 +15,7 @@ const jwt = require('jsonwebtoken');
 
 
 
+
 dotenv.config();
 
 var filename = "";
@@ -783,6 +784,96 @@ Router.get("/api/Testimonial", (req, res) => {
 
 
 
+Router.get("/api/Registration", (req, res) => {
+    sqlDbconnect.query("SELECT * FROM registration", (err, rows) => {
+        if (!err) {
+            res.send(rows);
+        } else {
+            console.log(err);
+        }
+    });
+});
+// Endpoint for user registration
+
+Router.post('/api/NewRegistration', (req, res) => {
+    const { firstName, lastName, username, email, phone, gender, pincode, address1, address2, country, state, city, password } = req.body;
+
+    // Basic validation
+    if (!firstName || !lastName || !username || !email || !phone || !gender || !pincode || !address1 || !address2 || !country || !state || !city || !password) {
+        return res.status(400).json({ success: false, message: 'All fields are required' });
+    }
+
+    // Check if the email is already registered
+    sqlDbconnect.query('SELECT * FROM registration WHERE email = ?', [email], (error, results) => {
+        if (error) {
+            console.error('Error checking email:', error);
+            return res.status(500).json({ success: false, message: 'Internal server error' });
+        }
+
+        if (results.length > 0) {
+            return res.status(400).json({ success: false, message: 'Email is already registered' });
+        }
+
+        // Insert user data into the "users" table
+        sqlDbconnect.query('INSERT INTO registration (fname, lname, uname, email,phone,gender,pincode,address1,address2,country,state,city, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+            [firstName, lastName, username, email, phone, gender, pincode, address1, address2, country, state, city, password],
+            (insertError) => {
+                if (insertError) {
+                    console.error('Error inserting user data:', insertError);
+                    return res.status(500).json({ success: false, message: 'Internal server error' });
+                }
+
+                console.log('User registered:', { firstName, lastName, username, email, phone, gender, pincode, address1, address2, country, state, city });
+
+                // Respond with success
+                res.status(200).json({ success: true, message: 'Registration successful' });
+            });
+    });
+});
+
+// Router.post("/api/Course_add", upload.single("file"), (req, res) => {
+
+//     function makeString(val) {
+//         const fields = JSON.parse(req.body.fields);
+//         console.log(fields, "here are the fields")
+//         let str = `INSERT INTO selling_options (selling_category, name, price, status, cid) VALUES`
+//         for (let i = 0; i < fields.length; i++) {
+//             if (i === 0) {
+//                 str += ` ('${fields[i].category}','${fields[i].name}','${fields[i].price}', '${true}' , '${val}')`
+//             } else {
+//                 str += `, ('${fields[i].category}','${fields[i].name}','${fields[i].price}', '${true}' , '${val}')`
+//             }
+
+//         }
+//         console.log(str)
+//         return str;
+//     }
+
+//     console.log(req.body, filename, "<<>>", filet)
+//     try {
+//         sqlDbconnect.query(`INSERT INTO course_detail (industries, speaker, title, date, time, duration, course_thumbail) VALUES ('${req.body.industry}','${req.body.speaker}','${req.body.name}', '${req.body.cstdate}' , '${req.body.time}', '${req.body.duration}', '${filename}')`, (err, rows) => {
+//             if (!err) {
+//                 console.log(rows)
+//                 sqlDbconnect.query(makeString(rows.insertId), (err, row) => {
+//                     if (!err) {
+
+//                         res.status(200).json({ rows, row });
+//                     } else {
+//                         console.log(err);
+//                     }
+//                 });
+//             } else {
+//                 console.log(err);
+//             }
+//         });
+
+
+//     } catch (err) {
+//         console.log(err)
+//     }
+
+// })
+
 
 
 
@@ -994,6 +1085,41 @@ Router.post("/api/user_info", (req, res) => {
     });
 });
 
+// profile editor//
+
+
+
+Router.post('/api/save-image', async (req, res) => {
+    try {
+        let token = req.headers.authorization;
+        if (token && token.startsWith('Bearer ')) {
+            token = token.slice(7, token.length);
+        }
+        let jwtSecretKey = process.env.JWT_SECRET_KEY;
+        const decoded = jwt.verify(token, jwtSecretKey);
+    
+        if (!decoded) {
+            return res.json([]);
+        }
+      const id = decoded.userId;
+      const { image_content }  = req.body;
+      console.log(image_content,'image_content');
+      sqlDbconnect.query(`UPDATE registration SET image = "${image_content}" WHERE id =${id}`, (err, results) => {
+        if (err) {
+          console.error('Error saving image to MySQL:', err);
+          res.status(500).send('Internal Server Error');
+        } else {
+          console.log('Image saved to MySQL successfully');
+          res.status(200).send('Image saved successfully');
+        }
+      });
+    } catch (error) {
+      console.error('Error processing image:', error);
+      res.status(500).send('Internal Server Error');
+    }
+  });
+
+
 
 Router.get("/api/payment_success", (req, res) => {
     console.log(req.body, "<<<< Yaha")
@@ -1168,7 +1294,7 @@ Router.post("/api/Contact_Details", (req, res) => {
 
 // Update Profile data
 
-Router.post('/api/updateprofile', upload.single('image'), (req, res) => {
+Router.post('/api/updateprofile', (req, res) => {
     let token = req.headers.authorization;
     if (token && token.startsWith('Bearer ')) {
         token = token.slice(7, token.length);
@@ -1185,7 +1311,7 @@ Router.post('/api/updateprofile', upload.single('image'), (req, res) => {
     const id = decoded.userId;
     const {  fname, lname, uname, email, phone, gender, pincode, address1, address2, country, state, city, password ,image} = req.body;
     console.log(req.body,'-----');
-    sqlDbconnect.query('UPDATE registration  SET fname = ?, lname = ?, uname = ?, email = ?, phone = ?, gender = ?, pincode = ?, address1 = ?, address2 = ?, country = ?,state =?, city = ?, password = ?,image = ? WHERE id = ? ', [fname, lname, uname, email, phone, gender, pincode, address1, address2, country, state, city, password,image, id], (err, result) => {
+    sqlDbconnect.query('UPDATE registration  SET fname = ?, lname = ?, uname = ?, email = ?, phone = ?, gender = ?, pincode = ?, address1 = ?, address2 = ?, country = ?,state =?, city = ?, password = ? WHERE id = ? ', [fname, lname, uname, email, phone, gender, pincode, address1, address2, country, state, city, password, id], (err, result) => {
         if (err) {
             console.error('Error updating profile:', err);
             res.status(500).json({ message: 'Internal Server Error' });
@@ -1196,6 +1322,7 @@ Router.post('/api/updateprofile', upload.single('image'), (req, res) => {
         res.status(200).json({result,  message: 'Profile updated successfully' });
     });
 });
+
 
 
 

@@ -25,6 +25,10 @@ const updateProfile = (data) => {
     return http.post('/updateprofile', data);
 }
 
+const updateProfileImage = (data) => {
+    return http.post('/save-image', data);
+}
+
 const logout = () => {
     localStorage.removeItem('authUser');
     // return http.get('/logout', null, {
@@ -58,7 +62,8 @@ const methods = {
     profile,
     logout,
     getAuthUser,
-    updateProfile
+    updateProfile,
+    updateProfileImage
 }
 
 export default methods;

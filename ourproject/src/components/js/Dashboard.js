@@ -3,6 +3,10 @@ import React, { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import authService from '../../services/auth.service';
 import { useNavigate } from 'react-router-dom';
+import ProfileModal from './ProfileModal';
+import { Button } from 'react-bootstrap';
+
+const deafaultImg = "img/friend.jpg";
 
 
 
@@ -29,20 +33,31 @@ function Dashboard() {
     state: '',
     city: '',
     password: '',
-    image: '',
-
-
-
   });
   
-  // const handleImageChange = (e) => {
-  //   const file = e.target.files[0];
-  //   setFormData({
-  //     ...formData,
-  //     image: file,
-  //   });
-  // };
+  const [showModal, setShowModal] = useState(false);
+  const [avatarSrc, setAvatarSrc] = useState(deafaultImg); // Default avatar source
 
+  const handleSave = async (newAvatarSrc) => {
+    console.log(newAvatarSrc,'newAvatarSrc');
+    // Handle the save logic, for example, updating the avatar source in the state t
+    try {
+      let data = {
+        image_content: newAvatarSrc
+      };
+      await authService.updateProfileImage(data);
+      toast.success('Profile image updated successfully');
+    } catch (error) {
+      toast.error('Failed to update profile image');
+    }
+    setAvatarSrc(newAvatarSrc);
+  };
+
+  const onClose = () => {
+  //  setAvatarSrc(deafaultImg);
+    setShowModal(false)
+  };
+  
   console.log(user)
   useEffect(() => {
     fetchProfile();
@@ -70,6 +85,10 @@ function Dashboard() {
         image: userInfo.image,
 
       });
+      if(userInfo?.image){
+        setAvatarSrc(userInfo?.image);
+      }
+      
     } catch (error) {
       toast.error(error.data.message);
     }
@@ -110,17 +129,19 @@ function Dashboard() {
         country: formData.country,
         state: formData.state,
         city: formData.city,
-        password: formData.password,
-        image: formData.image,
+        password: formData.password
       };
       await authService.updateProfile(data);
 
-      fetchProfile();
+    //  fetchProfile(' http://127.0.1:8000/api/save-image');
       toast.success('Profile updated successfully');
     } catch (error) {
       toast.error('Failed to update profile');
     }
   };
+
+  
+  
 
 
 
@@ -145,7 +166,7 @@ function Dashboard() {
             </div>
             <div className='row p-2'>
               <div className=' d-flex border-bottom flex-column justify-content-center align-items-center mt-3 mb-3 '>
-                <img src='' className='  rounded-circle' style={{ width: '150px', height: '150px' }} />
+                <img src={avatarSrc} className='  rounded-circle' style={{ width: '150px', height: '150px' }} />
                 <h4 className='mt-3'>{user[0]?.uname}</h4>
               </div>
             </div>
@@ -238,18 +259,24 @@ function Dashboard() {
 
                     <div className='d-flex gap-3'>
                       <div className='mt-2 d-flex justify-content-center' style={{ width: '90px', height: '90px', borderRadius: '50%' }}>
-                        <img src='img/friend.jpg ' width={"100%"} alt='' className='rounded-circle' />
+                        <img src={avatarSrc} width={"100%"} alt='' className='rounded-circle' />
                       </div>
                       <div className='d-flex flex-column align-item-center justify-content-center'>
                         <h6 className='mt-3'></h6>
                         <p className='text-secondary'>Accepted file type .png. Less than 1MB</p>
-                        {/* <label htmlFor="image">Profile Image:</label>
-                        <input
-                          type="file"
-                          id="image"
-                          name="image"
-                          onChange={handleImageChange}
-                        /> */}
+                        <Button className="w-5" variant="primary" onClick={() => setShowModal(true)}>
+                            Change Profile
+                          </Button>
+                          {
+                            user[0] && 
+                            <ProfileModal
+                            showModal={showModal}
+                            onClose={onClose}
+                            onSave={handleSave}
+                            avatarSrc={avatarSrc}
+                          />
+                          }
+                          
                       </div>
                     </div>
 
