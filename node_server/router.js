@@ -200,7 +200,7 @@ Router.post("/api/Course_add", upload.single("file"), (req, res) => {
                     if (!err) {
                         const fetchedSellingOptions = JSON.parse(fetchedRow[0].selling_option);
                         // Sending response to the client
-                        res.status(200).json({ rows, fetchedSellingOptions });
+                        res.status(200).json({ message: 'Course added successfully', rows, fetchedSellingOptions });
                     } else {
                         console.log(err);
                         res.status(500).json({ error: 'Internal Server Error' });
@@ -217,6 +217,57 @@ Router.post("/api/Course_add", upload.single("file"), (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
+
+
+Router.get("/api/edit/:course_id", (req, res) => {
+    const id = req.params.course_id;
+    const query = "SELECT * FROM course_detail WHERE id = ? AND status IN (?)";
+    sqlDbconnect.query(query, [id, [1, 2]], (err, result) => {
+        if (err) return res.json({ Error: err });
+        return res.json(result);
+    });
+
+});
+
+
+Router.put('/api/update/:course_id', upload.single('thumbnail'), async (req, res) => {
+    const courseId = req.params.course_id;
+    const { industries,speaker, title,description,duration,time,date,selling_Option,} = req.body;
+    const course_thumbnail = req.file ? req.file.buffer : null;
+
+    const updateQuery = `
+        UPDATE course_detail
+        SET industries = ?, speaker = ?, title = ?, description = ?, duration = ?, time = ?, date = ?, course_thumbnail = ?,
+        selling_option = ?
+        WHERE id = ?
+    `;
+
+    try {
+        await sqlDbconnect.query(updateQuery, [
+            industries,
+            speaker,
+            title,
+            description,
+            duration,
+            time,
+            date,
+            course_thumbnail,
+            selling_Option,
+            courseId
+        ]);
+
+        res.status(200).send('Course updated successfully!');
+    } catch (error) {
+        console.error('Error updating course:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+   
+
+
+
+
 // end courses
 
 
@@ -273,7 +324,7 @@ Router.delete("/api/delete_speaker", (req, res) => {
 
 // edit speaker
 Router.get("/api/edit/:speaker_id", (req, res) => {
-    const id = req.params.id;
+    const id = req.params.speaker_id;
     const query = "SELECT * FROM speaker_info WHERE speaker_id = ? AND status IN (?)";
     sqlDbconnect.query(query, [id, [1, 2]], (err, result) => {
         if (err) return res.json({ Error: err });
@@ -310,7 +361,7 @@ Router.get("/api/profile", (req, res) => {
 
 // update speaker
 Router.put('/api/update_speaker/:speaker_id', upload.single('image'), async (req, res) => {
-    const { id } = req.params;
+    const { speaker_id } = req.params;
     const { name, email, phone_no, bio, designation, experience } = req.body;
 
     // Handle file upload
@@ -325,7 +376,7 @@ Router.put('/api/update_speaker/:speaker_id', upload.single('image'), async (req
 
     sqlDbconnect.query(
         updateQuery,
-        [name, email, phone_no, bio, designation, experience, image, id],
+        [name, email, phone_no, bio, designation, experience, image, speaker_id],
         (err, result) => {
             if (err) {
                 console.error('Error updating speaker:', err);
@@ -417,7 +468,7 @@ Router.delete("/api/delete_Coupans", (req, res) => {
 Router.post('/api/InsertCoupons', (req, res) => {
     const { couponName, discountType, startDate, expiryDate, coupanlimit, status } = req.body;
 
-    sqlDbconnect.query('INSERT INTO sales_promotion_coupon (coupon_code,discount,start_date,expire_date,coupons_status)VALUES (?, ?, ?, ?, ?)',
+    sqlDbconnect.query('INSERT INTO sales_promotion_coupon (coupon_code,discount,start_date,expire_date,coupons_limit,coupons_status)VALUES (?, ?, ?, ?,?, ?)',
         [couponName, discountType, startDate, expiryDate, coupanlimit, status], (err, result) => {
             if (err) {
                 console.error('Error inserting data into MySQL:', err);
@@ -444,6 +495,60 @@ Router.get("/api/Industary", (req, res) => {
     });
 });
 
+Router.post("/api/Industary_add", upload.single("file"), (req, res) => {
+    // insert data in contact form
+    const industry_name = req.body.industry_name;
+    const filename = req.file.filename; // Assuming you are trying to get the uploaded file name
+
+    console.log(req.body, "<<<<");
+    console.log("File Name is = " + filename);
+
+    sqlDbconnect.query(
+        `INSERT INTO industry (industry_name, image) VALUES ('${industry_name}', '${filename}')`,
+        (err, result) => {
+            if (!err) {
+                res.json({ success: true, message: "Industry added successfully", data: result });
+            } else {
+                console.error(err);
+                res.status(500).json({ error: "Internal Server Error" });
+            }
+        }
+    );
+});
+
+
+
+Router.put('/api/update_industry/:id', upload.single('image'), (req, res) => {
+    try {
+        const industryId = req.params.id;
+        const { industry_name } = req.body;
+        const image = req.file; // The uploaded image file
+
+        if (!industry_name || typeof industry_name !== 'string') {
+            return res.status(400).json({ error: 'Invalid industry data' });
+        }
+
+        const query = 'UPDATE industry SET industry_name = ?, image = ? WHERE id = ?';
+
+        sqlDbconnect.query(query, [industry_name, image ? image.filename : null, industryId], (error, result) => {
+            if (error) {
+                console.error('Error updating industry:', error);
+                res.status(500).json({ error: 'Internal Server Error' });
+            } else {
+                if (result.affectedRows > 0) {
+                    res.json({ success: true, message: 'Industry updated successfully' });
+                } else {
+                    res.status(404).json({ error: 'Industry not found or no changes made' });
+                }
+            }
+        });
+    } catch (error) {
+        console.error('Error updating industry:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+  
 
 // start faq category
 
@@ -456,6 +561,9 @@ Router.get("/api/Faq_Category", (req, res) => {
         }
     });
 });
+
+
+
 
 // edit faq category
 
@@ -656,95 +764,7 @@ Router.get("/api/Testimonial", (req, res) => {
 });
 
 
-// Router.get("/api/Registration", (req, res) => {
-//     sqlDbconnect.query("SELECT * FROM registration", (err, rows) => {
-//         if (!err) {
-//             res.send(rows);
-//         } else {
-//             console.log(err);
-//         }
-//     });
-// });
 
-// Endpoint for user registration
-Router.post('/api/NewRegistration', (req, res) => {
-    const { firstName, lastName, username, email, phone, gender, pincode, address1, address2, country, state, city, password } = req.body;
-
-    // Basic validation
-    if (!firstName || !lastName || !username || !email || !phone || !gender || !pincode || !address1 || !address2 || !country || !state || !city || !password) {
-        return res.status(400).json({ success: false, message: 'All fields are required' });
-    }
-
-    // Check if the email is already registered
-    sqlDbconnect.query('SELECT * FROM registration WHERE email = ?', [email], (error, results) => {
-        if (error) {
-            console.error('Error checking email:', error);
-            return res.status(500).json({ success: false, message: 'Internal server error' });
-        }
-
-        if (results.length > 0) {
-            return res.status(400).json({ success: false, message: 'Email is already registered' });
-        }
-
-        // Insert user data into the "users" table
-        sqlDbconnect.query('INSERT INTO registration (fname, lname, uname, email,phone,gender,pincode,address1,address2,country,state,city, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-            [firstName, lastName, username, email, phone, gender, pincode, address1, address2, country, state, city, password],
-            (insertError) => {
-                if (insertError) {
-                    console.error('Error inserting user data:', insertError);
-                    return res.status(500).json({ success: false, message: 'Internal server error' });
-                }
-
-                console.log('User registered:', { firstName, lastName, username, email, phone, gender, pincode, address1, address2, country, state, city });
-
-                // Respond with success
-                res.status(200).json({ success: true, message: 'Registration successful' });
-            });
-    });
-});
-
-// Router.post("/api/Course_add", upload.single("file"), (req, res) => {
-
-//     function makeString(val) {
-//         const fields = JSON.parse(req.body.fields);
-//         console.log(fields, "here are the fields")
-//         let str = `INSERT INTO selling_options (selling_category, name, price, status, cid) VALUES`
-//         for (let i = 0; i < fields.length; i++) {
-//             if (i === 0) {
-//                 str += ` ('${fields[i].category}','${fields[i].name}','${fields[i].price}', '${true}' , '${val}')`
-//             } else {
-//                 str += `, ('${fields[i].category}','${fields[i].name}','${fields[i].price}', '${true}' , '${val}')`
-//             }
-
-//         }
-//         console.log(str)
-//         return str;
-//     }
-
-//     console.log(req.body, filename, "<<>>", filet)
-//     try {
-//         sqlDbconnect.query(`INSERT INTO course_detail (industries, speaker, title, date, time, duration, course_thumbail) VALUES ('${req.body.industry}','${req.body.speaker}','${req.body.name}', '${req.body.cstdate}' , '${req.body.time}', '${req.body.duration}', '${filename}')`, (err, rows) => {
-//             if (!err) {
-//                 console.log(rows)
-//                 sqlDbconnect.query(makeString(rows.insertId), (err, row) => {
-//                     if (!err) {
-
-//                         res.status(200).json({ rows, row });
-//                     } else {
-//                         console.log(err);
-//                     }
-//                 });
-//             } else {
-//                 console.log(err);
-//             }
-//         });
-
-
-//     } catch (err) {
-//         console.log(err)
-//     }
-
-// })
 
 
 

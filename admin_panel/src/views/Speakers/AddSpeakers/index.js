@@ -83,7 +83,8 @@ export default function AddSpeakers() {
                 </div><br />
                 <div className='row'>
                   <div className='col-2 mt-3'><label>Speaker Image :</label></div>
-                  <div className='col'><input type="file" className="form-control" name='image'  onChange={(e)=>{setFiledata(e.target.files[0])}} id="customFile" /></div>
+                  <div className='col'>
+                    <input type="file" className="form-control" name='image'  onChange={(e)=>{setFiledata(e.target.files[0])}} id="customFile" /></div>
                 </div> <br />
 
                 <div className='row'>

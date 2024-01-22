@@ -61,7 +61,7 @@ export default function AllSpeakers() {
                   <th scope="col">Name</th>
                   <th scope="col">Email</th>
                   <th scope="col">phone_no</th>
-                  <th scope="col">Bio</th>
+                  {/* <th scope="col">Bio</th> */}
                   <th scope="col">Designation</th>
                   <th scope="col">Experience</th>
                   <th scope="col">Image</th>
@@ -77,7 +77,7 @@ export default function AllSpeakers() {
                     <td>{row.name}</td>
                     <td>{row.email}</td>
                     <td>{row.phone_no}</td>
-                    <td>{row.bio}</td>
+                    {/* <td>{row.bio}</td> */}
                     <td>{row.designation}</td>
                     <td>{row.experience}</td>
                     <td>{row.images}</td>
