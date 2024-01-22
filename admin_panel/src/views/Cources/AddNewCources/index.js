@@ -24,8 +24,8 @@ export default function AddCourse() {
         { category: '', name: '', price: '' },
     ]);
     const [filedata, setFiledata] = useState(null);
+    const [showSuccessModal, setShowSuccessModal] = useState(false);
     const [sellingOptions, setSellingOptions] = useState([]);
-    const [successMessage, setSuccessMessage] = useState(null);
     const navigate = useNavigate();
 
     const fetchData = async () => {
@@ -122,7 +122,8 @@ export default function AddCourse() {
         
             .then(response => {
                 if (response.status === 200) {
-                    setSuccessMessage('Course added successfully!');
+                    console.log('Course added successfully!');
+                    setShowSuccessModal(true);
                     navigate('/Cources/AllCources');
                 } else {
                     console.error('Failed to add course:', response.statusText);
@@ -314,12 +315,25 @@ export default function AddCourse() {
                                 <center>
                                     <button onClick={submitForm} type='submit' className="btn btn-primary ">Submit</button>
                                 </center>
-                                {successMessage && (
-                                    <div className="alert alert-success mt-3" role="alert">
-                                        {successMessage}
-                                    </div>
-                                )}
                             </form>
+                            <div className="modal" tabIndex="-1" role="dialog" style={{ display: showSuccessModal ? 'block' : 'none' }}>
+            <div className="modal-dialog" role="document">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h5 className="modal-title">Success!</h5>
+                  <button type="button" className="close" onClick={() => setShowSuccessModal(false)} aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div className="modal-body">
+                  Course updated successfully!
+                </div>
+                <div className="modal-footer">
+                  <button type="button" className="btn btn-primary" onClick={() => setShowSuccessModal(false)}>Close</button>
+                </div>
+              </div>
+            </div>
+          </div>
                         </div>
                     </div>
                 </div>

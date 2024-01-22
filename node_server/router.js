@@ -232,36 +232,45 @@ Router.get("/api/edit/:course_id", (req, res) => {
 
 Router.put('/api/update/:course_id', upload.single('thumbnail'), async (req, res) => {
     const courseId = req.params.course_id;
-    const { industries,speaker, title,description,duration,time,date,selling_Option,} = req.body;
-    const course_thumbnail = req.file ? req.file.buffer : null;
-
-    const updateQuery = `
-        UPDATE course_detail
-        SET industries = ?, speaker = ?, title = ?, description = ?, duration = ?, time = ?, date = ?, course_thumbnail = ?,
-        selling_option = ?
-        WHERE id = ?
+    const { industries, speaker, title, description, duration, time, date } = req.body;
+    const course_thumbnail = req.file ? req.file.buffer : null; // Assuming 'thumbnail' is the name of the file input in your form
+  
+    const updateCourseQuery = `
+      UPDATE course_detail
+      SET Industries = ?, speaker = ?, title = ?, description = ?, duration = ?, time = ?, date = ?, course_thumbnail = ?
+      WHERE id = ?
     `;
-
+  
     try {
-        await sqlDbconnect.query(updateQuery, [
-            industries,
-            speaker,
-            title,
-            description,
-            duration,
-            time,
-            date,
-            course_thumbnail,
-            selling_Option,
-            courseId
-        ]);
-
-        res.status(200).send('Course updated successfully!');
+      await sqlDbconnect.query(updateCourseQuery, [
+        industries,
+        speaker,
+        title,
+        description,
+        duration,
+        time,
+        date,
+        course_thumbnail,
+        courseId,
+      ]);
+  
+      // Insert or update selling options as needed
+      const updateSellingOptionsQuery = `
+        REPLACE INTO selling_options ( category, name, price)
+        VALUES ( ?, ?, ?)
+      `;
+  
+      req.body.sellingOptions.forEach(async (option) => {
+        await sqlDbconnect.query(updateSellingOptionsQuery, [courseId, option.category, option.name, option.price]);
+      });
+  
+      res.status(200).send('Course updated successfully!');
     } catch (error) {
-        console.error('Error updating course:', error);
-        res.status(500).send('Internal Server Error');
+      console.error('Error updating course:', error);
+      res.status(500).send('Internal Server Error');
     }
 });
+
 
    
 
@@ -295,16 +304,24 @@ Router.post("/api/Speaker_add", upload.single("file"), (req, res) => {
     const bio = req.body.bio;
     const designation = req.body.designation;
     const experience = req.body.experience;
-    console.log(req.body, "<<<<")
-    console.log("File Name is =  " + filename)
-    sqlDbconnect.query(`INSERT INTO speaker_info (name, email, phone_no, bio, images ,designation ,experience) VALUES ('${username}','${email}','${phone}','${bio}','${filename}','${designation}',${experience})`, (err, rows) => {
+
+    // Get the original name of the uploaded file
+    const filename = req.file ? req.file.originalname : null;
+
+    console.log(req.body, "<<<<");
+    console.log("File Name is =  " + filename);
+
+    // Use parameterized query to prevent SQL injection
+    const insertQuery = "INSERT INTO speaker_info (name, email, phone_no, bio, images, designation, experience) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    
+    sqlDbconnect.query(insertQuery, [username, email, phone, bio, filename, designation, experience], (err, rows) => {
         if (!err) {
-            res.send(rows);
+            res.json({ success: true, message: 'Speaker added successfully!' });
         } else {
             console.log(err);
+            res.status(500).json({ success: false, message: 'Internal Server Error' });
         }
     });
-
 });
 
 

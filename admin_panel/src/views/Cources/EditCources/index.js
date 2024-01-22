@@ -32,7 +32,7 @@ const EditCourseDetail = () => {
     Description: '',
     Duration: '',
     Time: '',
-    CSTDate: '',
+    Date: '',
   });
 
   const [sellingOptions, setSellingOptions] = useState([]);
@@ -52,9 +52,9 @@ const EditCourseDetail = () => {
             Title: dataCourse.title,
             Description: dataCourse.description,
             Duration: dataCourse.duration,
-            Thumbnail:dataCourse.Thumbnail,
+            Thumbnail: dataCourse.Thumbnail,
             Time: dataCourse.time,
-            CSTDate: dataCourse.cstdate,
+            Date: dataCourse.date,
           });
         } else {
           console.error('Error fetching course details:', responseCourse.statusText);
@@ -102,16 +102,16 @@ const EditCourseDetail = () => {
       const data = new FormData();
       data.append('industry', course.Industries);
       data.append('speaker', course.Speaker);
-      data.append('name', course.Title);
+      data.append('title', course.Title);
       data.append('description', course.Description);
       data.append('duration', course.Duration);
-      data.append('thumbnail', course.Thumbnail); // Make sure 'Thumbnail' is a File object
+      data.append('course_thumbnail', course.Thumbnail); // Make sure 'Thumbnail' is a File object
       data.append('time', course.Time);
-      data.append('cstdate', course.CSTDate);
+      data.append('date', course.Date);
       data.append('fields', JSON.stringify(sellingOptions));
-  
+
       const response = await axios.put(`http://localhost:8000/api/update/${course_id}`, data);
-      
+
       if (response.status === 200) {
         console.log('Course updated successfully!');
         setShowSuccessModal(true);
@@ -205,19 +205,25 @@ const EditCourseDetail = () => {
             </div>
 
             <div className='row'>
-  <div className='col-2 mt-4'>
-    <label>Thumbnail</label>
-  </div>
-  <div className='col'>
-    <input
-      onChange={(e) => setCourse({ ...course, Thumbnail: e.target.files[0] })}
-      type="file"
-      name='thumbnail'
-      className="form-control"
-      id="customFile"
-    />
-  </div>
-</div>
+              <div className='col-2 mt-4'>
+                <label>Thumbnail</label>
+              </div>
+              <div className='col'>
+                <input
+                  onChange={(e) => {
+                    const file = e.target.files[0];
+                    setCourse((prevCourse) => ({
+                      ...prevCourse,
+                      Thumbnail: file,
+                    }));
+                  }}
+                  type="file"
+                  name='thumbnail'
+                  className="form-control"
+                  id="customFile"
+                />
+              </div>
+            </div>
 
             <div className="row">
               <div className="col-2">
@@ -259,7 +265,7 @@ const EditCourseDetail = () => {
                 <input
                   type="date"
                   value={course.Date}
-                  onChange={(e) => setCourse({ ...course, CSTDate: e.target.value })}
+                  onChange={(e) => setCourse({ ...course, Date: e.target.value })}
                   className="form-control"
                   placeholder="date "
                 />
@@ -301,24 +307,24 @@ const EditCourseDetail = () => {
             </div>
           </form>
           <div className="modal" tabIndex="-1" role="dialog" style={{ display: showSuccessModal ? 'block' : 'none' }}>
-        <div className="modal-dialog" role="document">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h5 className="modal-title">Success!</h5>
-              <button type="button" className="close" onClick={() => setShowSuccessModal(false)} aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div className="modal-body">
-              Course updated successfully!
-            </div>
-            <div className="modal-footer">
-              <button type="button" className="btn btn-primary" onClick={() => setShowSuccessModal(false)}>Close</button>
+            <div className="modal-dialog" role="document">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h5 className="modal-title">Success!</h5>
+                  <button type="button" className="close" onClick={() => setShowSuccessModal(false)} aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div className="modal-body">
+                  Course updated successfully!
+                </div>
+                <div className="modal-footer">
+                  <button type="button" className="btn btn-primary" onClick={() => setShowSuccessModal(false)}>Close</button>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </div>         
-          
+
         </div>
       </div>
     </div>

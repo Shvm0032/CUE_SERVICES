@@ -1,9 +1,10 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import ReactQuill from 'react-quill';
 import axios from 'axios';
 import 'react-quill/dist/quill.snow.css';
+import { useNavigate } from 'react-router';
+
 const modules = {
-  
   toolbar: [
     [{ header: [1, 2, 3, 4, 5, 6, false] }],
     [{ font: [] }],
@@ -19,16 +20,21 @@ const modules = {
 };
 
 export default function AddSpeakers() {
+  const [formValue, setFormValue] = useState({
+    name: '',
+    phone: '',
+    email: '',
+    bio: '',
+    image: '',
+    designation: '',
+    experience: ''
+  });
+  const [returnMessage, setReturnMessage] = useState('');
+  const [filedata, setFiledata] = useState([]);
+  const navigate = useNavigate
 
-  
-  const [formValue, setFormValue] = useState({ name: '', phone: '', email: '', bio: '', image: '', designation: '', experience:'' });
-  const [Returnmessage, setReturnmessage] = useState();
-  const [filedata, setFiledata] = useState([])
-  
- 
-  console.log(formValue, filedata)
-  function submitForm(e){
-    e.preventDefault()
+  function submitForm(e) {
+    e.preventDefault();
     const data = new FormData();
     data.append('name', formValue.name);
     data.append('email', formValue.email);
@@ -36,42 +42,46 @@ export default function AddSpeakers() {
     data.append('designation', formValue.designation);
     data.append('experience', formValue.experience);
     data.append('bio', formValue.bio);
-   
-   data.append("file", filedata)
-    console.log(filedata, data)
-    
+    data.append("file", filedata);
+
     axios.post('http://localhost:8000/api/Speaker_add', data)
-      .then(data => console.log(data))
-      .catch(error => console.error('Error:', error));
+      .then(response => {
+        console.log(response.data);
+        setReturnMessage(response.data.message); // Assuming the server sends a 'message' field
+        navigate('/Speakers/AllSpeakers');
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        setReturnMessage('Failed to add speaker. Please try again.');
+      });
   }
 
   return (
-
     <>
       <section>
         <div className="container">
           <div className="row">
-            <div className="col-12 bg-light  p-4 border shadow">
+            <div className="col-12 bg-light p-4 border shadow">
               <h3 className="text-start my-3 mb-5">Add New Speaker</h3>
-              <p>{Returnmessage}</p>
-              <form >
+              {returnMessage && <p className="text-success">{returnMessage}</p>}
+              <form>
                 <div className='row'>
                   <div className='col'>
                     <div className='row'>
                       <div className='col-2'><label className="form-label"> Name :</label></div>
-                      <div className='col'><input type='text' className='form-control' name='username'  onChange={(e)=>{setFormValue((pre)=>({...pre, name: e.target.value}))}} placeholder='Enter Name...' /> </div>
+                      <div className='col'><input type='text' className='form-control' name='username' onChange={(e) => { setFormValue((pre) => ({ ...pre, name: e.target.value })) }} placeholder='Enter Name...' /> </div>
                     </div>
                   </div>
                   <div className='col'>
                     <div className='row'>
                       <div className='col-2 text-end'><label>Email :</label></div>
-                      <div className='col'><input type='text' className='form-control' name='email' onChange={(e)=>{setFormValue((pre)=>({...pre, email: e.target.value}))}}  placeholder='Email id...' /> </div>
+                      <div className='col'><input type='text' className='form-control' name='email' onChange={(e) => { setFormValue((pre) => ({ ...pre, email: e.target.value })) }} placeholder='Email id...' /> </div>
                     </div>
                   </div>
                 </div><br />
                 <div className='row'>
                   <div className='col-2'><label>Phone Number:</label></div>
-                  <div className='col'> <input type="text" className="form-control" name='phone'  onChange={(e)=>{setFormValue((pre)=>({...pre, phone: e.target.value}))}} placeholder="Phone Number" /></div>
+                  <div className='col'> <input type="text" className="form-control" name='phone' onChange={(e) => { setFormValue((pre) => ({ ...pre, phone: e.target.value })) }} placeholder="Phone Number" /></div>
                 </div><br />
                 <div className='row'>
                   <div className='col-2'><label>Designation:</label></div>
@@ -79,20 +89,19 @@ export default function AddSpeakers() {
                 </div><br />
                 <div className='row'>
                   <div className='col-2'><label>Experience:</label></div>
-                  <div className='col'> <input type="text" className="form-control" name='experience' onChange={(e) => { setFormValue((pre) => ({ ...pre, experience: e.target.value })) }} placeholder="Working Experience"/></div>
+                  <div className='col'> <input type="text" className="form-control" name='experience' onChange={(e) => { setFormValue((pre) => ({ ...pre, experience: e.target.value })) }} placeholder="Working Experience" /></div>
                 </div><br />
                 <div className='row'>
                   <div className='col-2 mt-3'><label>Speaker Image :</label></div>
                   <div className='col'>
-                    <input type="file" className="form-control" name='image'  onChange={(e)=>{setFiledata(e.target.files[0])}} id="customFile" /></div>
+                    <input type="file" className="form-control" name='image' onChange={(e) => { setFiledata(e.target.files[0]) }} id="customFile" /></div>
                 </div> <br />
 
                 <div className='row'>
                   <div className='col-2'> <label className='form-label'>Bio :</label></div>
                   <div className='col'>
-                    <ReactQuill onChange={(e)=>{setFormValue((pre)=>({...pre, bio: e}))}} theme="snow"
+                    <ReactQuill onChange={(e) => { setFormValue((pre) => ({ ...pre, bio: e })) }} theme="snow"
                       modules={modules}
-                     
                       style={{
                         height: '40vh',
                       }}
@@ -101,7 +110,7 @@ export default function AddSpeakers() {
                 </div><br /><br />
                 <div className='row'>
                   <center>
-                    <button onClick={submitForm} type='submit' className="btn btn-primary ">Submit</button>
+                    <button onClick={submitForm} type='submit' className="btn btn-primary">Submit</button>
                   </center>
                 </div>
               </form>
@@ -110,5 +119,5 @@ export default function AddSpeakers() {
         </div>
       </section>
     </>
-  )
+  );
 }
