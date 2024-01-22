@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import '../css/Contact.modules.css'
 import { Link } from "react-router-dom";
+import http from "../../utils/http-client";
 
 function Contact() {
   const [formValue, setFormValue] = useState({ username: '', phone: '', email: '', message: '' });
@@ -13,15 +14,10 @@ function Contact() {
     e.preventDefault();
     const allInputvalue = { username: formValue.username, email: formValue.email, phone: formValue.phone, message: formValue.message };
     // console.log(allInputvalue);
-    let res = await fetch("http://localhost:8000/api/user_message", {
-      method: "POST",
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify(allInputvalue)
-    });
-
-    let resjson = await res.json();
+    let res = await http.post("user_message", {...formValue});
+    //console.log(res);
     if (res.status === 200) {
-      setReturnmessage(resjson.success);
+      setReturnmessage(res.data.success);
     } else {
       setReturnmessage("Some error occure");
     }
@@ -32,8 +28,8 @@ function Contact() {
         <div className='row  faq-heads'>
           <div className='row faq-headers p-5 mt-5'>
             <div className='col-md-12 faq mains '>
-              <h1 className="mt-5 " style={{ fontSize: "80px", marginBottom: "5px", fontWeight: '500' }}>Contact Us</h1>
-              <Link to='/' className=''><i class="fa-solid fa-house" style={{ "color": "#719dea;" }}></i> CuService - Contact us</Link>
+              <h1 className="mt-5  text-white" style={{ fontSize: "80px", marginBottom: "5px", fontWeight: '500' }}>Contact Us</h1>
+              <Link to='/' className='text-white'><i class="fa-solid fa-house" style={{ "color": "#719dea;" }}></i> CuService - Contact us</Link>
             </div>
           </div>
           <div className='wave wave1'></div>
@@ -84,7 +80,7 @@ function Contact() {
             <div className="col-lg-8  offset-lg-2 col-12">
                 <h2 className="fs-1 text-center my-4">Fill the form below so we can get to know  you and your needs better.</h2>
               <div className="row  bg-light  p-4 " style={{ borderRadius: '1.563rem' }}>
-                <p className="text-success text-center">{Returnmessage}</p>
+                
                 <form className="p-3" onSubmit={handleSubmit}>
 
                   <div className="mb-3 input-group-lg">
@@ -110,6 +106,7 @@ function Contact() {
                   <div className="col mt-2">
                     <button type="submit" className="btn btn-primary btn-lg mb-3">Submit</button>
                   </div>
+                  <p className="text-success text-center">{Returnmessage}</p>
 
                 </form>
               </div>

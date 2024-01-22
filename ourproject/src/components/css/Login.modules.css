@@ -1,72 +1,42 @@
-/* Login page
-
-.log-cont {
-    height: 570px;
-}
-
-
-.log-clum {
-    margin-top: 100px;
-    background: rgba(255, 255, 255, 0.5);
-    -webkit-backdrop-filter: blur(10px);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    border-radius: 5px;
-}
-
-
-
-.log-clum {
-    margin-left: 350px;
-    height: 500px;
-    width: 500px;
-}
-
-.log-form {
-    margin-left: 20px;
-    margin-right: 20px;
+.Form-Container {
+    border: #ff9b24 1px solid !important;
+    border-radius: 8px;
+    box-shadow: #ffe5d0 2px;
 }
 
 .log-form input {
-    background-color: rgb(184, 237, 237);
-}
-
-.log-lnk {
-    color: #00bbae;
-}
-
-.log-lnk:hover {
-    color: #ff9b24;
+    background-color: #b8eded;
+    border: #ff9b24 !important;
 }
 
 .log-buttons {
-    background-color: #0eada3;
-    margin-left: 40px;
+    min-width: 300px;
+    background-color: #ff9b24;
+    margin-top: 35px;
+    margin-bottom: 20px;
     border-radius: 5px;
-    color: #ff9b24;
-}
-
-.log-buttons button {
-    color: white;
+    color: #fff;
 }
 
 .log-buttons:hover {
-    background-color: #ff9b24;
+    background-color: #0eada3;
     color: white;
-} */
-
-.log-cl {
-    border-radius: 8px;
 }
 
-.log-form input {
-    background-color: rgb(184, 237, 237);
+.input-group {
+    position: relative;
 }
 
-.log-lnk {
-    color: #00bbae;
+.eye_icon {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #555;
+    transition: color 0.3s ease;
 }
 
-.log-lnk:hover {
+.eye_icon:hover {
     color: #ff9b24;
 }

@@ -1,55 +1,141 @@
-import React, { useState, useEffect } from 'react';
 import '../css/Dashboard.modules.css';
+import React, { useState, useEffect } from 'react';
+import toast from 'react-hot-toast';
+import authService from '../../services/auth.service';
 import { useNavigate } from 'react-router-dom';
 
+
+
 function Dashboard() {
-
-  const [user, setUser] = useState(null);
   const navigate = useNavigate();
-
-
-  useEffect(() => {
-    // Fetch user information from the server
-    fetch('http://127.0.1:8000/api/Registration')
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          setUser(data.user);
-        }
-      })
-      .catch(error => console.error('Error fetching user information:', error));
-  }, []);
-
-
-
-  const handleLogout = () => {
-    // Logout request to the server
-    fetch('http://127.0.1:8000/api/logout', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          // Redirect to login page after successful logout
-          navigate('/login');
-        } else {
-          console.error('Logout failed:', data.message);
-        }
-      })
-      .catch(error => console.error('Error during logout:', error));
-  };
-
+  const authUser = authService.getAuthUser();
+  console.log(authUser)
+  const userId = authUser ? authUser.userId : null;
+  console.log(userId)
   
 
+  const [user, setUser] = useState([]);
+  const [formData, setFormData] = useState({
+    fname: '',
+    lname: '',
+    uname: '',
+    email: '',
+    phone: '',
+    gender: '',
+    pincode: '',
+    address1: '',
+    address2: '',
+    country: '',
+    state: '',
+    city: '',
+    password: '',
+    image: '',
+
+
+
+  });
+  
+  // const handleImageChange = (e) => {
+  //   const file = e.target.files[0];
+  //   setFormData({
+  //     ...formData,
+  //     image: file,
+  //   });
+  // };
+
+  console.log(user)
+  useEffect(() => {
+    fetchProfile();
+  }, []);
+
+  const fetchProfile = async () => {
+    try {
+      const result = await authService.profile(authUser);
+      setUser(result.data)
+      let userInfo = result.data[0]
+      setFormData({
+        fname: userInfo.fname,
+        lname: userInfo.lname,
+        uname: userInfo.uname,
+        email: userInfo.email,
+        phone: userInfo.phone,
+        gender: userInfo.gender,
+        pincode: userInfo.pincode,
+        address1: userInfo.address1,
+        address2: userInfo.address2,
+        country: userInfo.country,
+        state: userInfo.state,
+        city: userInfo.city,
+        password: userInfo.password,
+        image: userInfo.image,
+
+      });
+    } catch (error) {
+      toast.error(error.data.message);
+    }
+  }
+
+  const handleLogout = async () => {
+    try {
+      await authService.logout();
+      navigate('/');
+    } catch (error) {
+      toast.error(error.data.message);
+    }
+  }
+
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      console.log(formData, 'formData')
+      let data = {
+        fname: formData.fname,
+        lname: formData.lname,
+        uname: formData.uname,
+        email: formData.email,
+        phone: formData.phone,
+        gender: formData.gender,
+        pincode: formData.pincode,
+        address1: formData.address1,
+        address2: formData.address2,
+        country: formData.country,
+        state: formData.state,
+        city: formData.city,
+        password: formData.password,
+        image: formData.image,
+      };
+      await authService.updateProfile(data);
+
+      fetchProfile();
+      toast.success('Profile updated successfully');
+    } catch (error) {
+      toast.error('Failed to update profile');
+    }
+  };
+
+
+
+
+
   const countries = ['india', 'spain', 'france', 'argentina', 'pakistan', 'russia'];
+
+
+
+
 
   return (
 
     <section style={{ paddingBottom: '120px', paddingTop: '120px', background: '#e9ecf6' }}>
-      <div className='container'>
+      <div className='container-fluid'>
         <div className='row text-center'>
         </div>
         <div className='d-flex flex-lg-row flex-column gap-4 ' >
@@ -59,8 +145,8 @@ function Dashboard() {
             </div>
             <div className='row p-2'>
               <div className=' d-flex border-bottom flex-column justify-content-center align-items-center mt-3 mb-3 '>
-                <img src='images/img1.jpg' className='  rounded-circle' style={{ width: '150px', height: '150px' }} />
-                <h4 className='mt-3'>{user ? user.email : 'Loading...'}</h4>
+                <img src='' className='  rounded-circle' style={{ width: '150px', height: '150px' }} />
+                <h4 className='mt-3'>{user[0]?.uname}</h4>
               </div>
             </div>
             <div class="nav dashboard flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
@@ -69,7 +155,7 @@ function Dashboard() {
               <button class="nav-link text-start border-bottom" id="v-pills-messages-tab" data-bs-toggle="pill" data-bs-target="#v-pills-messages" type="button" role="tab" aria-controls="v-pills-messages" aria-selected="false"><i class="fa-solid fa-heart"></i>&emsp;Wishlist</button>
               <button class="nav-link text-start border-bottom" id="v-pills-profile-tab" data-bs-toggle="pill" data-bs-target="#v-pills-profile" type="button" role="tab" aria-controls="v-pills-profile" aria-selected="false"><i class="fa-solid fa-user"></i>&emsp;Profile </button>
               {/* <button class="nav-link text-start border-bottom" id="v-pills-settings-tab" data-bs-toggle="pill" data-bs-target="#v-pills-settings" type="button" role="tab" aria-controls="v-pills-settings" aria-selected="false"onClick={handleLogout} ><i class="fa-solid fa-right-from-bracket"></i>&emsp;Logout</button> */}
-              <button className='nav-link ' onClick={handleLogout}>Logout</button>
+              <button className='nav-link ' onClick={handleLogout} >Logout</button>
             </div>
 
 
@@ -142,50 +228,86 @@ function Dashboard() {
                   </tbody>
                 </table>
               </div>
+
+              {/* //Profile form // */}
+
               <div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
-                <div className='container'>
 
-                 <div className='d-flex gap-3'>
-                  <div className='mt-2 d-flex justify-content-center' style={{width:'90px',height:'90px', borderRadius:'50%'}}>
-                      <img src='img/friend.jpg ' width={"100%"} alt='' className='rounded-circle' />
-                  </div>
-                  <div className='d-flex flex-column align-item-center justify-content-center'>
-                      <h6 className='mt-3'></h6>
-                      <p className='text-secondary'>Accepted file type .png. Less than 1MB</p>
-                      <input type='file' className='text-secondary'/>
-                  </div>
-                 </div>
+                <form onSubmit={handleSubmit} encType='multipart/form-data' method='post'>
+                  <div className='container'>
 
-                  <div className='row'>
-                    <div className='col p-5'>
-                      <label className='mb-2'>First name</label><br/>
-                      <input type='text' placeholder='First name' className='form-control' name='n' /><br />
-
-                      <label className='mb-2'>Email</label>
-                      <input type='text' placeholder='First name' className='form-control' name='e' /><br />
-
-                      <label className='mb-2'>Country</label>
-                      <select placeholder='First name' className='form-control' name='country'>
-                        {countries.map((country, index) => (
-                          <option key={index} value={country}>
-                            {country}
-                          </option>
-                        ))}
-                      </select><br />
+                    <div className='d-flex gap-3'>
+                      <div className='mt-2 d-flex justify-content-center' style={{ width: '90px', height: '90px', borderRadius: '50%' }}>
+                        <img src='img/friend.jpg ' width={"100%"} alt='' className='rounded-circle' />
+                      </div>
+                      <div className='d-flex flex-column align-item-center justify-content-center'>
+                        <h6 className='mt-3'></h6>
+                        <p className='text-secondary'>Accepted file type .png. Less than 1MB</p>
+                        {/* <label htmlFor="image">Profile Image:</label>
+                        <input
+                          type="file"
+                          id="image"
+                          name="image"
+                          onChange={handleImageChange}
+                        /> */}
+                      </div>
                     </div>
-                    <div className='col p-5'>
-                      <label className='mb-2'> Last name</label>
-                      <input type='text' placeholder='First name' className='form-control' name='n' /><br />
 
-                      <label className='mb-2'>Phone Number</label>
-                      <input type='text' placeholder='First name' className='form-control' name='ph' /><br />
+                    <div className='row'>
+                      <div className='col p-5'>
 
-                      <label className='mb-2'> Language</label>
-                      <input type='text' placeholder='First name' className='form-control' name='language' /><br />
+                        <label className='mb-2'>First name</label><br />
+                        <input type='text' placeholder='First name' className='form-control' name='fname' value={formData.fname} onChange={handleInputChange} /><br />
+
+                        <label className='mb-2'>Email</label>
+                        <input type='text' placeholder='Email' className='form-control' disabled name='email' value={formData.email} onChange={handleInputChange} /><br />
+                        <label className='mb-2'> Username</label>
+                        <input type='text' placeholder='Username' className='form-control' disabled name='uname' value={formData.uname} onChange={handleInputChange} /><br />
+                        <label className='mb-2'> Address1</label>
+                        <input type='text' placeholder='Address1' className='form-control' name='address1' value={formData.address1} onChange={handleInputChange} /><br />
+
+                        <label className='mb-2'>Country</label>
+                        <select placeholder='Country' className='form-control' name='country' value={formData.country} onChange={handleInputChange}>
+                          {countries.map((country, index) => (
+                            <option key={index} value={country}>
+                              {country}
+                            </option>
+                          ))}
+                        </select><br />
+
+                        <label className='mb-2'> City</label>
+                        <input type='text' placeholder='City' className='form-control' name='city' value={formData.city} onChange={handleInputChange} /><br />
+
+                        <label className='mb-2'> Password</label>
+                        <input type='password' placeholder='password' className='form-control' name='password' value={formData.password} onChange={handleInputChange} /><br /><br />
+
+
+                      </div>
+                      <div className='col p-5'>
+                        <label className='mb-2'> Last name</label>
+                        <input type='text' placeholder='Last name' className='form-control' name='lname' value={formData.lname} onChange={handleInputChange} /><br />
+                        <label className='mb-2'>Phone Number</label>
+                        <input type='text' placeholder='Phone No.' className='form-control' name='phone' value={formData.phone} onChange={handleInputChange} /><br />
+                        <label className='mb-2'> Gender</label>
+                        <input type='text' placeholder='Gender' className='form-control' name='gender' value={formData.gender} onChange={handleInputChange} /><br />
+                        <label className='mb-2'> Address2</label>
+                        <input type='text' placeholder='Address2' className='form-control' name='address2' value={formData.address2} onChange={handleInputChange} /><br />
+                        <label className='mb-2'> State</label>
+                        <input type='text' placeholder='State' className='form-control' name='state' value={formData.state} onChange={handleInputChange} /><br />
+                        <label className='mb-2'> Pincode</label>
+                        <input type='text' placeholder='Pincode' className='form-control' name='pincode' value={formData.pincode} onChange={handleInputChange} /><br />
+                      </div>
+
+                      {/* //Submit buttons// */}
+                      <input type='submit' className='btn btn-success' name='submit' value='Update' ></input>
+
                     </div>
+
                   </div>
-                </div>
+                </form>
+
               </div>
+
 
               <div class="tab-pane fade p-4" id="v-pills-messages" role="tabpanel" aria-labelledby="v-pills-messages-tab">
                 <div className='d-flex justify-content-between align-items-center p-4'>
@@ -255,9 +377,9 @@ function Dashboard() {
                         <div class="card-body">
                           <h5 class="card-title"><i class="fa-solid fa-house"></i>&emsp;Default Address</h5>
                           <hr />
-                          <p>+91 08023310451</p>
-                          <p class="card-text">3-15/10/403 Newark, Street no 5, Next To Pizza Hut, Bangalore, Karnataka, 560003, India.</p>
-                          <p>soniataylor344@example.com</p>
+                          <p> + {user[0]?.phone}</p>
+                          <p class="card-text">{user[0]?.address1}.</p>
+                          <p>{user[0]?.email}</p>
                           <hr />
                           <a href="#" class="btn btn-primary "><i class="fa-solid fa-pencil"></i></a>&emsp;
                           <a href="#" class="btn btn-primary"><i class="fa-solid fa-trash"></i></a>
@@ -267,9 +389,9 @@ function Dashboard() {
                     <div class="col-sm-6 col-lg-6">
                       <div class="card">
                         <div class="card-body">
-                          <h5 class="card-title"><i class="fa-solid fa-house"></i>&emsp;Office Address</h5>  <hr />
-                          <p>+91 02228346362</p>
-                          <p class="card-text">2-15A-12 , Steriling Chambers, S Radhakrishnana Marg, J B Nagar, Andheri (west), Mumbai , Maharashtra</p>
+                          <h5 class="card-title"><i class="fa-solid fa-house"></i>&emsp;Office Address</h5><hr />
+                          <p>{user[0]?.phone}</p>
+                          <p class="card-text">{user[0]?.address2}</p>
                           <p>john54@gmail.com</p>
                           <hr />
                           <a href="#" class="btn btn-primary"><i class="fa-solid fa-pencil"></i></a>&emsp;

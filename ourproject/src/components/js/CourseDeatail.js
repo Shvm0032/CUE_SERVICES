@@ -1,54 +1,15 @@
-import React, { useEffect, useLayoutEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { addToCart } from '../../redux/cartSlice';
 import parse from 'html-react-parser';
 
 export default function CourseDetail() {
-    const { id } = useParams();
+    //    timer section
     const [days, setDays] = useState(0)
     const [hours, setHours] = useState(0)
     const [mins, setMinutes] = useState(0)
     const [secs, setSeconds] = useState(0)
-    const [course, setCourse] = useState([])
-    const [courseDe, setCourseDe] = useState({})
-
-    const live = course.filter((ele) => {
-        if (ele.selling_category === "Live Options") {
-            return true;
-        } else {
-            return false;
-        }
-    })
-    const live2 = course.filter((ele) => {
-        if (ele.selling_category === "Super Saver Options") {
-            return true;
-        } else {
-            return false;
-        }
-    })
-
-    const live3 = course.filter((ele) => {
-        if (ele.selling_category === "Recording & Combos") {
-            return true;
-        } else {
-            return false;
-        }
-    })
-
-
-
-    var [pr, setPrice] = useState(0)
-    function addData(e, price) {
-        console.log("Price is calling")
-        if (e.checked)
-            setPrice(parseInt(pr) + parseInt(price))
-        else
-            setPrice(parseInt(pr) - parseInt(price))
-
-
-    }
-
-var [mycourse,setMyCourse]=useState()
-
     const deadline = "October,21,2023"
     const getTime = () => {
         const time = Date.parse(deadline) - Date.now()
@@ -58,46 +19,30 @@ var [mycourse,setMyCourse]=useState()
         setSeconds(Math.floor((time / 1000) % 60))
     }
     useEffect(() => {
-        console.log(id)
+
         const interval = setInterval(() => getTime(deadline), 2000)
         return () => clearInterval(interval)
     }, []);
 
-    useEffect(() => {
-        // Fetch user information from the server
-        fetch(`http://127.0.1:8000/api/Selling?id=${id}`)
-            .then(response => response.json())
-            .then(data => {
-                console.log(data)
-                setCourse(data[1])
-                setCourseDe(data[0][0])
-            })
-            .catch(error => console.error('Error fetching user information:', error));
-    }, []);
+    //course detail section 
 
+    const { id } = useParams();
 
-    const addToCart = () => {
-        alert("Calling")
-        // Assuming courseId and pr are already defined in your component
-        fetch('http://localhost:8000/api/addToCart', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ title, pr }),
-            
-        })
-            .then(response => response.json())
-            .then(data => {
-                console.log("Api...........")
-                console.log(data);
-                // Handle success or error messages
-            })
-            .catch(error => console.error('Error adding to cart:', error));
+    const dispatch = useDispatch();
+    const courses = useSelector((state) => state.course.courses);
+
+    // Find the course with the specified id
+    const course = courses.find((c) => c.id.toString() === id);
+
+    const handleAddToCart = () => {
+        if (course) {
+            dispatch(addToCart(course));
+        }
     };
- 
-   const descrip = parse(`${courseDe.description}`)
-   const title = parse(`${courseDe.title}`)
+
+    if (!course) {
+        return <div>Course not found</div>;
+    }
 
     return (
         <div>
@@ -107,14 +52,21 @@ var [mycourse,setMyCourse]=useState()
                         <div className='row p-3'>
                             <div className='col-12 '>
                                 <h3 className=' mt-5' style={{ fontSize: '36px', fontStyle: 'normal' }}>
-                                    {courseDe["title"]}
+                                    {course.title}
                                 </h3>
                             </div>
                             <div className='col-lg-6 col-12'>
-                                <div className='d-flex gap-5 flex-column align-item-center justify-content-start mt-4'><div className='d-flex align-item-center justify-content-start'><i class="far fa-clock fa-2x"></i>&emsp;<span className='fs-5'>{courseDe.time}</span></div></div>
+                                <div className='d-flex gap-5 flex-row align-item-center justify-content-start mt-4'>
+                                    <div className='d-flex align-item-center justify-content-start'>
+                                        <i class="far fa-clock fa-2x"></i>&emsp;<span className='fs-5'>{course.time}</span>
+                                    </div>
+                                    <div className='d-flex align-item-center justify-content-start'>
+                                        <i class="far fa-user fa-2x"></i>&emsp;<span className='fs-5'>{course.time}</span>
+                                    </div>
+                                </div>
                                 <div className='d-flex gap-lg-5 gap-2 align-item-center justify-content-start mt-4'>
-                                    <div className='d-flex align-item-center justify-content-start'><i class="fas fa-stopwatch fa-2x"></i>&emsp;<span className='fs-5'>Duration : {courseDe.duration}</span></div>
-                                    <div className='d-flex align-item-center justify-content-start'><i class="fas fa-calendar-alt fa-2x"></i>&emsp;<span className='fs-5'> {courseDe.date}</span></div>
+                                    <div className='d-flex align-item-center justify-content-start'><i class="fas fa-stopwatch fa-2x"></i>&emsp;<span className='fs-5'>Duration :{course.duration} </span></div>
+                                    <div className='d-flex align-item-center justify-content-start'><i class="fas fa-calendar-alt fa-2x"></i>&emsp;<span className='fs-5'>{course.date} </span></div>
                                 </div>
                             </div>
                             <div className='col-lg-6 col-12'>
@@ -156,42 +108,9 @@ var [mycourse,setMyCourse]=useState()
                                 <div class="tab-content" id="nav-tabContent" >
                                     <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
                                         <div className='row p-2  fs-5'>
-                                            <div className='col-12 p-3 mt-2' >
-                                                <p className=' my-4 text-dark'>
-                                                    {descrip}
-                                                </p>
-
-
-                                            </div>
-                                            <div className='col-12 mt-3' >
-                                                <h4 className='my-4'>What You’ll Learn?</h4>
-                                                <ul className='mb-5 fs-5'>
-                                                    <li>What is exempt—exactly</li>
-                                                    <li>What are the categories of exempt employees under the FLSA?</li>
-                                                    <li>Examine the job duties test</li>
-                                                    <li>What is the bonus rule?</li>
-                                                    <li>How is the highly compensated exemption applied?</li>
-                                                    <li>Examine the latest from DOL on upgrading salary level tests for exempt employees!</li>
-                                                    <li>What is salary basis?</li>
-                                                    <li>When you can and when you cannot dock the pay of an exempt employee?</li>
-                                                    <li>Where do the states stand on exempt?</li>
-                                                </ul>
-                                            </div>
-                                            <div className='col-12 mt-3'>
-                                                <h4 className='my-4'>Why you should Attend:</h4>
-                                                <p className=' my-4 text-dark'>
-                                                    In this webinar we will discuss the four classifications of exempt employees permitted under Department of Labor rules including executive, administrative, professional and outside sales. We will examine the salary level test including rules for using bonuses to cover salary and the salary basis test. We will determine what deductions can be properly made from an exempt employee’s salary and which, if made, would violate the salary basis test and result in penalties for the employer.
-                                                </p>
-                                                <h4 className='my-4'>Who should Attend:</h4>
-                                                <ul className='mb-5 ms-3'>
-                                                    <li>Payroll Executives/ Managers/ Administrators/ Professionals/ Practitioners/ Entry Level Personnel</li>
-                                                    <li>Human Resources Executives/Managers/Administrators</li>
-                                                    <li>Accounting Personnel</li>
-                                                    <li>Business Owners/Executive Officers/Operations and Departmental Managers</li>
-                                                    <li>Lawmakers</li>
-                                                    <li>Attorneys/Legal Professionals</li>
-                                                    <li>Any individual or entity that must deal with the complexities and requirements of Payroll compliance issues</li>
-                                                </ul>
+                                            <div className='col-12 p-3 mt-2' style={{ textAlign: 'justify' }} >
+                                                {/* course description page */}
+                                                {parse(course.description)}
                                             </div>
                                         </div>
                                     </div>
@@ -201,7 +120,9 @@ var [mycourse,setMyCourse]=useState()
                                                 <img src='img/img2.jpg' alt="/" style={{ width: '100%', height: '300px', borderRadius: '20px' }} />
                                             </div>
                                             <div className='col-lg-7 col-12 p-3'>
-                                                <h4 className='my-2'>Vicki Lambert</h4>
+                                                <h4 className='my-2'>{course.name}
+                                               
+                                                </h4>
                                                 <h6 className='my-1'>Speaker</h6>
                                                 <p className=' text-dark'>
                                                     Vicki Lambert, President of Advantage HR Consulting, LLC, has over 25 years of experience in the Human Resources arena.
@@ -295,11 +216,11 @@ var [mycourse,setMyCourse]=useState()
                                             <form>
                                                 <table className='table table-striped table-hover table-primary'>
 
-                                                    {live.map((ele) => (<tr class="table-primary" >
-                                                        <td><input class="form-check-input" type="checkbox" id="" name="" value="" onClick={(e) => addData(e.target, ele.price)} /></td>
-                                                        <td>{ele.name}</td>
-                                                        <td className='text-primary fs-5 fw-4'>{ele.price}</td>
-                                                    </tr>))}
+                                                    <tr class="table-primary" >
+                                                        <td><input class="form-check-input" type="checkbox" id="" name="" value="" /></td>
+                                                        <td></td>
+                                                        <td className='text-primary fs-5 fw-4'></td>
+                                                    </tr>
                                                 </table>
                                             </form>
 
@@ -309,13 +230,13 @@ var [mycourse,setMyCourse]=useState()
                                             <p className='fs-5 text-center text-warning'>(Get Recordings & e-Transcripts <span className='text-danger'>Free</span> )</p>
                                             <form>
                                                 <table className='table table-striped table-hover table-primary'>
-                                                    {live2.map((ele) => (
-                                                        <tr class="table-primary" >
-                                                            <td><input class="form-check-input" type="checkbox" id="" name="" value="" onClick={(e) => addData(e.target, ele.price)} /></td>
-                                                            <td>{ele.name}</td>
-                                                            <td className='text-primary fs-5 fw-4'>{ele.price}</td>
-                                                        </tr>
-                                                    ))}
+
+                                                    <tr class="table-primary" >
+                                                        <td><input class="form-check-input" type="checkbox" id="" name="" value="" /></td>
+                                                        <td></td>
+                                                        <td className='text-primary fs-5 fw-4'></td>
+                                                    </tr>
+
 
                                                 </table>
                                             </form>
@@ -326,13 +247,13 @@ var [mycourse,setMyCourse]=useState()
 
                                             <form>
                                                 <table className='table table-striped table-hover table-primary'>
-                                                    {live3.map((ele) => (
-                                                        <tr class="table-primary" >
-                                                            <td><input class="form-check-input" type="checkbox" id="" name="" value="" onClick={(e) => addData(e.target, ele.price)} /></td>
-                                                            <td>{ele.name} (Save $300)</td>
-                                                            <td className='text-primary fs-5 fw-4'>{ele.price}</td>
-                                                        </tr>
-                                                    ))}
+
+                                                    <tr class="table-primary" >
+                                                        <td><input class="form-check-input" type="checkbox" id="" name="" value="" /></td>
+                                                        <td></td>
+                                                        <td className='text-primary fs-5 fw-4'></td>
+                                                    </tr>
+
                                                 </table>
                                             </form>
 
@@ -346,13 +267,13 @@ var [mycourse,setMyCourse]=useState()
                                             </p>
                                             <div className='col-12 my-4'>
                                                 <h5 className='text-center mt-5 '>
-                                                    Total Fee: ${pr}
+                                                    Total Fee: ${course.price}
                                                 </h5>
-                                                <center><Link to={`/CardSummary/${courseDe.id}/${pr}`}>
-                                                    <button onClick={addToCart}  className=' btn btn-primary btn-lg text-center mt-4 my-4'>
+                                                <center><Link to=''>
+                                                    <button onClick={handleAddToCart} className=' btn btn-primary btn-lg text-center mt-4 my-4'>
                                                         Add to Cart
                                                     </button></Link> &emsp;
-                                                    
+
                                                 </center>
                                             </div>
                                         </div>
