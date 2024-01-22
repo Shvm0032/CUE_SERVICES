@@ -201,7 +201,7 @@ Router.post("/api/Course_add", upload.single("file"), (req, res) => {
                     if (!err) {
                         const fetchedSellingOptions = JSON.parse(fetchedRow[0].selling_option);
                         // Sending response to the client
-                        res.status(200).json({ rows, fetchedSellingOptions });
+                        res.status(200).json({ message: 'Course added successfully', rows, fetchedSellingOptions });
                     } else {
                         console.log(err);
                         res.status(500).json({ error: 'Internal Server Error' });
@@ -218,6 +218,66 @@ Router.post("/api/Course_add", upload.single("file"), (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
+
+
+Router.get("/api/edit/:course_id", (req, res) => {
+    const id = req.params.course_id;
+    const query = "SELECT * FROM course_detail WHERE id = ? AND status IN (?)";
+    sqlDbconnect.query(query, [id, [1, 2]], (err, result) => {
+        if (err) return res.json({ Error: err });
+        return res.json(result);
+    });
+
+});
+
+
+Router.put('/api/update/:course_id', upload.single('thumbnail'), async (req, res) => {
+    const courseId = req.params.course_id;
+    const { industries, speaker, title, description, duration, time, date } = req.body;
+    const course_thumbnail = req.file ? req.file.buffer : null; // Assuming 'thumbnail' is the name of the file input in your form
+  
+    const updateCourseQuery = `
+      UPDATE course_detail
+      SET Industries = ?, speaker = ?, title = ?, description = ?, duration = ?, time = ?, date = ?, course_thumbnail = ?
+      WHERE id = ?
+    `;
+  
+    try {
+      await sqlDbconnect.query(updateCourseQuery, [
+        industries,
+        speaker,
+        title,
+        description,
+        duration,
+        time,
+        date,
+        course_thumbnail,
+        courseId,
+      ]);
+  
+      // Insert or update selling options as needed
+      const updateSellingOptionsQuery = `
+        REPLACE INTO selling_options ( category, name, price)
+        VALUES ( ?, ?, ?)
+      `;
+  
+      req.body.sellingOptions.forEach(async (option) => {
+        await sqlDbconnect.query(updateSellingOptionsQuery, [courseId, option.category, option.name, option.price]);
+      });
+  
+      res.status(200).send('Course updated successfully!');
+    } catch (error) {
+      console.error('Error updating course:', error);
+      res.status(500).send('Internal Server Error');
+    }
+});
+
+
+   
+
+
+
+
 // end courses
 
 
@@ -245,16 +305,24 @@ Router.post("/api/Speaker_add", upload.single("file"), (req, res) => {
     const bio = req.body.bio;
     const designation = req.body.designation;
     const experience = req.body.experience;
-    console.log(req.body, "<<<<")
-    console.log("File Name is =  " + filename)
-    sqlDbconnect.query(`INSERT INTO speaker_info (name, email, phone_no, bio, images ,designation ,experience) VALUES ('${username}','${email}','${phone}','${bio}','${filename}','${designation}',${experience})`, (err, rows) => {
+
+    // Get the original name of the uploaded file
+    const filename = req.file ? req.file.originalname : null;
+
+    console.log(req.body, "<<<<");
+    console.log("File Name is =  " + filename);
+
+    // Use parameterized query to prevent SQL injection
+    const insertQuery = "INSERT INTO speaker_info (name, email, phone_no, bio, images, designation, experience) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    
+    sqlDbconnect.query(insertQuery, [username, email, phone, bio, filename, designation, experience], (err, rows) => {
         if (!err) {
-            res.send(rows);
+            res.json({ success: true, message: 'Speaker added successfully!' });
         } else {
             console.log(err);
+            res.status(500).json({ success: false, message: 'Internal Server Error' });
         }
     });
-
 });
 
 
@@ -274,7 +342,7 @@ Router.delete("/api/delete_speaker", (req, res) => {
 
 // edit speaker
 Router.get("/api/edit/:speaker_id", (req, res) => {
-    const id = req.params.id;
+    const id = req.params.speaker_id;
     const query = "SELECT * FROM speaker_info WHERE speaker_id = ? AND status IN (?)";
     sqlDbconnect.query(query, [id, [1, 2]], (err, result) => {
         if (err) return res.json({ Error: err });
@@ -311,7 +379,7 @@ Router.get("/api/profile", (req, res) => {
 
 // update speaker
 Router.put('/api/update_speaker/:speaker_id', upload.single('image'), async (req, res) => {
-    const { id } = req.params;
+    const { speaker_id } = req.params;
     const { name, email, phone_no, bio, designation, experience } = req.body;
 
     // Handle file upload
@@ -326,7 +394,7 @@ Router.put('/api/update_speaker/:speaker_id', upload.single('image'), async (req
 
     sqlDbconnect.query(
         updateQuery,
-        [name, email, phone_no, bio, designation, experience, image, id],
+        [name, email, phone_no, bio, designation, experience, image, speaker_id],
         (err, result) => {
             if (err) {
                 console.error('Error updating speaker:', err);
@@ -418,7 +486,7 @@ Router.delete("/api/delete_Coupans", (req, res) => {
 Router.post('/api/InsertCoupons', (req, res) => {
     const { couponName, discountType, startDate, expiryDate, coupanlimit, status } = req.body;
 
-    sqlDbconnect.query('INSERT INTO sales_promotion_coupon (coupon_code,discount,start_date,expire_date,coupons_status)VALUES (?, ?, ?, ?, ?)',
+    sqlDbconnect.query('INSERT INTO sales_promotion_coupon (coupon_code,discount,start_date,expire_date,coupons_limit,coupons_status)VALUES (?, ?, ?, ?,?, ?)',
         [couponName, discountType, startDate, expiryDate, coupanlimit, status], (err, result) => {
             if (err) {
                 console.error('Error inserting data into MySQL:', err);
@@ -445,6 +513,60 @@ Router.get("/api/Industary", (req, res) => {
     });
 });
 
+Router.post("/api/Industary_add", upload.single("file"), (req, res) => {
+    // insert data in contact form
+    const industry_name = req.body.industry_name;
+    const filename = req.file.filename; // Assuming you are trying to get the uploaded file name
+
+    console.log(req.body, "<<<<");
+    console.log("File Name is = " + filename);
+
+    sqlDbconnect.query(
+        `INSERT INTO industry (industry_name, image) VALUES ('${industry_name}', '${filename}')`,
+        (err, result) => {
+            if (!err) {
+                res.json({ success: true, message: "Industry added successfully", data: result });
+            } else {
+                console.error(err);
+                res.status(500).json({ error: "Internal Server Error" });
+            }
+        }
+    );
+});
+
+
+
+Router.put('/api/update_industry/:id', upload.single('image'), (req, res) => {
+    try {
+        const industryId = req.params.id;
+        const { industry_name } = req.body;
+        const image = req.file; // The uploaded image file
+
+        if (!industry_name || typeof industry_name !== 'string') {
+            return res.status(400).json({ error: 'Invalid industry data' });
+        }
+
+        const query = 'UPDATE industry SET industry_name = ?, image = ? WHERE id = ?';
+
+        sqlDbconnect.query(query, [industry_name, image ? image.filename : null, industryId], (error, result) => {
+            if (error) {
+                console.error('Error updating industry:', error);
+                res.status(500).json({ error: 'Internal Server Error' });
+            } else {
+                if (result.affectedRows > 0) {
+                    res.json({ success: true, message: 'Industry updated successfully' });
+                } else {
+                    res.status(404).json({ error: 'Industry not found or no changes made' });
+                }
+            }
+        });
+    } catch (error) {
+        console.error('Error updating industry:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+  
 
 // start faq category
 
@@ -457,6 +579,9 @@ Router.get("/api/Faq_Category", (req, res) => {
         }
     });
 });
+
+
+
 
 // edit faq category
 
@@ -655,6 +780,8 @@ Router.get("/api/Testimonial", (req, res) => {
         }
     });
 });
+
+
 
 
 Router.get("/api/Registration", (req, res) => {

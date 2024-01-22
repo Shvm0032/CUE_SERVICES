@@ -48,7 +48,7 @@ const routes = [
   { path: '/Cources', name: 'Cources', element: AllCources, exact: true },
   { path: '/Cources/AllCources', name: 'AllCources', element: AllCources },
   { path: '/Cources/AddCourse', name: 'AddCourse', element: AddCourse },
-  { path: '/Cources/EditCources', name: 'EditCources', element: EditCources },
+  { path: '/Cources/EditCources/:course_id', name: 'EditCources', element: EditCources },
   
   // Industary
   { path: '/Industary', name: 'Industary', element: NewIndustary, exact: true },
@@ -59,7 +59,7 @@ const routes = [
   { path: '/Speakers', name: 'Speakers', element: AllSpeakers, exact: true },
   { path: '/Speakers/AllSpeakers', name: 'All Speakers', element: AllSpeakers },
   { path: '/Speakers/AddSpeakers', name: 'Add Speakers', element: AddSpeakers },
-  { path: '/Speakers/EditSpeakers/:id', name: 'EditSpeakers', element: EditSpeakers },
+  { path: '/Speakers/EditSpeakers/:speaker_id', name: 'EditSpeakers', element: EditSpeakers },
 
 
   //Orders

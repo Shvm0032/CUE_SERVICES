@@ -61,8 +61,13 @@ export default function AllSpeakers() {
                   <th scope="col">Name</th>
                   <th scope="col">Email</th>
                   <th scope="col">phone_no</th>
+<<<<<<< HEAD
                 {/*  <th scope="col">Bio</th>*/}
                   {/* <th scope="col">Designation</th>*/}
+=======
+                  {/* <th scope="col">Bio</th> */}
+                  <th scope="col">Designation</th>
+>>>>>>> 7159af60eedb53f2a360a0b3cc11833c3813ef15
                   <th scope="col">Experience</th>
                   <th scope="col">Image</th>
                   {/* <th scope="col">Resume</th> */}
@@ -77,8 +82,13 @@ export default function AllSpeakers() {
                     <td>{row.name}</td>
                     <td>{row.email}</td>
                     <td>{row.phone_no}</td>
+<<<<<<< HEAD
                     {/* <td>{row.bio}</td>*/}
                       {/* <td>{row.designation}</td>*/}
+=======
+                    {/* <td>{row.bio}</td> */}
+                    <td>{row.designation}</td>
+>>>>>>> 7159af60eedb53f2a360a0b3cc11833c3813ef15
                     <td>{row.experience}</td>
                     <td>{row.images}</td>
                     {/* <td>{row.resume}</td> */}
