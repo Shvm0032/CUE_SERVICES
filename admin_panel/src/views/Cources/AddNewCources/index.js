@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import axios from 'axios';
+import { useNavigate } from 'react-router';
 
 const modules = {
     toolbar: [
@@ -18,13 +19,15 @@ const modules = {
     ],
 };
 
-
 export default function AddCourse() {
     const [formFields, setFormFields] = useState([
         { category: '', name: '', price: '' },
     ]);
-    const [filedata, setFiledata] = useState([]);
+    const [filedata, setFiledata] = useState(null);
+    const [showSuccessModal, setShowSuccessModal] = useState(false);
     const [sellingOptions, setSellingOptions] = useState([]);
+    const navigate = useNavigate();
+
     const fetchData = async () => {
         try {
             const response = await fetch('http://localhost:8000/api/GetsellingOptions');
@@ -42,11 +45,6 @@ export default function AddCourse() {
     useEffect(() => {
         fetchData();
     }, []);
-
-    useEffect(() => {
-        // Log sellingOptions to console when it changes
-        console.log("Selling Options:", sellingOptions);
-    }, [sellingOptions]);
 
     const handleFormChange = (event, index) => {
         let data = [...formFields];
@@ -85,7 +83,7 @@ export default function AddCourse() {
     }, []);
 
     const [Course, setCourse] = useState({
-        Industary: "",
+        Industry: "",
         Speaker: "",
         Name: '',
         Description: "",
@@ -99,9 +97,6 @@ export default function AddCourse() {
         let data = [...sellingOptions];
         data[index][event.target.name] = event.target.value;
         setSellingOptions(data);
-        console.log(event.target.name, 'data--------');
-
-        console.log("Fields Data:", formFields);
     }
 
     function submitForm(e) {
@@ -157,11 +152,12 @@ export default function AddCourse() {
         let selling = sellingOptions.map((ele) => ({ 
             id: ele.id,
             category: ele.selling_category,
-            name:ele.name,
-            price:ele.price
-        }))
+            name: ele.name,
+            price: ele.price
+        }));
+
         const data = new FormData();
-        data.append('industry', Course.Industary);
+        data.append('industry', Course.Industry);
         data.append('speaker', Course.Speaker);
         data.append('name', Course.Name);
         data.append('description', Course.Description);
@@ -172,10 +168,20 @@ export default function AddCourse() {
         data.append('file', filedata);
         console.log(data,'data');
         axios.post('http://localhost:8000/api/Course_add', data)
-            .then(data => console.log(data))
-            .catch(error => console.error('Error:', error));
+        
+            .then(response => {
+                if (response.status === 200) {
+                    console.log('Course added successfully!');
+                    setShowSuccessModal(true);
+                    navigate('/Cources/AllCources');
+                } else {
+                    console.error('Failed to add course:', response.statusText);
+                }
+            })
+            .catch(error => {
+                console.error('Error adding course:', error.message);
+            });
     }
-    console.log(Course, filedata);
 
     return (
         <>
@@ -185,7 +191,6 @@ export default function AddCourse() {
                         <div className="col-12 p-4">
                             <h4 className="text-center mt-2">Add New Course</h4>
                             <form>
-                                {/* industary */}
                                 <div className='row'>
                                     <div className='col-2'>
                                         <label>Industry</label>
@@ -194,18 +199,16 @@ export default function AddCourse() {
                                         <select onChange={(e) => {
                                             setCourse((previous) => ({
                                                 ...previous,
-                                                Industary: e.target.value
+                                                Industry: e.target.value
                                             }))
-                                        }} className="form-select" name='Industry' aria-label="Default select example">
-                                            <option selected>Open this select menu</option>
+                                        }} className="form-select" name='Industry' aria-label="Industry Select">
+                                            <option defaultValue>Select an Industry</option>
                                             {industry.map((ele) => (
                                                 <option key={ele.id} value={ele.id}>{ele.industry_name}</option>
                                             ))}
                                         </select>
                                     </div>
                                 </div>
-                                <br />
-                                {/* Seaker */}
                                 <div className='row'>
                                     <div className='col-2'>
                                         <label>Speaker</label>
@@ -216,93 +219,129 @@ export default function AddCourse() {
                                                 ...previous,
                                                 Speaker: e.target.value
                                             }))
-                                        }} className="form-select" name='Speaker' aria-label="Default select example">
-                                            <option selected>Open this select menu</option>
-
+                                        }} className="form-select" name='Speaker' aria-label="Speaker Select">
+                                            <option defaultValue>Select a Speaker</option>
                                             {speaker.map((ele) => (
                                                 <option key={ele.id} value={ele.speaker_id}>{ele.name}</option>
                                             ))}
                                         </select>
                                     </div>
-                                </div><br />
-                                {/* hide or display */}
-
-                                {/* COURSE NAME */}
+                                </div>
                                 <div className='row'>
-                                    <div className='col-2'><label>Name</label></div>
-                                    <div className='col'> <input onChange={(e) => {
-                                        setCourse((previous) => ({
-                                            ...previous,
-                                            Name: e.target.value
-                                        }))
-                                    }} type="text" name='courseName' className="form-control" placeholder="name" /></div>
-                                </div><br />
-
-                                {/* Description */}
-                                <div className='row'>
-                                    <div className='col-2'> <label> Description</label></div>
-                                    <div className='col'> <ReactQuill onChange={(e) => {
-                                        setCourse((previous) => ({
-                                            ...previous,
-                                            Description: e,
-                                        }))
-                                    }} theme="snow"
-                                        modules={modules}
-                                        style={{
-                                            height: '40vh',
-                                            marginBottom: '40px'
-                                        }}
-                                    />
+                                    <div className='col-2'>
+                                        <label>Name</label>
+                                    </div>
+                                    <div className='col'>
+                                        <input
+                                            onChange={(e) => {
+                                                setCourse((previous) => ({
+                                                    ...previous,
+                                                    Name: e.target.value
+                                                }))
+                                            }}
+                                            type="text"
+                                            name='courseName'
+                                            className="form-control"
+                                            placeholder="Course Name"
+                                        />
                                     </div>
                                 </div>
-                                {/* thumbnail */}
-                                <br />
                                 <div className='row'>
-                                    <div className='col-2 mt-4'><label>Thumbnail</label></div>
-                                    <div className='col'><input onChange={(e) => { setFiledata(e.target.files[0]) }} type="file" name='thumbnail' className="form-control" id="customFile" /></div>
-                                </div>
-                                {/* duration */}
-                                <br />
-                                <div className='row'>
-                                    <div className='col-2'>  <label>Duration</label></div>
-                                    <div className='col'><input onChange={(e) => {
-                                        setCourse((previous) => ({
-                                            ...previous,
-                                            Duration: e.target.value,
-                                        }))
-                                    }} type="text" name='duration' className="form-control" placeholder="duration" /></div>
-                                </div>
-
-                                <br />
-                                {/* cst time date */}
-                                <div className='row'>
-                                    <div className='col-2'><label>CST Date </label></div>
-                                    <div className='col'><input onChange={(e) => {
-                                        setCourse((previous) => ({
-                                            ...previous,
-                                            CSTDate: e.target.value,
-                                        }))
-                                    }} type="date" name='date' className="form-control" /></div>
-                                </div>
-                                <br />
-
-                                {/* time */}
-                                <div className='row'>
-                                    <div className='col-2'><label> Time</label></div>
-                                    <div className='col'><input onChange={(e) => {
-                                        setCourse((previous) => ({
-                                            ...previous,
-                                            Time: e.target.value,
-                                        }))
-                                    }} type="time" name='time' className="form-control" /></div>
-                                </div>
-                                <br />
-
-                                {/* selling option */}
-                                <div className='row'>
-                                    <div className='col-2'> <label>Selling option</label></div>
+                                    <div className='col-2'>
+                                        <label>Description</label>
+                                    </div>
                                     <div className='col'>
-                                        <table className='table  table-active table-hover'>
+                                        <ReactQuill
+                                            onChange={(e) => {
+                                                setCourse((previous) => ({
+                                                    ...previous,
+                                                    Description: e,
+                                                }))
+                                            }}
+                                            theme="snow"
+                                            modules={modules}
+                                            style={{
+                                                height: '40vh',
+                                                marginBottom: '40px'
+                                            }}
+                                        />
+                                    </div>
+                                </div>
+                                <div className='row'>
+                                    <div className='col-2 mt-4'>
+                                        <label>Thumbnail</label>
+                                    </div>
+                                    <div className='col'>
+                                        <input
+                                            onChange={(e) => { setFiledata(e.target.files[0]) }}
+                                            type="file"
+                                            name='thumbnail'
+                                            className="form-control"
+                                            id="customFile"
+                                        />
+                                    </div>
+                                </div>
+                                <div className='row'>
+                                    <div className='col-2'>
+                                        <label>Duration</label>
+                                    </div>
+                                    <div className='col'>
+                                        <input
+                                            onChange={(e) => {
+                                                setCourse((previous) => ({
+                                                    ...previous,
+                                                    Duration: e.target.value,
+                                                }))
+                                            }}
+                                            type="text"
+                                            name='duration'
+                                            className="form-control"
+                                            placeholder="Duration"
+                                        />
+                                    </div>
+                                </div>
+                                <div className='row'>
+                                    <div className='col-2'>
+                                        <label>CST Date</label>
+                                    </div>
+                                    <div className='col'>
+                                        <input
+                                            onChange={(e) => {
+                                                setCourse((previous) => ({
+                                                    ...previous,
+                                                    CSTDate: e.target.value,
+                                                }))
+                                            }}
+                                            type="date"
+                                            name='date'
+                                            className="form-control"
+                                        />
+                                    </div>
+                                </div>
+                                <div className='row'>
+                                    <div className='col-2'>
+                                        <label>Time</label>
+                                    </div>
+                                    <div className='col'>
+                                        <input
+                                            onChange={(e) => {
+                                                setCourse((previous) => ({
+                                                    ...previous,
+                                                    Time: e.target.value,
+                                                }))
+                                            }}
+                                            type="time"
+                                            name='time'
+                                            className="form-control"
+                                        />
+                                    </div>
+                                </div>
+                                <div className='row'>
+                                    <div className='col-2'>
+                                        <label>Selling Option</label>
+                                    </div>
+                                    <div className='col'>
+                                        <table className='table table-active table-hover'>
                                             <thead>
                                                 <tr className='fw-bold'>
                                                     <td></td>
@@ -325,11 +364,29 @@ export default function AddCourse() {
                                             </tbody>
                                         </table>
                                     </div>
-                                </div><br />
+                                </div>
                                 <center>
                                     <button onClick={submitForm} type='submit' className="btn btn-primary ">Submit</button>
                                 </center>
                             </form>
+                            <div className="modal" tabIndex="-1" role="dialog" style={{ display: showSuccessModal ? 'block' : 'none' }}>
+            <div className="modal-dialog" role="document">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h5 className="modal-title">Success!</h5>
+                  <button type="button" className="close" onClick={() => setShowSuccessModal(false)} aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div className="modal-body">
+                  Course updated successfully!
+                </div>
+                <div className="modal-footer">
+                  <button type="button" className="btn btn-primary" onClick={() => setShowSuccessModal(false)}>Close</button>
+                </div>
+              </div>
+            </div>
+          </div>
                         </div>
                     </div>
                 </div>

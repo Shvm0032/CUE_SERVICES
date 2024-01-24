@@ -24,7 +24,7 @@ const modules = {
 };
 
 const EditSpeakersComponent = () => {
-  const { id } = useParams();
+  const { speaker_id } = useParams();
   const navigate = useNavigate();
 
   const [name, setName] = useState('');
@@ -38,7 +38,7 @@ const EditSpeakersComponent = () => {
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
-    axios.get(`http://localhost:8000/api/edit/${id}`)
+    axios.get(`http://localhost:8000/api/speaker/edit/${speaker_id}`)
       .then((res) => {
         setName(res.data[0].name);
         setEmail(res.data[0].email);
@@ -48,7 +48,7 @@ const EditSpeakersComponent = () => {
         setExperience(res.data[0].experience);
       })
       .catch((err) => console.log(err));
-  }, [id]);
+  }, [speaker_id]);
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
@@ -76,7 +76,7 @@ const EditSpeakersComponent = () => {
     formData.append('image', file);
 
     try {
-      const response = await axios.put(`http://localhost:8000/api/update_speaker/${id}`, formData, {
+      const response = await axios.put(`http://localhost:8000/api/update_speaker/${speaker_id}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },

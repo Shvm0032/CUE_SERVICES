@@ -6,7 +6,7 @@ export const fetchSpeakers = createAsyncThunk('speakers/fetchSpeakers', async ()
     try {
         // Update the URL to match your API endpoint
         const response = await http.get('/Speaker');
-        return response.data;
+        return response.data.data;
     } catch (error) {
         throw error;
     }

@@ -1,14 +1,27 @@
 import React, { useState } from 'react';
 import '../css/Login.modules.css';
-import axios from 'axios';
+// import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import authService from "../../services/auth.service";
 import { Link } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+
+
 function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
 
     const navigate = useNavigate()
+
+    const handleClickShowPassword = () => {
+        setShowPassword(!showPassword);
+    };
+
+    const handleMouseDownPassword = (event) => {
+        event.preventDefault();
+    };
 
     async function handleSubmit(event) {
         event.preventDefault();
@@ -53,7 +66,7 @@ function Login() {
                                         <input
                                             type='email'
                                             className='form-control'
-                                            placeholder='Username or Email'
+                                            placeholder='Email'
                                             value={email}
                                             onChange={e => setEmail(e.target.value)}
                                         />
@@ -61,19 +74,34 @@ function Login() {
 
                                     <div className='mb-3 log-form'>
                                         <label htmlFor='exampleInputEmail1' className='form-label'> Password</label>
-                                        <input
-                                            type='password'
-                                            className='form-control'
-                                            placeholder='Username or Email'
-                                            value={password}
-                                            onChange={e => setPassword(e.target.value)}
-                                        />
+                                        <div className='password-input d-flex p-1 rounded-4'style={{background:'#b8eded'}}>
+                                            <input
+                                                type={showPassword ? 'text' : 'password'}
+                                                className='form-control '
+                                                placeholder='Password'
+                                                value={password}
+                                                onChange={e => setPassword(e.target.value)}
+                                            />
+                                            <div>
+                                            {showPassword ? (
+                                                <>
+                                                
+                                                <i className='fa-solid fa-eye  p-2' icon={faEyeSlash} onClick={handleClickShowPassword} onMouseDown={handleMouseDownPassword} />
+                                                </>
+                                            ) : (
+                                                <>
+                                                
+                                                <i  className='fa-solid fa-eye-slash p-2' icon={faEye} onClick={handleClickShowPassword} onMouseDown={handleMouseDownPassword} ></i>
+                                                </>
+                                            )}
+                                            </div>
+                                        </div>
                                     </div>
-                                    
-                                    <button className='btn log-buttons'>Login</button><br/>
+
+                                    <button className='btn log-buttons'>Login</button><br />
                                     <Link to='/register ' className='text-secondary text-center'>Not a member?<span className='text-primary'>Create your new Account</span></Link>
                                 </form>
-                                
+
                             </div>
                         </div>
                     </div>

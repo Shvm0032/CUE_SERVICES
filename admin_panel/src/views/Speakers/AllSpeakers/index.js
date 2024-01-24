@@ -11,7 +11,7 @@ export default function AllSpeakers() {
     try {
       var res = await axios.get("http://localhost:8000/api/Speaker");
       console.log(res);
-      setSpeakers(res.data);
+      setSpeakers(res.data.data);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -25,10 +25,10 @@ export default function AllSpeakers() {
     console.log("hii")
     console.log(r)
     try {
-      var res = await axios.delete(`http://localhost:8000/api/delete_speaker?id=${r.id}`);
+      var res = await axios.delete(`http://localhost:8000/api/delete_speaker?id=${r.speaker_id}`);
       console.log(res);
       if (res.status === 200) {
-        setSpeakers(speakers.filter((ele) => { if (ele.id !== r.id) { return true } else { return false } }))
+        setSpeakers(speakers.filter((ele) => { if (ele.speaker_id !== r.speaker_id) { return true } else { return false } }))
       }
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -61,8 +61,13 @@ export default function AllSpeakers() {
                   <th scope="col">Name</th>
                   <th scope="col">Email</th>
                   <th scope="col">phone_no</th>
-                  <th scope="col">Bio</th>
+
+                {/*  <th scope="col">Bio</th>*/}
+                  {/* <th scope="col">Designation</th>*/}
+
+                  {/* <th scope="col">Bio</th> */}
                   <th scope="col">Designation</th>
+
                   <th scope="col">Experience</th>
                   <th scope="col">Image</th>
                   {/* <th scope="col">Resume</th> */}
@@ -77,8 +82,13 @@ export default function AllSpeakers() {
                     <td>{row.name}</td>
                     <td>{row.email}</td>
                     <td>{row.phone_no}</td>
-                    <td>{row.bio}</td>
+
+                    {/* <td>{row.bio}</td>*/}
+                      {/* <td>{row.designation}</td>*/}
+
+                    {/* <td>{row.bio}</td> */}
                     <td>{row.designation}</td>
+
                     <td>{row.experience}</td>
                     <td>{row.images}</td>
                     {/* <td>{row.resume}</td> */}
@@ -88,7 +98,7 @@ export default function AllSpeakers() {
                         <i className="fa-solid fa-trash-can"></i>&nbsp;Delete
                       </button>
                       &nbsp;&nbsp;
-                     <Link to= {`/Speakers/EditSpeakers/${row.id}`} className='btn btn-outline-success'>
+                     <Link to= {`/Speakers/EditSpeakers/${row.speaker_id}`} className='btn btn-outline-success'>
                         <i className="fa fa-edit"></i>&nbsp;Edit
                       </Link>
                     </td>
