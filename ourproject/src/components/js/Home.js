@@ -5,22 +5,18 @@ import 'react-multi-carousel/lib/styles.css';
 import { Link } from "react-router-dom";
 import '../css/Home.modules.css';
 import CountUp from 'react-countup';
+import { v4 as uuid } from "uuid";
 
 const Home = () => {
 
-  // var [Cources, setCources] = useState([]);
-  // var getData = async () => {
-  //   try {
-  //     var res = await axios.get("http://localhost:8000/api/Course");
-  //     console.log(res);
-  //     setCources(res.data);
-  //   } catch (error) {
-  //     console.error("Error fetching data:", error);
-  //   }
-  // }
-  // useEffect(() => {
-  //   getData();
-  // }, []);
+  const unique_id = uuid();
+  if (localStorage.getItem('unique_id')){
+
+  }
+  else{
+    localStorage.setItem('unique_id', unique_id);
+  }
+  
 
 
   const Siderresponsive = {
@@ -91,8 +87,9 @@ const Home = () => {
               <div className="row my-lg-3 my-md-3 my-3">
                 <span className="" style={{ color: "rgb(19, 187, 175)", fontSize: "23px", fontWeight: '600' }}>CEU Services<br /></span>
                 <h1 >Best Online Courses</h1>
+                <h5>{localStorage.getItem('unique_id')}</h5>
                 <div class="p-lg-2 p-2">
-                  <Link to="/Webinar" ><button class="button1 rounded-pill"> View All Cources</button></Link> &emsp; &emsp;
+                  <Link to="/Webinar"><button class="button1 rounded-pill"> View All Cources</button></Link> &emsp; &emsp;
                 </div>
               </div>
             </div>

@@ -1,8 +1,12 @@
 
 import React from 'react'
 import { Link } from "react-router-dom";
-import authService from '../../services/auth.service';
+import { useSelector } from 'react-redux';
+import { selectCartItems } from '../../redux/cartSlice';
 export default function Navbar() {
+    const cartItems = useSelector(selectCartItems);
+    console.log(cartItems.length)
+    console.log(cartItems);
     return (
         <>  <div className='sticky-top'>
             <section className="d-flex justify-content-between p-2" style={{ background: '#13bbaf' }}>
@@ -91,7 +95,8 @@ export default function Navbar() {
                                     <button type="button" class="btn  d-inline-flex  position-relative">
                                         <i class="fas fa-cart-arrow-down fa-2 me-2 mt-1" style={{ color: '#ff9b24' }}></i>Cart
                                         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                            +1
+                                            {cartItems.length}
+                                            
                                             <span class="visually-hidden">unread messages</span>
                                         </span>
                                     </button>

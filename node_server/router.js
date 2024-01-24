@@ -10,6 +10,8 @@ const { log } = require("console");
 const { title } = require("process");
 const dotenv = require('dotenv');
 const jwt = require('jsonwebtoken');
+const { json } = require("body-parser");
+const { Route } = require("react-browser-router");
 
 
 
@@ -185,13 +187,15 @@ Router.post("/api/Course_add", upload.single("file"), (req, res) => {
         const { industry, speaker, name, description, duration, time, cstdate, fields } = req.body;
         const filename = req.file.filename; // Assuming your file is uploaded correctly
         const fieldsData = JSON.parse(fields);
-        console.log('fieldsData');
+        console.log(fieldsData, 'fieldsData');
         // Extracting selling options data from fieldsData
-        const sellingOptions = fieldsData.map(option => ({
+        let sellingOptions = fieldsData.map(option => ({
+            id: option.id,
             category: option.category,
             name: option.name,
             price: option.price
         }));
+        // sellingOptions = JSON.stringify(sellingOptions);
         // Inserting data into the database, including the new selling_option column
         sqlDbconnect.query(`INSERT INTO course_detail (industries, speaker, description, title, date, time, duration, course_thumbail, selling_option) VALUES ('${industry}','${speaker}','${description}','${name}','${cstdate}','${time}', '${duration}', '${filename}', '${JSON.stringify(sellingOptions)}')`, (err, rows) => {
             if (!err) {
@@ -431,8 +435,35 @@ Router.put('/api/update_speaker/:speaker_id', upload.single('image'), async (req
 // start copan
 
 
+Router.post('/api/check-coupon', (req, res) => {
+    const { couponCode } = req.body;
+
+    // Query the database to check if the coupon code exists
+    sqlDbconnect.query(
+        'SELECT * FROM sales_promotion_coupon WHERE coupon_code = ?',
+        [couponCode],
+        (err, results) => {
+            if (err) {
+                console.error('MySQL query error:', err);
+                res.status(500).send('Internal Server Error');
+            }
+            else {
+                if (results.length > 0) {
+                    // Coupon code exists
+                    res.json({ valid: true, discount: results[0].discount });
+                } else {
+                    // Coupon code does not exist
+                    res.json({ valid: false });
+                }
+            }
+        }
+    );
+});
+
+
 
 Router.get("/api/Coupan", (req, res) => {
+
     sqlDbconnect.query("SELECT * FROM sales_promotion_coupon", (err, rows) => {
         if (!err) {
             res.send(rows);
@@ -441,7 +472,6 @@ Router.get("/api/Coupan", (req, res) => {
         }
     });
 });
-
 
 // edit copon
 Router.get("/api/cu_edit/:id", (req, res) => {
@@ -650,6 +680,8 @@ Router.put('/api/Update_Category/:id', (req, res) => {
 // end faq category
 
 
+
+
 // start faq question
 
 Router.get("/api/Faq_Question", (req, res) => {
@@ -710,7 +742,6 @@ Router.get("/api/Order_Details", (req, res) => {
 
 
 // Selling_option
-
 
 Router.post('/api/AddSellingOption', (req, res) => {
     const { category, name, price } = req.body;
@@ -1252,7 +1283,6 @@ function isValidEmail(email) {
     return emailRegex.test(email);
 }
 
-
 Router.get("/api/GetContact_Details", (req, res) => {
     sqlDbconnect.query("SELECT * FROM contact_details", (err, rows) => {
         if (!err) {
@@ -1338,6 +1368,52 @@ Router.post('/api/updateprofile', (req, res) => {
 
 
 
+
+
+// const stripe = require('stripe')('sk_test_51OGHZSSA3p9Dwv0NOucSSfsRcoPoVUuczA2UhFef5XqHasgHKiNDypSQqr0qVuu6jJX1V74riE78pD6M8V61dZJS00tQR6B9W5');
+
+// Router.post('/api/create-checkout-session', async (req, res) => {
+//     const formData = req.body.formData;
+
+//     // Insert form data into the database
+//     const insertFormDataQuery = 'INSERT INTO order_course SET ?';
+//     sqlDbconnect.query(insertFormDataQuery, formData, (err, result) => {
+//         if (err) {
+//             console.error('Error inserting form data into the database:', err);
+//             res.status(500).json({ error: 'Internal Server Error' });
+//             return;
+//         }
+
+//         const cartItems = req.body.cartItems;
+
+//         // Create line items dynamically based on the items in cartItems
+//         const lineItems = cartItems.map((item) => ({
+//             price_data: {
+//                 currency: 'usd',
+//                 product_data: {
+//                     name: item.course_title, // Change this to the property representing the product name
+//                 },
+//                 unit_amount: item.totalPrice * 100, // Convert the total price to cents
+//             },
+//             quantity: item.qty,
+//         }));
+
+//         // Create a Checkout session
+//         stripe.checkout.sessions.create({
+//             payment_method_types: ['card'],
+//             line_items: lineItems,
+//             mode: 'payment',
+//             success_url: 'http://localhost:3000/success', // Redirect to success page after payment
+//             cancel_url: 'http://localhost:3000/cancel', // Redirect to cancel page if user cancels
+//         }).then((session) => {
+//             // Return the session ID to the frontend
+//             res.json({ sessionId: session.id });
+//         }).catch((error) => {
+//             console.error('Error creating Checkout session:', error);
+//             res.status(500).json({ error: 'Internal Server Error' });
+//         });
+//     });
+// });
 
 
 module.exports = Router;
