@@ -68,3 +68,24 @@
 //     const sql  'insert into order_details (user_id , order_id , bank_ref_no , order_status , card_name , status_message,amount ,trans_date ,trans_date)'
 
 // })
+try {
+    // Make a POST request to the backend to create a checkout session
+    const response = await http.post('/create-checkout-session', { formData });
+    const { sessionId } = response.data;
+
+    // Initialize Stripe
+    const stripe = await loadStripe('pk_test_51OGHZSSA3p9Dwv0NaccoiuEfDXTNtWgvxuPleUcdSBFVbnBTwoa1KZcXPVzBxmNRXW1GNwpPZcX5YGY8FfiBSdpH00ZkIQDWaC');
+
+    // Redirect to Stripe Checkout
+    const { error } = await stripe.redirectToCheckout({
+        sessionId,
+    });
+
+    if (error) {
+        console.error('Error redirecting to Checkout:', error);
+        // Handle the error (e.g., display an error message to the user)
+    }
+} catch (error) {
+    console.error('Error during checkout:', error);
+    // Handle the error (e.g., display an error message to the user)
+}

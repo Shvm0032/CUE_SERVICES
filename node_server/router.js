@@ -1106,4 +1106,50 @@ Router.post("/api/Contact_Details", (req, res) => {
 
 
 
+// const stripe = require('stripe')('sk_test_51OGHZSSA3p9Dwv0NOucSSfsRcoPoVUuczA2UhFef5XqHasgHKiNDypSQqr0qVuu6jJX1V74riE78pD6M8V61dZJS00tQR6B9W5');
+
+// Router.post('/api/create-checkout-session', async (req, res) => {
+//     const formData = req.body.formData;
+
+//     // Insert form data into the database
+//     const insertFormDataQuery = 'INSERT INTO order_course SET ?';
+//     sqlDbconnect.query(insertFormDataQuery, formData, (err, result) => {
+//         if (err) {
+//             console.error('Error inserting form data into the database:', err);
+//             res.status(500).json({ error: 'Internal Server Error' });
+//             return;
+//         }
+
+//         const cartItems = req.body.cartItems;
+
+//         // Create line items dynamically based on the items in cartItems
+//         const lineItems = cartItems.map((item) => ({
+//             price_data: {
+//                 currency: 'usd',
+//                 product_data: {
+//                     name: item.course_title, // Change this to the property representing the product name
+//                 },
+//                 unit_amount: item.totalPrice * 100, // Convert the total price to cents
+//             },
+//             quantity: item.qty,
+//         }));
+
+//         // Create a Checkout session
+//         stripe.checkout.sessions.create({
+//             payment_method_types: ['card'],
+//             line_items: lineItems,
+//             mode: 'payment',
+//             success_url: 'http://localhost:3000/success', // Redirect to success page after payment
+//             cancel_url: 'http://localhost:3000/cancel', // Redirect to cancel page if user cancels
+//         }).then((session) => {
+//             // Return the session ID to the frontend
+//             res.json({ sessionId: session.id });
+//         }).catch((error) => {
+//             console.error('Error creating Checkout session:', error);
+//             res.status(500).json({ error: 'Internal Server Error' });
+//         });
+//     });
+// });
+
+
 module.exports = Router;

@@ -14,8 +14,6 @@ import Cources from './components/js/Courses';
 import CourseDetail from './components/js/CourseDeatail';
 
 import Add_cart from './components/js/Add_cart';
-import CardSummary from './components/js/CardSummery';
-
 import Success from './components/js/Success';
 import Cancle from './components/js/Cancle';
 
@@ -32,6 +30,7 @@ import Subscribe from './components/js/Subscribe';
 
 import Faqrear from './components/js/Faqrear';
 import Contactus from './components/js/Contactus';
+import Checkout from './components/js/Checkout';
 
 const AppRouter = () => {
 
@@ -66,7 +65,7 @@ const AppRouter = () => {
             <Route path='/login' element={<Login />} />
             <Route path='/register' element={<Register />} />
             <Route path='/Add_cart' element={<Add_cart />} />
-            <Route path='/CardSummary/:course/:payment' element={<CardSummary />} />
+            <Route path='/Checkout' element={<Checkout/>} />
 
             <Route path='/Faqrear' element={<Faqrear />} />
             <Route path='/Contactus' element={<Contactus />} />

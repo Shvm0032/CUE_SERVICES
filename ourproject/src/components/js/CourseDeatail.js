@@ -360,7 +360,7 @@ export default function CourseDetail() {
                                                 </p>
                                             </div>
                                         </div>
-                                        <Toast show={showToast} onClose={() => setShowToast(false)} className="position-fixed bottom-0 end-0 m-3">
+                                        <Toast show={showToast} onClose={() => setShowToast(false)} className="position-fixed bottom-0 end-0 m-3"style={{zIndex:'3'}}>
                                             <Toast.Header>
                                                 <strong className="fs-4 text-success  me-auto">Success</strong>
                                             </Toast.Header>

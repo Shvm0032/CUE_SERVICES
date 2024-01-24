@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, } from 'react-router-dom';
 import { removeFromCart } from '../../redux/cartSlice';
 import { selectCartItems } from '../../redux/cartSlice';
 import http from "../../utils/http-client";
@@ -16,21 +16,12 @@ const AddToCart = () => {
   const [discount, setDiscount] = useState(0);
   const cartItems = useSelector(selectCartItems);
   console.log(cartItems);
-  console.log();
+  // console.log();
   const dispatch = useDispatch();
 
   const handleRemove = (itemId) => {
     dispatch(removeFromCart(itemId));
   };
-
-  // const handleIncreaseQuantity = (itemId) => {
-  //   dispatch(increaseQuantity(itemId));
-  // };
-
-  // const handleDecreaseQuantity = (itemId) => {
-  //   dispatch(decreaseQuantity(itemId));
-  // };
-
 
   const handleApplyCoupon = async () => {
     // Make a request to your backend to check the coupon code and get the discount
@@ -92,7 +83,6 @@ const AddToCart = () => {
 
   };
 
-
   console.log(getTotalPrice)
 
   const ItemComponent = ({ itemName, itemPrice }) => (
@@ -105,6 +95,8 @@ const AddToCart = () => {
       </tbody>
     </table>
   );
+
+
 
   return (
     <>
@@ -128,18 +120,18 @@ const AddToCart = () => {
           <div className="card-header">
             <h3>Shopping Cart</h3>
           </div>
-          <div className="card-body">
+          <div className="card-body p-5">
             <div className="table-responsive">
-              <table className="table table-bordered m-0">
-                <thead className='bg-secondary fs-6'>
+              <table className="table table-bordered m-0" >
+                <thead className='  fs-6' style={{ background: '#FFAA33', borderRadius: '10px' }}>
                   <tr>
                     {/* Set columns width */}
-                    <th className="text-center py-3 px-4" style={{ minWidth: 300 }}>Product Name &amp; Details</th>
-                    <th className="text-center py-3 px-4" style={{ minWidth: 300 }}>selling_option</th>
-                    <th className="text-right py-3 px-4" style={{ width: 120 }}>Price</th>
+                    <th className="text-center fs-4 py-3 px-4" style={{ minWidth: 250 }}>Product Name </th>
+                    <th className="text-center fs-4 py-3 px-4" style={{ minWidth: 300 }}>Selling option</th>
+                    <th className="text-right fs-4 py-3 px-4" style={{ width: 120 }}>Price</th>
                     {/* <th className="text-center py-3 px-4" style={{ width: 120 }}>Quantity</th> */}
                     {/* <th className="text-right py-3 px-4" style={{ width: 120 }}>Total</th> */}
-                    <th className="text-center align-middle py-3 px-0" style={{ width: 140 }}>Remove Course</th>
+                    <th className="text-center fs-4 align-middle py-3 px-0" style={{ width: 170 }}>Remove</th>
                   </tr>
                 </thead>
                 {cartItems?.map((item) => (
@@ -151,7 +143,7 @@ const AddToCart = () => {
                           <div className="media-body">
                             <Link to={`/Course_Detail/${item.course_id}`} onClick={() => {
                               setSelectedCourseId(item.course_id); navigate(`/Course_Detail/${item.course_id}`);
-                            }} className="d-block fs-5 fw-4 text-dark">{item?.course_title}</Link>
+                            }} className="d-block fs-5 fw-4 ">{item?.course_title}</Link>
                           </div>
                         </div>
                       </td>
@@ -179,72 +171,29 @@ const AddToCart = () => {
               </table>
             </div>
             {/* / Shopping cart table */}
-            <div className="d-flex flex-wrap justify-content-between align-items-center pb-4">
+            <div className="d-flex flex-wrap justify-content-end align-items-center pb-4">
               <div className='d-flex'>
-                <tr>
-                  <td colSpan={3}>
-                    <div className="text-end  mt-4">
-                      <label className="text-muted font-weight-normal m-0">Total price</label>
-                      <div className="text-large"><strong>{sum}</strong></div>
-                    </div>
-                  </td>
-                </tr>
+                <table className='table border border-success rounded-4  mt-4 table-success'>
+                  <tr>
+                    <td><label className="text-muted fs-4 font-weight-normal m-0" style={{ width: 140 }}>Total price</label></td>
+                    <td><div className="text-center  fs-4" style={{ width: 140, fontWeight: '500' }}>${sum}</div></td>
+                  </tr>
+                </table>
               </div>
 
               {/* coupan section  */}
-              <div className='d-flex gap-2'>
-                {!applied ? (
-                  <div className="mt-4">
-                    <label className="text-muted font-weight-normal">Promocode</label>
-                    <input type="text" placeholder="ABC" className="form-control" value={couponCode}
-                      onChange={(e) => setCouponCode(e.target.value)}
-                    />
-                  </div>
 
 
-                ) : null}
-
-                {!applied ? (
-
-                  <div className='mt-4'>
-                    <button className='btn btn-success mt-4' onClick={handleApplyCoupon}  >
-                      Apply coupon
-                    </button>
-                  </div>
-
-                ) : null}
-
-              </div>
-              {applied ? (
-                <div className="d-flex">
-                  <div className="text-end mt-4 ml-5">
-                    <label className="text-muted font-weight-normal m-0">Discount</label>
-                    <div className="text-large">
-                      <strong>${discount}</strong>
-                    </div>
-                  </div>
-                  <div className="text-end mt-4">
-                    <label className="text-muted font-weight-normal m-0">Total price</label>
-                    <div className="text-large">
-                      <strong>${getTotalPrice()}</strong>
-                    </div>
-                  </div>
-                </div>
-              ) : null}
-              {applied ? (
-                <div className="d-flex justify-content-end mt-3">
-                  <button className="btn btn-outline-secondary" onClick={handleCancelCoupon}>
-                    Cancel
-                  </button>
-                </div>
-              ) : null}
-              <div className="d-flex ">
-
-              </div>
             </div>
-            <div className="  d-flex justify-content-between">
-              <Link to='/course'> <button type="button" className="btn btn-sm btn-outline-dark  mt-2 mr-3">Back to shopping</button></Link>
-              <Link to='/Checkout'><button type="button" className="btn btn-lg btn-outline-primary mt-2">Checkout</button></Link>
+            <div className=" d-flex justify-content-between ">
+              <div className='row shadow text-center   p-3' style={{ width: 300, background: '#66b2b2', borderRadius: '8px' }}>
+                <Link to='/course' className="text-white fs-5"> <i className="fas fa-arrow-left"></i>  &emsp; Back to shopping</Link>
+              </div>
+
+              <div className='row p-3 text-center  shadow' style={{ width: 300, background: '#FFAC1C', borderRadius: '8px' }}>
+                <Link to='/Checkout' className=" text-white fs-5" > <i className="fas fa-money-check-alt"></i> &emsp;Checkout</Link>
+              </div>
+
             </div>
           </div>
         </div>
