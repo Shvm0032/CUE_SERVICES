@@ -31,7 +31,7 @@ export default function AddSpeakers() {
   });
   const [returnMessage, setReturnMessage] = useState('');
   const [filedata, setFiledata] = useState([]);
-  const navigate = useNavigate
+  const navigate = useNavigate(); // Correct useNavigate call
 
   function submitForm(e) {
     e.preventDefault();
@@ -47,14 +47,14 @@ export default function AddSpeakers() {
     axios.post('http://localhost:8000/api/Speaker_add', data)
       .then(response => {
         console.log(response.data);
-        setReturnMessage(response.data.message); // Assuming the server sends a 'message' field
+        setReturnMessage(response.data.message);
         navigate('/Speakers/AllSpeakers');
       })
       .catch(error => {
         console.error('Error:', error);
         setReturnMessage('Failed to add speaker. Please try again.');
-      });
-  }
+      });
+  }
 
   return (
     <>
