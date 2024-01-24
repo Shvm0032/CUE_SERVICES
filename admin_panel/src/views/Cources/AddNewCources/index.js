@@ -93,6 +93,7 @@ export default function AddCourse() {
     });
 
     const handleSellingOptionChange = (event, index) => {
+
         let data = [...sellingOptions];
         data[index][event.target.name] = event.target.value;
         setSellingOptions(data);
@@ -101,7 +102,55 @@ export default function AddCourse() {
     function submitForm(e) {
         e.preventDefault();
 
-        let selling = sellingOptions.map((ele) => ({
+        console.log("Selling Options:", sellingOptions);
+        const result = Object.groupBy(sellingOptions, ({ selling_category }) => selling_category);
+        var lp = result["Live Options"]
+        var ssp = result["Super Saver Options"]
+        var rc = result["Recording & Combos"]
+
+        console.log("Live Option")
+        console.log(lp)
+        console.log("SS Option")
+        console.log(ssp)
+        console.log("Recording")
+        console.log(rc)
+
+
+        // var l1 = []
+        // lp.forEach(row => {
+        //     var a = { "id": row.id, "scat": row.selling_category, "price": row.price }
+        //     l1.push(a)
+        // })
+        // var l2 = []
+        // ssp.forEach(row => {
+        //     var a = { "id": row.id, "scat": row.selling_category, "price": row.price }
+        //     l2.push(a)
+        // })
+
+        // var l3 = []
+        // rc.forEach(row => {
+        //     var a = { "id": row.id, "scat": row.selling_category, "price": row.price }
+        //     l3.push(a)
+        // })
+
+
+        // var newMap = new Map([
+        //     ['l1', lp],
+        //     ['l2', ssp],
+        //     ['l3', rc],
+        // ]);
+
+    //    console.log(newMap);
+    //     var res = arr.get('key2');
+    //     console.log(res);
+
+        console.log("Pussing data")
+        // console.log(l1)
+
+        //console.log(sellingOptions)
+
+        let selling = sellingOptions.map((ele) => ({ 
+            id: ele.id,
             category: ele.selling_category,
             name: ele.name,
             price: ele.price
@@ -117,7 +166,7 @@ export default function AddCourse() {
         data.append('cstdate', Course.CSTDate);
         data.append('fields', JSON.stringify(selling));
         data.append('file', filedata);
-
+        console.log(data,'data');
         axios.post('http://localhost:8000/api/Course_add', data)
         
             .then(response => {
@@ -295,6 +344,7 @@ export default function AddCourse() {
                                         <table className='table table-active table-hover'>
                                             <thead>
                                                 <tr className='fw-bold'>
+                                                    <td></td>
                                                     <td>Category</td>
                                                     <td>Name</td>
                                                     <td>Price</td>
@@ -303,6 +353,9 @@ export default function AddCourse() {
                                             <tbody>
                                                 {sellingOptions.map((option, index) => (
                                                     <tr key={option.id}>
+                                                        <td>
+                                                            <input type='hidden' name="id[]" value={option.id} />
+                                                        </td>
                                                         <td><input type='hidden' name="category[]" value={option.selling_category} />{option.selling_category}</td>
                                                         <td><input type='text' className='form-control' name="name" value={option.name} onChange={(e) => handleSellingOptionChange(e, index)} /></td>
                                                         <td><input type='text' className='form-control' name="price" value={option.price} onChange={(e) => handleSellingOptionChange(e, index)} /></td>

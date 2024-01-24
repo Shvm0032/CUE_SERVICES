@@ -27,20 +27,21 @@ export default function Cources() {
   if (status === 'failed') {
     return <p>Error: {error}</p>;
   }
+ 
 
   return (
     <>
       {/* webi */}
       <section className="WaveHeaderBox">
         <div className='row  faq-heads'>
-          <div className='row faq-headers p-5'>
-            <div className='col-md-12 faq mains'>
-              <h2 className="mt-5 pt-5 " style={{ fontSize: "80px", marginTop: '20px', fontWeight: '600' }}>Programs</h2>
-              <Link to='#' className='faq-lnk-main'><i class="fa-solid fa-house" style={{ "color": "#719dea;" }}></i> CuService - Programs </Link>
+          <div className='row faq-headers p-5 mt-5'>
+            <div className='col-md-12 faq mains '>
+              <h1 className="mt-5  text-white" style={{ fontSize: "80px", marginBottom: "5px", fontWeight: '500' }}>Programs</h1>
+              <Link to='/' className='text-white'><i class="fa-solid fa-house" style={{ "color": "#719dea;" }}></i> CuService - Programs</Link>
             </div>
-            <div className='wave wave1'></div>
-            <div className='wave wave5'></div>
           </div>
+          <div className='wave wave1'></div>
+          <div className='wave wave5'></div>
         </div>
       </section >
 
@@ -56,7 +57,7 @@ export default function Cources() {
                   <div className='newsCaption'>
                     <div className='d-flex'>
                       <p className='newsCaption-content mb-2' >
-                        <i class="fas fa-chalkboard-teacher fa-lg" style={{ color: '#00bbae' }}></i>&emsp;{course.speaker}
+                        <i class="fas fa-chalkboard-teacher fa-lg" style={{ color: '#00bbae' }}></i>&emsp;{course.name}
                       </p>
                       <p className='newsCaption-content mb-2 ms-5'>
                         <i class="fas fa-chalkboard-teacher fa-lg" style={{ color: '#00bbae' }}></i>&emsp;

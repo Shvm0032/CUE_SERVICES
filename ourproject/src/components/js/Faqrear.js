@@ -70,6 +70,10 @@ const Accordion = () => {
                                                 </div>
                                             ))}
                                         </div>
+                                        <details>
+                                            <summary>this is first Detail page</summary>
+                                            <p>lorem12 sdbasdkjnasdjkfadsnakljsdfalskd asdkj casdvnakjsdsdfjklasjdl</p>
+                                        </details>
 
                                     </div>
                                     <div class="tab-pane fade overflow-scroll" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
@@ -123,7 +127,9 @@ const Accordion = () => {
 
 
                                     </div>
-                                    <div class="tab-pane fade" id="v-pills-settings" role="tabpanel" aria-labelledby="v-pills-settings-tab">...</div>
+                                    <div class="tab-pane fade" id="v-pills-settings" role="tabpanel" aria-labelledby="v-pills-settings-tab">
+                                        
+                                    </div>
                                 </div>
                             </div>
 

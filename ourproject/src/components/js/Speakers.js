@@ -4,15 +4,13 @@ import { Link, } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchSpeakers } from '../../redux/speakerSlice';
 
-
-
 function Speakers() {
 
     const dispatch = useDispatch();
     const speakers = useSelector((state) => state.speaker.speakers);
     const status = useSelector((state) => state.speaker.status);
     const error = useSelector((state) => state.speaker.error);
-
+console.log(speakers);
     useEffect(() => {
         dispatch(fetchSpeakers());
     }, [dispatch]);
@@ -24,9 +22,6 @@ function Speakers() {
     if (status === 'failed') {
         return <p>Error: {error}</p>;
     }
-
-
-
     return (
         <>
             <section className="WaveHeaderBox">
@@ -52,7 +47,7 @@ function Speakers() {
 
                             {speakers.map((speaker) => (
 
-                                <div className="col-lg-4 mb-4" key={speaker.id} >
+                                <div className="col-lg-4 mb-4" key={speaker.speaker_id} >
                                     <div className='wrapper'>
 
                                         <div className='pcard'>

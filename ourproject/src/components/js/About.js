@@ -4,7 +4,9 @@ import "react-multi-carousel/lib/styles.css";
 import '../css/About.modules.css';
 import { Link } from "react-router-dom";
 import CountUp from 'react-countup';
-
+import aboutImage1 from '../../assets/about1.webp';
+import aboutImage2 from '../../assets/about2.webp';
+import aboutImage3 from '../../assets/about3.webp';
 const responsive = {
 
   
@@ -76,15 +78,15 @@ function About() {
               <div className="row " >
                 <div className="col-6">
                   <div className="row mt-5">
-                    <img src="img/girl2.jpg" className="abimg" alt="" style={{ width: '100%', height: '370px', borderRadius: "0  40px 0 40px" }} />
+                    <img src={aboutImage2} className="abimg" alt="" style={{ width: '100%', height: '370px', borderRadius: "0  40px 0 40px" }} />
                   </div>
                 </div>
                 <div className="col-6">
                   <div className="row p-3">
-                    <img src="img/boy1.jpg" className="abimg" alt="" style={{ width: '100%', height: '200px', borderRadius: "40px 0 40px 0" }} />
+                    <img src={aboutImage3} className="abimg" alt="" style={{ width: '100%', height: '200px', borderRadius: "40px 0 40px 0" }} />
                   </div>
                   <div className="row p-1">
-                    <img src="img/girl1.jpg" className="abimg" alt="" style={{ width: '100%', height: '280px', borderRadius: "50%" }} />
+                    <img src={aboutImage1} className="abimg" alt="" style={{ width: '100%', height: '280px', borderRadius: "50%" }} />
                   </div>
                 </div>
               </div>
