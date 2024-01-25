@@ -258,16 +258,8 @@ function Dashboard() {
                   <div className='container'>
 
                     <div className='d-flex gap-3'>
-                      <div className='mt-2 d-flex justify-content-center' style={{ width: '90px', height: '90px', borderRadius: '50%' }}>
-                        <img src={avatarSrc} width={"100%"} alt='' className='rounded-circle' />
-                      </div>
-                      <div className='d-flex flex-column align-item-center justify-content-center'>
-                        <h6 className='mt-3'></h6>
-                        <p className='text-secondary'>Accepted file type .png. Less than 1MB</p>
-                        <Button className="w-5" variant="primary" onClick={() => setShowModal(true)}>
-                            Change Profile
-                          </Button>
-                          {
+                      <div className='mt-2 d-flex justify-content-center ' style={{ width: '90px', height: '90px', borderRadius: '50%' }}>
+                      {
                             user[0] && 
                             <ProfileModal
                             showModal={showModal}
@@ -276,6 +268,11 @@ function Dashboard() {
                             avatarSrc={avatarSrc}
                           />
                           }
+                      </div>
+                      <div className='d-flex flex-column align-item-center justify-content-center'>
+                        <h6 className='mt-3'></h6>
+                        
+                         
                           
                       </div>
                     </div>

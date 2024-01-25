@@ -1,80 +1,165 @@
-import React, { useState ,useEffect, useRef} from 'react';
-import { Modal, Button, Form } from 'react-bootstrap';
-import Avatar from "react-avatar-edit";
 
-function ProfileModal({ showModal, onClose, onSave, avatarSrc }) {
-  const [newAvatarSrc, setNewAvatarSrc] = useState(avatarSrc);
-  const [preavatar, setPreavatar] = useState(avatarSrc);
-  const avatarRef = useRef(null);
-  useEffect(() => {
-    // Update preavatar state when avatarSrc prop changes (initially and when changed from outside)
-    setPreavatar(avatarSrc);
-  }, [avatarSrc]);
 
-  const handleAvatarChange = (newSrc) => {
-    setNewAvatarSrc(newSrc);
-  };
+import { Box, Modal, Slider, Button } from "@mui/material";
+import { useRef, useState } from "react";
+import AvatarEditor from "react-avatar-editor";
+import { FcAddImage } from "react-icons/fc";
+import { AiFillGithub } from "react-icons/ai";
+import "../css/profile.modules.css";
 
-  const handleSave = () => {
-    console.log(newAvatarSrc)
-    // Call the onSave callback with the updated avatar source
-    onSave(newAvatarSrc);
-    
 
-    // Close the modal
-    onClose();
-  };
-  const handleModalClose = () => {
-    // Reset the Avatar component by calling its cancel method
-    if (avatarRef.current) {
-      avatarRef.current.cancelCrop();
+// Styles
+const boxStyle = {
+  width: "300px",
+  height: "300px",
+  display: "flex",
+  flexFlow: "column",
+  justifyContent: "center",
+  alignItems: "center"
+};
+const modalStyle = {
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center"
+};
+
+// Modal
+const CropperModal = ({ src, modalOpen, setModalOpen, setPreview, onSave }) => {
+  const [slideValue, setSlideValue] = useState(10);
+  const cropRef = useRef(null);
+
+  //handle save
+  const handleSave = async () => {
+    if (cropRef) {
+      const dataUrl = cropRef.current.getImage().toDataURL();
+      const dataUrlsave = cropRef.current.getImageScaledToCanvas().toDataURL();
+      const result = await fetch(dataUrl);
+      const blob = await result.blob();
+      setPreview(URL.createObjectURL(blob));
+      console.log(blob,'info');
+      onSave(dataUrlsave);
+      setModalOpen(false);
     }
-
-    // Reset newAvatarSrc to preavatar when the modal is closed
-    setNewAvatarSrc(preavatar);
-
-    // Close the modal
-    onClose();
   };
-
-  const onBeforeFileLoad = (elem) => {
-    // if (elem.target.files[0].size > 71680) {
-    //   alert("File is too big!");
-    //   elem.target.value = "";
-    // }
-  };
-
 
   return (
-    <Modal show={showModal}  onHide={handleModalClose}>
-      <Modal.Header closeButton>
-        <Modal.Title>Edit Profile</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        <Form>
-          <Form.Group controlId="formAvatar">
-            <Form.Label>Avatar</Form.Label>
-            <Avatar
-              width={300}
-              height={300}
-              round={true}
-              src={newAvatarSrc}
-              onBeforeFileLoad={onBeforeFileLoad}
-              onCrop={(newSrc) => handleAvatarChange(newSrc)}
-            />
-          </Form.Group>
-        </Form>
-      </Modal.Body>
-      <Modal.Footer>
-        <Button variant="secondary" onClick={handleModalClose}>
-          Close
-        </Button>
-        <Button variant="primary" onClick={handleSave}>
-          Save Changes
-        </Button>
-      </Modal.Footer>
+    <Modal sx={modalStyle} open={modalOpen}>
+      <Box sx={boxStyle}>
+        <AvatarEditor
+          ref={cropRef}
+          image={src}
+          style={{ width: "100%", height: "100%" }}
+          border={50}
+          borderRadius={150}
+          color={[0, 0, 0, 0.72]}
+          scale={slideValue / 10}
+          rotate={0}
+        />
+
+        {/* MUI Slider */}
+        <Slider
+          min={10}
+          max={50}
+          sx={{
+            margin: "0 auto",
+            width: "80%",
+            color: "cyan"
+          }}
+          size="medium"
+          defaultValue={slideValue}
+          value={slideValue}
+          onChange={(e) => setSlideValue(e.target.value)}
+        />
+        <Box
+          sx={{
+            display: "flex",
+            padding: "10px",
+            border: "3px solid white",
+            background: "black"
+          }}
+        >
+          <Button
+            size="small"
+            sx={{ marginRight: "10px", color: "white", borderColor: "white" }}
+            variant="outlined"
+            onClick={(e) => setModalOpen(false)}
+          >
+            cancel
+          </Button>
+          <Button
+            sx={{ background: "#5596e6" }}
+            size="small"
+            variant="contained"
+            onClick={handleSave}
+          >
+            Save
+          </Button>
+        </Box>
+      </Box>
     </Modal>
   );
-}
+};
 
-export default ProfileModal;
+// Container
+const Cropper = ({ showModal, onClose, onSave, avatarSrc }) => {
+  // image src
+  const [src, setSrc] = useState(null);
+
+  // preview
+  const [preview, setPreview] = useState(null);
+
+  // modal state
+  const [modalOpen, setModalOpen] = useState(false);
+
+  // ref to control input element
+  const inputRef = useRef(null);
+
+  // handle Click
+  const handleInputClick = (e) => {
+    e.preventDefault();
+    inputRef.current.click();
+  };
+  // handle Change
+  const handleImgChange = (e) => {
+    setSrc(URL.createObjectURL(e.target.files[0]));
+    setModalOpen(true);
+  };
+
+  return (
+    <>
+      <main className="profilecontainer">
+        <CropperModal
+          modalOpen={modalOpen}
+          src={src}
+          setPreview={setPreview}
+          setModalOpen={setModalOpen}
+          onSave={onSave}
+        />
+        <input
+          className="profile-input"
+          type="file"
+          accept="image/*"
+          ref={inputRef}
+          onChange={handleImgChange}
+        />
+        <div className="img-container" onClick={handleInputClick}>
+          <img
+            src={
+              preview || avatarSrc
+            }
+            alt=""
+            width="150"
+            height="150"
+           style={{borderRadius:"50%"}}
+          />
+        </div>
+      </main>
+
+     
+    </>
+  );
+};
+
+export default Cropper;
+
+
