@@ -105,6 +105,11 @@ const Cropper = ({ showModal, onClose, onSave, avatarSrc }) => {
   // image src
   const [src, setSrc] = useState(null);
 
+   // function to handle both cropping and image selection
+   const handleEditIconClick = () => {
+    setModalOpen(true);
+  };
+
   // preview
   const [preview, setPreview] = useState(null);
 
@@ -118,11 +123,13 @@ const Cropper = ({ showModal, onClose, onSave, avatarSrc }) => {
   const handleInputClick = (e) => {
     e.preventDefault();
     inputRef.current.click();
+    handleEditIconClick();
   };
   // handle Change
   const handleImgChange = (e) => {
     setSrc(URL.createObjectURL(e.target.files[0]));
     setModalOpen(true);
+    handleEditIconClick();
   };
 
   return (
@@ -152,6 +159,10 @@ const Cropper = ({ showModal, onClose, onSave, avatarSrc }) => {
             height="150"
            style={{borderRadius:"50%"}}
           />
+            <i
+            className="edit-icon fa-regular position-absolute fa-pen-to-square bottom-0 end-0"
+            onClick={handleEditIconClick}
+          ></i>
         </div>
       </main>
 

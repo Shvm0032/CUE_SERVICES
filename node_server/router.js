@@ -11,6 +11,7 @@ const { title } = require("process");
 const dotenv = require('dotenv');
 const jwt = require('jsonwebtoken');
 const { json } = require("body-parser");
+const { sendEmail } = require("./lib/mail");
 // const { Route } = require("react-browser-router");
 
 
@@ -867,7 +868,13 @@ Router.post('/api/NewRegistration', (req, res) => {
                 }
 
                 console.log('User registered:', { firstName, lastName, username, email, phone, gender, pincode, address1, address2, country, state, city });
-
+                let emailObject = {
+                    user_name:username,
+                    receiver:email,
+                    subject:'Account Created successfully.',
+                    content:''
+               };
+                sendEmail(emailObject);
                 // Respond with success
                 res.status(200).json({ success: true, message: 'Registration successful' });
             });
@@ -986,7 +993,7 @@ Router.post("/api/course_added", (req, res) => {
                     let mailTransporter = nodemailer.createTransport({
                         service: 'gmail',
                         auth: {
-                            user: 'itsyourabhay@gmail.com',
+                            user: '',
                             pass: 'eppb dskn plzj ggqs'
                         }
                     });
@@ -1414,6 +1421,31 @@ Router.post('/api/updateprofile', (req, res) => {
 //         });
 //     });
 // });
+
+
+// testing api
+Router.get("/api/testing", async (req, res) => {
+   let emailObject = {
+        user_name:'nAVJOT',
+        receiver:'navjotsingh@yopmail.com',
+        subject:'Account Created successfully.',
+        content:''
+   };
+    let response = await sendEmail(emailObject);
+    const err = null;  
+    const result = { message: 'Data fetched successfully' };
+  
+    if (!err) {
+      res.status(200).json({ response: 'yes', response });
+    } else {
+      console.log(err);
+      res.status(500).json({ response: 'no', error: 'Internal Server Error' });
+    }
+  });
+ 
+
+   
+
 
 
 module.exports = Router;
