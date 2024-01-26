@@ -123,11 +123,12 @@ const Cropper = ({ showModal, onClose, onSave, avatarSrc }) => {
   const handleInputClick = (e) => {
     e.preventDefault();
     inputRef.current.click();
-    handleEditIconClick();
+   // handleEditIconClick();
   };
   // handle Change
   const handleImgChange = (e) => {
-    setSrc(URL.createObjectURL(e.target.files[0]));
+    if(e.target.files[0])
+      setSrc(URL.createObjectURL(e.target.files[0]));
     setModalOpen(true);
     handleEditIconClick();
   };
@@ -149,7 +150,7 @@ const Cropper = ({ showModal, onClose, onSave, avatarSrc }) => {
           ref={inputRef}
           onChange={handleImgChange}
         />
-        <div className="img-container" onClick={handleInputClick}>
+        <div className="img-container" >
           <img
             src={
               preview || avatarSrc
@@ -160,8 +161,9 @@ const Cropper = ({ showModal, onClose, onSave, avatarSrc }) => {
            style={{borderRadius:"50%"}}
           />
             <i
-            className="edit-icon fa-regular position-absolute fa-pen-to-square bottom-0 end-0"
-            onClick={handleEditIconClick}
+            className="edit-icon fa-regular position-absolute fa-pen-to-square " 
+            onClick={handleInputClick}
+          style={{color:"white",  cursor: 'pointer' , bottom: 0, right: 0 }}
           ></i>
         </div>
       </main>

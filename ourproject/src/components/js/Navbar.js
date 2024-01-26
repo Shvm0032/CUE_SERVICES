@@ -5,6 +5,7 @@ import { selectCartItems } from '../../redux/cartSlice';
 // Navbar.js
 import { useSelector, useDispatch } from 'react-redux';
 import { selectIsLoggedIn, logout } from '../../redux/authSlice'; // Update the path
+import authService from '../../services/auth.service';
 // Update the path
 
 export default function Navbar() {
@@ -16,9 +17,9 @@ export default function Navbar() {
     const navigate = useNavigate();
 
 
-    const handleLogout = () => {
+    const handleLogout = async () => {
+        authService.logout();
         dispatch(logout()); // Dispatch the logout action
-       
         navigate('/login',{ replace: true });
         // in this when userlogout there is no way to go back to the dashboard
 
@@ -124,7 +125,7 @@ export default function Navbar() {
                                 <>
                                     <li>
                                         <Link className="nav-link mx-2" to="/Dashboard">
-                                            Dashboard
+                                            Profile
                                         </Link>
                                     </li>
                                     <li>

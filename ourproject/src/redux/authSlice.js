@@ -1,8 +1,9 @@
 // authSlice.js
 import { createSlice } from '@reduxjs/toolkit';
+import authService from '../services/auth.service';
 
 const initialState = {
-  isLoggedIn: false,
+  isLoggedIn: authService.getAuthUser() ? true : false,
   // other authentication-related state if needed
 };
 
