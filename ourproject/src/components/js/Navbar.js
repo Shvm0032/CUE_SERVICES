@@ -2,6 +2,7 @@
 import React from 'react'
 import { Link, useNavigate } from "react-router-dom";
 import { selectCartItems } from '../../redux/cartSlice';
+import { v4 as uuid } from "uuid";
 // Navbar.js
 import { useSelector, useDispatch } from 'react-redux';
 import { selectIsLoggedIn, logout } from '../../redux/authSlice'; // Update the path
@@ -12,6 +13,13 @@ export default function Navbar() {
     const cartItems = useSelector(selectCartItems);
     console.log(cartItems.length)
     console.log(cartItems);
+    const unique_id = uuid();
+    if (localStorage.getItem('unique_id')) {
+
+    }
+    else {
+        localStorage.setItem('unique_id', unique_id);
+    }
     const dispatch = useDispatch();
     const isLoggedIn = useSelector(selectIsLoggedIn);
     const navigate = useNavigate();

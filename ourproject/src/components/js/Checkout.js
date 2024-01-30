@@ -1,27 +1,31 @@
 import React, { useState, useEffect } from 'react'
 import { loadStripe } from '@stripe/stripe-js';
-import { Link, json, useParams } from 'react-router-dom';
+import { Link, } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { selectCartItems } from '../../redux/cartSlice';
-import { removeFromCart } from '../../redux/cartSlice';
+import { selectCartItems, removeFromCart, removeAllItemsFromCart, } from '../../redux/cartSlice';
+import LoadingSpinner from './LoadingSpinner';
 import http from "../../utils/http-client";
-// import { checkout } from '../../../../node_server/router';
+const stripePromise = loadStripe('pk_test_51OGHZSSA3p9Dwv0NaccoiuEfDXTNtWgvxuPleUcdSBFVbnBTwoa1KZcXPVzBxmNRXW1GNwpPZcX5YGY8FfiBSdpH00ZkIQDWaC'); // Replace with your Stripe public key
 
 function Checkout() {
-
+    const [isLoading, setIsLoading] = useState(false);
     const [selectedCourseId, setSelectedCourseId] = useState(null);
     const navigate = useNavigate();
     const [applied, setApplied] = useState(false);
     const [couponCode, setCouponCode] = useState('');
     const [discount, setDiscount] = useState(0);
     const cartItems = useSelector(selectCartItems);
+
     console.log(cartItems);
     // console.log();
     const dispatch = useDispatch();
 
     const handleRemove = (itemId) => {
         dispatch(removeFromCart(itemId));
+    };
+    const handleremoveAllItemsFromCart = (cartItems) => {
+        dispatch(removeAllItemsFromCart(cartItems));
     };
 
     const handleApplyCoupon = async () => {
@@ -125,6 +129,7 @@ function Checkout() {
             }
         }
         setFormErrors(errors);
+        console.log(errors);
         return Object.keys(errors).length === 0;
     };
 
@@ -143,49 +148,102 @@ function Checkout() {
     console.log(cartItems.length);
     console.log(formData, 'fd');
 
-    const purchaseDetails = [
-        { label: 'Grand Total', amount: getTotalPrice() },
-        { label: 'Subtotal', amount: sum },
-        { label: 'Discount', amount: discount },
-        { label: 'Coupon Code', value: couponCode },
-        { label: 'course detail', value: cartItems.length },
-        { label: 'caard detail', value: cartItems },
-        { label: 'FormData detail', value: formData },
-        // Add other details as needed
-        { label: 'Item 1', amount: cartItems[0]?.course_title },
-        { label: 'Item 2', amount: cartItems[1]?.totalPrice },
+    const [orderId, setOrderId] = useState('');
+    useEffect(() => {
+        const generateRandomOrderId = () => {
+            const alphanumeric = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let orderId = '';
 
-    ];
+            for (let i = 0; i < 7; i++) {
+                orderId += alphanumeric.charAt(Math.floor(Math.random() * alphanumeric.length));
+            }
+
+            return orderId;
+        };
+
+        // Generate and set the random order ID when the component mounts
+        setOrderId(generateRandomOrderId());
+    }, []);
+
+    console.log(orderId, 'hellow')
+
+    const purchaseDetails = {
+        'OrderID': orderId,
+        'Grand_Total': getTotalPrice(),
+        'Subtotal': sum,
+        'Discount': discount,
+        'Coupon_Code': couponCode,
+        'Course_Quantity': cartItems.length,
+        'card_detail': cartItems,
+        'detail': formData
+    };
     console.log(purchaseDetails);
 
-    const handleCheckout = () => {
-        fetch(" http://127.0.1:8000/api/create-checkout-session", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            mode: 'cors',
-            body: JSON.stringify({
-                purchaseDetails: [
-                    {
-                        amount: getTotalPrice(),
-                        quantity: cartItems.length,
-                        DiscountAmount: discount,
-                    }
-                ]
-            })
-        })
-            .then(res => {
-                if (res.ok) return res.json()
-                return res.json().then(json => Promise.reject(json))
+    const stripe = stripePromise;
+    const handleCheckout = async () => {
 
-            })
-            .then(({ url }) => {
-                window.location = url
-            }).catch(e => {
-                console.log(e.errors)
-            })
-    }
+
+        setIsLoading(true);
+        console.log(validateForm())
+        if (!validateForm()) {
+            console.log('validateForm');
+            // Form validation failed
+            return;
+        }
+        try {
+            const response = await http.post('/create-checkout-session', { ...purchaseDetails });
+            console.log(response, 'response');
+            const stripe = await loadStripe('pk_test_51OGHZSSA3p9Dwv0NaccoiuEfDXTNtWgvxuPleUcdSBFVbnBTwoa1KZcXPVzBxmNRXW1GNwpPZcX5YGY8FfiBSdpH00ZkIQDWaC');
+            setIsLoading(false);
+            handleremoveAllItemsFromCart();
+
+            // Redirect to Stripe Checkout page
+            const result = await stripe.redirectToCheckout({
+                sessionId: response.data.id,
+            });
+
+            console.log(response.payment_status);
+            if (result.error) {
+                console.error(result.error.message);
+                // Handle error
+            } 
+
+        } catch (error) {
+            console.error('Error during checkout:', error);
+            
+            // Handle error
+        }
+
+    };
+
+
+    //    {
+    //     method: "POST",
+    //     headers: {
+    //         "Content-Type": "application/json"
+    //     },
+    //     mode: 'cors',
+    //     body: JSON.stringify({
+    //         purchaseDetails: [
+    //             {
+    //                 amount: getTotalPrice(),
+    //                 quantity: cartItems.length,
+    //                 DiscountAmount: discount,
+    //             }
+    //         ]
+    //     })
+    // })
+    //     .then(res => {
+    //         if (res.ok) return res.json()
+    //         return res.json().then(json => Promise.reject(json))
+
+    //     })
+    //     .then(({ url }) => {
+    //         window.location = url
+    //     }).catch(e => {
+    //         console.log(e.errors)
+    //     })
+
 
     return (
         <div>
@@ -278,7 +336,7 @@ function Checkout() {
                                                 {!applied ? (
 
                                                     <div className='col mt-4'>
-                                                        <button className='btn btn-success mt-4' onClick={handleApplyCoupon}  >
+                                                        <button className='btn mt-4' onClick={handleApplyCoupon}  >
                                                             Apply coupon
                                                         </button>
                                                     </div>
@@ -405,9 +463,9 @@ function Checkout() {
                                                         {formErrors.city && <span className="error">{formErrors.city}</span>}
                                                     </div>
                                                     <div className='col'>
-                                                        <label htmlFor="country" class="form-label">State/Country</label>
-                                                        <input type="text" class="form-control" id="country" name='country' value={formData.country} onChange={handleInputChange} />
-                                                        {formErrors.country && <span className="error">{formErrors.country}</span>}
+                                                        <label htmlFor="state" class="form-label">State/Country</label>
+                                                        <input type="text" class="form-control" id="state" name='state' value={formData.state} onChange={handleInputChange} />
+                                                        {formErrors.state && <span className="error">{formErrors.state}</span>}
                                                     </div>
                                                     <div className='col'>
                                                         <label htmlFor="zip" class="form-label">Zip</label>
@@ -427,9 +485,11 @@ function Checkout() {
                                                         {formErrors.email && <span className="error">{formErrors.email}</span>}
                                                     </div>
                                                 </div><br />
+
                                                 <div className='row'>
                                                     <div className='col'>
-                                                        <button type='button' className='btn btn-warning' onClick={handleCheckout}>checkout</button>
+                                                        <button type='button' className='btn btn-warning' onClick={handleCheckout} disabled={isLoading}>checkout</button>
+                                                        {isLoading ? <LoadingSpinner /> : null}
                                                     </div>
                                                 </div>
 
