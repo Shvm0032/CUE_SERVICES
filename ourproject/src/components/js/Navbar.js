@@ -3,10 +3,22 @@ import React from 'react'
 import { Link } from "react-router-dom";
 import { useSelector } from 'react-redux';
 import { selectCartItems } from '../../redux/cartSlice';
+
+import { v4 as uuid } from "uuid";
 export default function Navbar() {
     const cartItems = useSelector(selectCartItems);
     console.log(cartItems.length)
     console.log(cartItems);
+
+
+    const unique_id = uuid();
+    if (localStorage.getItem('unique_id')) {
+
+    }
+    else {
+        localStorage.setItem('unique_id', unique_id);
+    }
+
     return (
         <>  <div className='sticky-top'>
             <section className="d-flex justify-content-between p-2" style={{ background: '#13bbaf' }}>

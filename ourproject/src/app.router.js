@@ -55,8 +55,8 @@ const AppRouter = () => {
 
             <Route element={<AuthGuard />}>
                 <Route path='/Dashboard' element={<Dashboard />} />
-                <Route path='/Payment_Success/:courseId/:userId/:payment' element={<Success />} />
             </Route>
+                <Route path='/Success' element={<Success />} />
 
 
             <Route path='/course' element={<Cources />} />
@@ -71,7 +71,7 @@ const AppRouter = () => {
             <Route path='/Contactus' element={<Contactus />} />
             <Route path='/Subscribe' element={<Subscribe />} />
 
-            <Route path='/Payment_Cancle' element={<Cancle />} />
+            <Route path='/Cancle' element={<Cancle />} />
             <Route path='*' element={<Error />} />
 
         </Routes>

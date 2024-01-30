@@ -12,6 +12,17 @@ body {
   background: linear-gradient(90deg, #fcf2e1 0%, #ebfffe 100%);
 }
 
+input {
+  outline: none !important;
+  border: 1px solid #00bbae !important;
+}
+
+input:focus {
+  outline: none !important;
+  border: 1px solid #ff9b24 !important;
+  box-shadow: 0 0 10px #f1be67 !important;
+}
+
 h1 {
   color: #1b1b1b;
   font-size: 96px !important;
@@ -218,11 +229,11 @@ a {
 
 
 .navbar .dropdown .dropdown-menu {
- 
+
   display: none;
   position: absolute;
   border-radius: 10px 10px 10px 10px;
-  margin-top:40px;
+  margin-top: 40px;
   background-color: #fff;
   min-width: 400px;
   box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
@@ -274,53 +285,7 @@ a {
 
 
 /* BUTTON CSS */
-.AllBtn {
-  font-size: 18px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  display: inline-block;
-  text-align: center;
-  font-weight: 400;
-  padding: 0.7em 2em;
-  border: 3px solid #00b7ff;
-  border-radius: 2px;
-  position: relative;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.1);
-  color: #00b7ff;
-  text-decoration: none;
-  transition: 0.3s ease all;
-  z-index: 1;
-}
 
-.AllBtn:before {
-  transition: 0.5s all ease;
-  position: absolute;
-  top: 0;
-  left: 50%;
-  right: 50%;
-  bottom: 0;
-  opacity: 0;
-  content: '';
-  background-color: #00b7ff;
-  z-index: -1;
-}
-
-.AllBtn:hover,
-.AllBtn:focus {
-  color: white;
-}
-
-.AllBtn:hover:before,
-.AllBtn:focus:before {
-  transition: 0.5s all ease;
-  left: 0;
-  right: 0;
-  opacity: 1;
-}
-
-.AllBtn:active {
-  transform: scale(0.9);
-}
 
 
 /* ReadMoreBtn */
@@ -560,7 +525,74 @@ a {
     box-shadow: 0 0 0 45px rgba(193, 244, 246, 0);
   }
 }
+.button2addtocark {
+  display: inline-block;
+  transition: all 0.2s ease-in;
+  position: relative;
+  overflow: hidden;
+  width:  200px;
+  z-index: 1;
+  color: #090909;
+  padding: 0.7em 1.7em;
+  cursor: pointer;
+  font-size: 18px;
+  border-radius: 0.5em;
+  background: #e8e8e8;
+  border: 1px solid #e8e8e8;
+  box-shadow: 6px 6px 12px #c5c5c5, -6px -6px 12px #ffffff;
+}
 
+.button2addtocark:active {
+  color: #666;
+  box-shadow: inset 4px 4px 12px #c5c5c5, inset -4px -4px 12px #ffffff;
+}
+
+.button2addtocark:before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%) scaleY(1) scaleX(1.25);
+  top: 100%;
+  width: 140%;
+  height: 180%;
+  background-color: rgba(0, 0, 0, 0.05);
+  border-radius: 50%;
+  display: block;
+  transition: all 0.5s 0.1s cubic-bezier(0.55, 0, 0.1, 1);
+  z-index: -1;
+}
+
+.button2addtocark:after {
+  content: "";
+  position: absolute;
+  left: 55%;
+  transform: translateX(-50%) scaleY(1) scaleX(1.45);
+  top: 180%;
+  width: 160%;
+  height: 190%;
+  background-color: #009087;
+  border-radius: 50%;
+  display: block;
+  transition: all 0.5s 0.1s cubic-bezier(0.55, 0, 0.1, 1);
+  z-index: -1;
+}
+
+.button2addtocark:hover {
+  color: #ffffff;
+  border: 1px solid #009087;
+}
+
+.button2addtocark:hover:before {
+  top: -35%;
+  background-color: #009087;
+  transform: translateX(-50%) scaleY(1.3) scaleX(0.8);
+}
+
+.button2addtocark:hover:after {
+  top: -45%;
+  background-color: #009087;
+  transform: translateX(-50%) scaleY(1.3) scaleX(0.8);
+}
 
 
 
@@ -1457,25 +1489,32 @@ img:hover {
 
 .Cource-Detail {
   background: url('/public/images/bg.jpg');
+  background-position: center;
+  background-origin: border-box;
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+  background-size: cover;
+  height: 70vh;
 }
 
 .Cource-Detail .container-fluid {
   background-position: center;
   background-origin: border-box;
   background-repeat: no-repeat;
-  background-attachment:fixed;
+  background-attachment: fixed;
   background-size: cover;
-  background: #141414a1;
+  /* background: #141414a1; */
   color: #fff;
   /* height: 70vh; */
 }
-.Course-title{
+
+.Course-title {
   border-radius: 10px;
-  background: rgba(151, 250, 253, 0.15);
-    -webkit-backdrop-filter: blur(16px);
-    backdrop-filter: blur(16px);
-    border: 1px solid rgba(151, 250, 253, 0.075);
+  background: rgba(236, 143, 5, 0.25);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
 }
+
 .Clock-box {
   width: 120px;
   height: 120px;

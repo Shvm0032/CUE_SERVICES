@@ -190,8 +190,8 @@ const AddToCart = () => {
                 <Link to='/course' className="text-white fs-5"> <i className="fas fa-arrow-left"></i>  &emsp; Back to shopping</Link>
               </div>
 
-              <div className='row p-3 text-center  shadow' style={{ width: 300, background: '#FFAC1C', borderRadius: '8px' }}>
-                <Link to='/Checkout' className=" text-white fs-5" > <i className="fas fa-money-check-alt"></i> &emsp;Checkout</Link>
+              <div className='row p-3 text-center'>
+                <Link to='/Checkout' className="button2addtocark" ><i className="fas fa-money-check-alt"></i> &emsp;Checkout</Link>
               </div>
 
             </div>

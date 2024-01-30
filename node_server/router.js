@@ -15,19 +15,17 @@ const { Route } = require("react-browser-router");
 
 
 
-
-
-
 dotenv.config();
 
 var filename = "";
 var filet = "";
+
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         return cb(null, "./public")
     },
     filename: function (req, file, cb) {
-        filename = crypto.randomBytes(10).toString('hex')+'_'+file.originalname
+        filename = crypto.randomBytes(10).toString('hex') + '_' + file.originalname
         //file = file;
         return cb(null, filename)
     }
@@ -239,7 +237,7 @@ Router.put('/api/update/:course_id', upload.single('file'), async (req, res) => 
     const courseId = req.params.course_id;
     const { industry, speaker, title, description, duration, time, date, fields } = req.body;
     //const course_thumbnail = req.course_thumbnail ? req.course_thumbnail.buffer : null; // Assuming 'thumbnail' is the name of the file input in your form
-    const course_thumbnail = req?.file?.filename; 
+    const course_thumbnail = req?.file?.filename;
     const updateCourseQuery = `
       UPDATE course_detail
       SET industries = ?, speaker = ?, title = ?, description = ?, duration = ?, time = ?, date = ?, course_thumbnail = ?, selling_option = ?
@@ -247,7 +245,7 @@ Router.put('/api/update/:course_id', upload.single('file'), async (req, res) => 
     `;
     const fieldsData = JSON.parse(fields);
     console.log(req.body, 'fieldsData');
-    console.log(req.file,'thumbnail')
+    console.log(req.file, 'thumbnail')
     // Extracting selling options data from fieldsData
     const sellingOptions = fieldsData.map(option => ({
         category: option.category,
@@ -255,40 +253,40 @@ Router.put('/api/update/:course_id', upload.single('file'), async (req, res) => 
         price: option.price
     }));
     try {
-      await sqlDbconnect.query(updateCourseQuery, [
-        industry,
-        speaker,
-        title,
-        description,
-        duration,
-        time,
-        date,
-        course_thumbnail,
-        JSON.stringify(sellingOptions),
-        courseId
-      ]);
-      
-      // Insert or update selling options as needed
-    //   const updateSellingOptionsQuery = `
-    //     REPLACE INTO selling_options ( category, name, price)
-    //     VALUES ( ?, ?, ?)
-    //   `;
+        await sqlDbconnect.query(updateCourseQuery, [
+            industry,
+            speaker,
+            title,
+            description,
+            duration,
+            time,
+            date,
+            course_thumbnail,
+            JSON.stringify(sellingOptions),
+            courseId
+        ]);
+
+        // Insert or update selling options as needed
+        //   const updateSellingOptionsQuery = `
+        //     REPLACE INTO selling_options ( category, name, price)
+        //     VALUES ( ?, ?, ?)
+        //   `;
 
 
-  
-    //   req.body.sellingOptions.forEach(async (option) => {
-    //     await sqlDbconnect.query(updateSellingOptionsQuery, [courseId, option.category, option.name, option.price]);
-    //   });
-  
-      res.status(200).send('Course updated successfully!');
+
+        //   req.body.sellingOptions.forEach(async (option) => {
+        //     await sqlDbconnect.query(updateSellingOptionsQuery, [courseId, option.category, option.name, option.price]);
+        //   });
+
+        res.status(200).send('Course updated successfully!');
     } catch (error) {
-      console.error('Error updating course:', error);
-      res.status(500).send('Internal Server Error');
+        console.error('Error updating course:', error);
+        res.status(500).send('Internal Server Error');
     }
 });
 
 
-   
+
 
 
 
@@ -329,7 +327,7 @@ Router.post("/api/Speaker_add", upload.single("file"), (req, res) => {
 
     // Use parameterized query to prevent SQL injection
     const insertQuery = "INSERT INTO speaker_info (name, email, phone_no, bio, images, designation, experience) VALUES (?, ?, ?, ?, ?, ?, ?)";
-    
+
     sqlDbconnect.query(insertQuery, [username, email, phone, bio, filename, designation, experience], (err, rows) => {
         if (!err) {
             res.json({ success: true, message: 'Speaker added successfully!' });
@@ -339,9 +337,6 @@ Router.post("/api/Speaker_add", upload.single("file"), (req, res) => {
         }
     });
 });
-
-
-
 
 
 Router.delete("/api/delete_speaker", (req, res) => {
@@ -355,10 +350,12 @@ Router.delete("/api/delete_speaker", (req, res) => {
     });
 })
 
+
+
 // edit speaker
 Router.get("/api/speaker/edit/:speaker_id", (req, res) => {
     const id = req.params.speaker_id;
-    console.log(id,'id');
+    console.log(id, 'id');
     const query = "SELECT * FROM speaker_info WHERE speaker_id = ? AND status IN (?)";
     sqlDbconnect.query(query, [id, [1, 2]], (err, result) => {
         if (err) return res.json({ Error: err });
@@ -366,6 +363,8 @@ Router.get("/api/speaker/edit/:speaker_id", (req, res) => {
     });
 
 });
+
+
 
 Router.get("/api/profile", (req, res) => {
     let token = req.headers.authorization;
@@ -390,7 +389,7 @@ Router.get("/api/profile", (req, res) => {
         console.log(result);
         return res.json(result);
     });
-  
+
 });
 
 // update speaker
@@ -608,7 +607,7 @@ Router.put('/api/update_industry/:id', upload.single('image'), (req, res) => {
     }
 });
 
-  
+
 
 // start faq category
 
@@ -728,6 +727,61 @@ Router.put('/api/Update_Question/:id', (req, res) => {
 
 //   end faq question
 
+Router.get("/api/faq/Get", (req, res) => {
+    
+    let sql = `SELECT * FROM faq_category LEFT OUTER JOIN faq ON faq_category.id = faq.category_id;`;
+
+    sqlDbconnect.query(sql, (err, rows) => {
+        if (!err) {
+            // Transform the data
+            const transformedData = transformData(rows);
+
+            // Send the transformed data in the response
+            res.send(transformedData);
+        } else {
+            console.log(err);
+        }
+    });
+});
+
+// Function to transform the data
+function transformData(data) {
+    console.log(data,'data');
+    const transformedResult = [];
+
+    // Group data by category_id
+    const groupedData = data.reduce((acc, item) => {
+        const category_id = item.category_id;
+
+        if (!acc[category_id]) {
+            acc[category_id] = [];
+        }
+
+        acc[category_id].push({
+            question: item.question || '',
+            answer: item.answer|| ''
+        });
+
+        return acc;
+    }, {});
+
+    // Create the final transformed result
+    for (const category_id in groupedData) {
+        const categoryData = groupedData[category_id];
+        const categoryInfo = data.find(item => item.category_id === category_id);
+        if (categoryInfo){
+            transformedResult.push({
+                category: categoryInfo.category || '',
+                items: categoryData
+            });
+        }
+        
+    }
+
+    return transformedResult;
+}
+
+
 
 Router.get("/api/Order_Details", (req, res) => {
     sqlDbconnect.query("SELECT * FROM order_details", (err, rows) => {
@@ -784,9 +838,6 @@ Router.get("/api/selling_edit/:id", (req, res) => {
     });
 });
 
-
-
-
 Router.put('/api/update_option/:id', (req, res) => {
     const { id } = req.params;
     const { selling_category, name, price } = req.body;
@@ -812,6 +863,7 @@ Router.put('/api/update_option/:id', (req, res) => {
         res.status(200).json({ success: true, message: 'Selling option updated successfully' });
     });
 });
+
 // end selling option
 
 Router.get("/api/Testimonial", (req, res) => {
@@ -824,9 +876,6 @@ Router.get("/api/Testimonial", (req, res) => {
     });
 });
 
-
-
-
 Router.get("/api/Registration", (req, res) => {
     sqlDbconnect.query("SELECT * FROM registration", (err, rows) => {
         if (!err) {
@@ -837,6 +886,7 @@ Router.get("/api/Registration", (req, res) => {
     });
 });
 // Endpoint for user registration
+
 
 Router.post('/api/NewRegistration', (req, res) => {
     const { firstName, lastName, username, email, phone, gender, pincode, address1, address2, country, state, city, password } = req.body;
@@ -873,52 +923,6 @@ Router.post('/api/NewRegistration', (req, res) => {
             });
     });
 });
-
-// Router.post("/api/Course_add", upload.single("file"), (req, res) => {
-
-//     function makeString(val) {
-//         const fields = JSON.parse(req.body.fields);
-//         console.log(fields, "here are the fields")
-//         let str = `INSERT INTO selling_options (selling_category, name, price, status, cid) VALUES`
-//         for (let i = 0; i < fields.length; i++) {
-//             if (i === 0) {
-//                 str += ` ('${fields[i].category}','${fields[i].name}','${fields[i].price}', '${true}' , '${val}')`
-//             } else {
-//                 str += `, ('${fields[i].category}','${fields[i].name}','${fields[i].price}', '${true}' , '${val}')`
-//             }
-
-//         }
-//         console.log(str)
-//         return str;
-//     }
-
-//     console.log(req.body, filename, "<<>>", filet)
-//     try {
-//         sqlDbconnect.query(`INSERT INTO course_detail (industries, speaker, title, date, time, duration, course_thumbail) VALUES ('${req.body.industry}','${req.body.speaker}','${req.body.name}', '${req.body.cstdate}' , '${req.body.time}', '${req.body.duration}', '${filename}')`, (err, rows) => {
-//             if (!err) {
-//                 console.log(rows)
-//                 sqlDbconnect.query(makeString(rows.insertId), (err, row) => {
-//                     if (!err) {
-
-//                         res.status(200).json({ rows, row });
-//                     } else {
-//                         console.log(err);
-//                     }
-//                 });
-//             } else {
-//                 console.log(err);
-//             }
-//         });
-
-
-//     } catch (err) {
-//         console.log(err)
-//     }
-
-// })
-
-
-
 
 
 Router.get("/api/User_message", (req, res) => {
@@ -958,6 +962,8 @@ Router.post("/api/user_message", (req, res) => {
         }
     });
 });
+
+
 Router.post("/api/add_user", (req, res) => {
     console.log(req.body, "<<>>Body")
     let sql = `INSERT INTO user_info (company_name,name,email,password,number,city, job_profile, country, address, address2, state, pin_code, isActive) VALUES ("${req.body.CompanyName}", "${req.body.Name}", "${req.body.Email}", "", "${req.body.Phone}", "${req.body.City}", "${req.body.JobTitle}", "${req.body.Country}", "${req.body.Address1}", "${req.body.Address2}", "${req.body.State}", "${req.body.Zip}", "${0}")`
@@ -1130,8 +1136,6 @@ Router.post("/api/user_info", (req, res) => {
 
 // profile editor//
 
-
-
 Router.post('/api/save-image', async (req, res) => {
     try {
         let token = req.headers.authorization;
@@ -1140,27 +1144,28 @@ Router.post('/api/save-image', async (req, res) => {
         }
         let jwtSecretKey = process.env.JWT_SECRET_KEY;
         const decoded = jwt.verify(token, jwtSecretKey);
-    
+
         if (!decoded) {
             return res.json([]);
         }
-      const id = decoded.userId;
-      const { image_content }  = req.body;
-      console.log(image_content,'image_content');
-      sqlDbconnect.query(`UPDATE registration SET image = "${image_content}" WHERE id =${id}`, (err, results) => {
-        if (err) {
-          console.error('Error saving image to MySQL:', err);
-          res.status(500).send('Internal Server Error');
-        } else {
-          console.log('Image saved to MySQL successfully');
-          res.status(200).send('Image saved successfully');
-        }
-      });
+
+        const id = decoded.userId;
+        const { image_content } = req.body;
+        console.log(image_content, 'image_content');
+        sqlDbconnect.query(`UPDATE registration SET image = "${image_content}" WHERE id =${id}`, (err, results) => {
+            if (err) {
+                console.error('Error saving image to MySQL:', err);
+                res.status(500).send('Internal Server Error');
+            } else {
+                console.log('Image saved to MySQL successfully');
+                res.status(200).send('Image saved successfully');
+            }
+        });
     } catch (error) {
-      console.error('Error processing image:', error);
-      res.status(500).send('Internal Server Error');
+        console.error('Error processing image:', error);
+        res.status(500).send('Internal Server Error');
     }
-  });
+});
 
 
 
@@ -1182,6 +1187,7 @@ Router.get("/api/industry", (req, res) => {
 
     }
 })
+
 Router.get("/api/speaker", (req, res) => {
     try {
         sqlDbconnect.query("SELECT * FROM speaker_info", (err, result) => {
@@ -1196,42 +1202,11 @@ Router.get("/api/speaker", (req, res) => {
     }
 })
 
-// add to cart api
-
-Router.get("/api/Add_cart", (req, res) => {
-    try {
 
 
-        sqlDbconnect.query("SELECT * FROM add_to_cart", (err, result) => {
-            if (!err) {
-                res.status(200).json(result);
-            } else {
-                console.log(err);
-            }
-        });
-    } catch (err) {
-
-    }
-})
 
 
-// API endpoint to add to the cart
-Router.post('/api/addToCart', (req, res) => {
-    console.log(req.body);
-    const { title, pr } = req.body;
-    sqlDbconnect.query('delete from add_to_cart', function (err, result) {
 
-    })
-    var sql = `INSERT INTO add_to_cart(course_name,price)
-        VALUES("${title}","${pr}")`;
-    sqlDbconnect.query(sql, (err, result) => {
-        if (!err) {
-            res.status(200).json({ success: "ueser message send succesfully", mydata: req.body });
-        } else {
-            console.log(err);
-        }
-    });
-});
 
 Router.get("/api/Subscribe", (req, res) => {
     sqlDbconnect.query("select * from  subscribe", (err, rows) => {
@@ -1313,24 +1288,7 @@ Router.post("/api/Contact_Details", (req, res) => {
 // backend to dashboard profile //
 
 
-// Router.get('/api/profile/:userId', (req, res) => {
-//     const userId = req.params.userId;
 
-//     // Query database to get user profile data
-//     const sql = 'SELECT * FROM registration WHERE id = ?';
-//     sqlDbconnect.query(sql, [userId], (err, results) => {
-//         if (err) {
-//             console.error('Error fetching profile:', err);
-//             res.status(500).json({ error: 'Internal Server Error' });
-//         } else {
-//             if (results.length > 0) {
-//                 res.json(results[0]);
-//             } else {
-//                 res.status(404).json({ error: 'User not found' });
-//             }
-//         }
-//     });
-// });
 
 
 
@@ -1351,8 +1309,8 @@ Router.post('/api/updateprofile', (req, res) => {
 
     const imagePath = req.file.path;
     const id = decoded.userId;
-    const {  fname, lname, uname, email, phone, gender, pincode, address1, address2, country, state, city, password ,image} = req.body;
-    console.log(req.body,'-----');
+    const { fname, lname, uname, email, phone, gender, pincode, address1, address2, country, state, city, password, image } = req.body;
+    console.log(req.body, '-----');
     sqlDbconnect.query('UPDATE registration  SET fname = ?, lname = ?, uname = ?, email = ?, phone = ?, gender = ?, pincode = ?, address1 = ?, address2 = ?, country = ?,state =?, city = ?, password = ? WHERE id = ? ', [fname, lname, uname, email, phone, gender, pincode, address1, address2, country, state, city, password, id], (err, result) => {
         if (err) {
             console.error('Error updating profile:', err);
@@ -1361,7 +1319,7 @@ Router.post('/api/updateprofile', (req, res) => {
         }
         console.log(req.body);
 
-        res.status(200).json({result,  message: 'Profile updated successfully' });
+        res.status(200).json({ result, message: 'Profile updated successfully' });
     });
 });
 
@@ -1370,50 +1328,7 @@ Router.post('/api/updateprofile', (req, res) => {
 
 
 
-// const stripe = require('stripe')('sk_test_51OGHZSSA3p9Dwv0NOucSSfsRcoPoVUuczA2UhFef5XqHasgHKiNDypSQqr0qVuu6jJX1V74riE78pD6M8V61dZJS00tQR6B9W5');
 
-// Router.post('/api/create-checkout-session', async (req, res) => {
-//     const formData = req.body.formData;
-
-//     // Insert form data into the database
-//     const insertFormDataQuery = 'INSERT INTO order_course SET ?';
-//     sqlDbconnect.query(insertFormDataQuery, formData, (err, result) => {
-//         if (err) {
-//             console.error('Error inserting form data into the database:', err);
-//             res.status(500).json({ error: 'Internal Server Error' });
-//             return;
-//         }
-
-//         const cartItems = req.body.cartItems;
-
-//         // Create line items dynamically based on the items in cartItems
-//         const lineItems = cartItems.map((item) => ({
-//             price_data: {
-//                 currency: 'usd',
-//                 product_data: {
-//                     name: item.course_title, // Change this to the property representing the product name
-//                 },
-//                 unit_amount: item.totalPrice * 100, // Convert the total price to cents
-//             },
-//             quantity: item.qty,
-//         }));
-
-//         // Create a Checkout session
-//         stripe.checkout.sessions.create({
-//             payment_method_types: ['card'],
-//             line_items: lineItems,
-//             mode: 'payment',
-//             success_url: 'http://localhost:3000/success', // Redirect to success page after payment
-//             cancel_url: 'http://localhost:3000/cancel', // Redirect to cancel page if user cancels
-//         }).then((session) => {
-//             // Return the session ID to the frontend
-//             res.json({ sessionId: session.id });
-//         }).catch((error) => {
-//             console.error('Error creating Checkout session:', error);
-//             res.status(500).json({ error: 'Internal Server Error' });
-//         });
-//     });
-// });
 
 
 module.exports = Router;
