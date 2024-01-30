@@ -47,7 +47,7 @@ export default function ViewIndustary() {
 
   const handleInputChange = (e) => {
     const { name, value, files } = e.target;
-    
+
     setEditForm((prev) => ({
       ...prev,
       [name]: name === 'image' ? files[0] : value,
@@ -103,6 +103,8 @@ export default function ViewIndustary() {
                     >
                       <i className="fa fa-edit"></i>&nbsp;Edit
                     </button>
+
+                    <button type='button' className='btn btn-danger'>Delete</button>
                   </td>
                 </tr>
               ))}

@@ -1,0 +1,11 @@
+<html>
+  <%- include('./includes/header.ejs') %>
+  <div style="margin: 0 auto; max-width: 720px; padding: 30px 0; font-family: Arial">
+  <p>Dear, <%= name %>,</p>
+  <p>Survey - <a href="<%= survey_link %>"> <%= title %> </a> had been published by <%= survey_owner %>. Kindly participate before the expiry date - <%= expiry_date %>,</p>
+  </div>
+  <!-- Other dynamic content here -->
+  <%- include('./includes/footer.ejs') %>
+</body>
+
+</html>                     
