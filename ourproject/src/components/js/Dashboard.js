@@ -5,12 +5,14 @@ import authService from '../../services/auth.service';
 import { useNavigate } from 'react-router-dom';
 import ProfileModal from './ProfileModal';
 import { Button } from 'react-bootstrap';
-
+import { useDispatch } from 'react-redux';
+import {  logout } from '../../redux/authSlice'; // Update the path
 const deafaultImg = "img/friend.jpg";
 
 
 
 function Dashboard() {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const authUser = authService.getAuthUser();
   console.log(authUser)
@@ -97,7 +99,8 @@ function Dashboard() {
   const handleLogout = async () => {
     try {
       await authService.logout();
-      navigate('/');
+      dispatch(logout()); // Dispatch the logout action
+      navigate('/login',{ replace: true });
     } catch (error) {
       toast.error(error.data.message);
     }
