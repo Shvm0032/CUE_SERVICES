@@ -22,6 +22,7 @@ import Speaker from './components/js/Speaker';
 import Becomespeaker from './components/js/Becomespeaker';
 
 import Login from './components/js/Login';
+// import Navbar from './components/js/Navbar';
 import Register from './components/js/Register';
 import Dashboard from './components/js/Dashboard';
 
@@ -37,7 +38,7 @@ const AppRouter = () => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        
+
         dispatch(fetchCourses());
         dispatch(fetchSpeakers());
 
@@ -56,16 +57,19 @@ const AppRouter = () => {
             <Route element={<AuthGuard />}>
                 <Route path='/Dashboard' element={<Dashboard />} />
             </Route>
-                <Route path='/Success' element={<Success />} />
-
+            <Route path='/Success' element={<Success />} />
 
             <Route path='/course' element={<Cources />} />
             <Route path='/Course_Detail/:id' element={<CourseDetail />} />
 
             <Route path='/login' element={<Login />} />
+
+
+
             <Route path='/register' element={<Register />} />
+            
             <Route path='/Add_cart' element={<Add_cart />} />
-            <Route path='/Checkout' element={<Checkout/>} />
+            <Route path='/Checkout' element={<Checkout />} />
 
             <Route path='/Faqrear' element={<Faqrear />} />
             <Route path='/Contactus' element={<Contactus />} />

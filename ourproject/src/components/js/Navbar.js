@@ -1,16 +1,18 @@
 
 import React from 'react'
-import { Link } from "react-router-dom";
-import { useSelector } from 'react-redux';
+import { Link, useNavigate } from "react-router-dom";
 import { selectCartItems } from '../../redux/cartSlice';
-
 import { v4 as uuid } from "uuid";
+// Navbar.js
+import { useSelector, useDispatch } from 'react-redux';
+import { selectIsLoggedIn, logout } from '../../redux/authSlice'; // Update the path
+import authService from '../../services/auth.service';
+// Update the path
+
 export default function Navbar() {
     const cartItems = useSelector(selectCartItems);
     console.log(cartItems.length)
     console.log(cartItems);
-
-
     const unique_id = uuid();
     if (localStorage.getItem('unique_id')) {
 
@@ -18,7 +20,18 @@ export default function Navbar() {
     else {
         localStorage.setItem('unique_id', unique_id);
     }
+    const dispatch = useDispatch();
+    const isLoggedIn = useSelector(selectIsLoggedIn);
+    const navigate = useNavigate();
 
+
+    const handleLogout = async () => {
+        authService.logout();
+        dispatch(logout()); // Dispatch the logout action
+        navigate('/login',{ replace: true });
+        // in this when userlogout there is no way to go back to the dashboard
+
+    };
     return (
         <>  <div className='sticky-top'>
             <section className="d-flex justify-content-between p-2" style={{ background: '#13bbaf' }}>
@@ -93,13 +106,13 @@ export default function Navbar() {
                                     <li ><Link class="dropdown-item  p-2" to="/Faqrear"> FAQ</Link></li>
                                 </ul>
                             </li>
-                           
+
                             <li className='nav-item'>
                                 <button class="btn p-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasTop" aria-controls="offcanvasTop">
                                     <i class="fas fa-search fa-lg" style={{ color: '#ff9b24' }}></i>
                                 </button>
                             </li>
-                            
+
                         </ul>
                         <ul className="navbar-nav ms-auto d-none d-lg-inline-flex">
                             <li>
@@ -108,14 +121,36 @@ export default function Navbar() {
                                         <i class="fas fa-cart-arrow-down fa-2 me-2 mt-1" style={{ color: '#ff9b24' }}></i>Cart
                                         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                                             {cartItems.length}
-                                            
+
                                             <span class="visually-hidden">unread messages</span>
                                         </span>
                                     </button>
                                 </Link>
                             </li>
-                            <li><Link to="/login"><button className='buttonLogIn'> Log-in</button></Link></li>
+                            {/* <li><Link to="/login"><button className='buttonLogIn'> Log-in</button></Link></li> */}
+
+                            {isLoggedIn ? (
+                                <>
+                                    <li>
+                                        <Link className="nav-link mx-2" to="/Dashboard">
+                                            Profile
+                                        </Link>
+                                    </li>
+                                    <li>
+                                        <button className='buttonLogIn' onClick={handleLogout}>
+                                            Logout
+                                        </button>
+                                    </li>
+                                </>
+                            ) : (
+                                <li>
+                                    <Link to="/login">
+                                        <button className='buttonLogIn'>Log-in</button>
+                                    </Link>
+                                </li>
+                            )}
                         </ul>
+                        
                     </div>
 
                 </div>

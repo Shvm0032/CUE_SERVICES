@@ -3,14 +3,15 @@ const app = express();
 const util = require('util');
 const jwt = require('jsonwebtoken');
 
-app.use(express.json());
+app.use(express.json({limit: '50mb'}));
 app.use(express.static("public"))
 // Use the express.urlencoded() middleware to parse URL-encoded bodies
-app.use(express.urlencoded({ extended: true }));
+//app.use(express.urlencoded({ extended: true }));
 const sqlDbconnect = require("./dbconnection");
-
 const schedular = require('./schedular/payment_status');
 const cron = require('node-cron');
+//app.use(express.json({limit: '50mb'}));
+app.use(express.urlencoded({limit: '50mb',  extended: true}));
 
 const RouterPath = require('./router');
 const cors = require('cors');

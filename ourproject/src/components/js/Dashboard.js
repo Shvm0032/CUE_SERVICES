@@ -5,12 +5,14 @@ import authService from '../../services/auth.service';
 import { useNavigate } from 'react-router-dom';
 import ProfileModal from './ProfileModal';
 import { Button } from 'react-bootstrap';
-
+import { useDispatch } from 'react-redux';
+import {  logout } from '../../redux/authSlice'; // Update the path
 const deafaultImg = "img/friend.jpg";
 
 
 
 function Dashboard() {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const authUser = authService.getAuthUser();
   console.log(authUser)
@@ -97,7 +99,8 @@ function Dashboard() {
   const handleLogout = async () => {
     try {
       await authService.logout();
-      navigate('/');
+      dispatch(logout()); // Dispatch the logout action
+      navigate('/login',{ replace: true });
     } catch (error) {
       toast.error(error.data.message);
     }
@@ -258,16 +261,8 @@ function Dashboard() {
                   <div className='container'>
 
                     <div className='d-flex gap-3'>
-                      <div className='mt-2 d-flex justify-content-center' style={{ width: '90px', height: '90px', borderRadius: '50%' }}>
-                        <img src={avatarSrc} width={"100%"} alt='' className='rounded-circle' />
-                      </div>
-                      <div className='d-flex flex-column align-item-center justify-content-center'>
-                        <h6 className='mt-3'></h6>
-                        <p className='text-secondary'>Accepted file type .png. Less than 1MB</p>
-                        <Button className="w-5" variant="primary" onClick={() => setShowModal(true)}>
-                            Change Profile
-                          </Button>
-                          {
+                      <div className='mt-2 position-relative  d-flex justify-content-center ' style={{ width: '90px', height: '90px', borderRadius: '50%', marginLeft:'55px'}}>
+                      {
                             user[0] && 
                             <ProfileModal
                             showModal={showModal}
@@ -276,9 +271,13 @@ function Dashboard() {
                             avatarSrc={avatarSrc}
                           />
                           }
-                          
+                     
                       </div>
-                    </div>
+                      <br/>
+                      {/* <div className='d-flex flex-column align-item-center justify-content-center'>
+                        <h6 className='mt-3'></h6>
+                      </div> */}
+                    </div><br/><br/>
 
                     <div className='row'>
                       <div className='col p-5'>

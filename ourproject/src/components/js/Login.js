@@ -6,13 +6,19 @@ import authService from "../../services/auth.service";
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
-
+import { login } from '../../redux/authSlice';
+import { useDispatch } from 'react-redux';
 
 function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
+    const dispatch = useDispatch();
 
+
+
+
+    
     const navigate = useNavigate()
 
     const handleClickShowPassword = () => {
@@ -29,6 +35,7 @@ function Login() {
         await authService.login({ email, password })
             .then(res => {
                 if (res.data.success) {
+                    dispatch(login()); 
                     navigate('/Dashboard');
                 } else {
                     alert("Login failed. " + res.data.message);
@@ -37,6 +44,7 @@ function Login() {
             })
             .catch(err => console.log(err));
     }
+
 
 
     return (
