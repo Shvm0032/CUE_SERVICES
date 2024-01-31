@@ -8,6 +8,7 @@ const cartSlice = createSlice({
         itemsInfo: unique_id ? JSON.parse(localStorage.getItem(unique_id)) || [] : []
     },
     reducers: {
+        
         addToCart: (state, action) => {
             const { items, course_id, course_title, totalPrice } = action.payload;
             let unique_id = localStorage.getItem('unique_id');
@@ -47,6 +48,7 @@ const cartSlice = createSlice({
       
         removeAllItemsFromCart: (state) => {
             state.itemsInfo = [];
+            let unique_id = localStorage.getItem('unique_id');
             localStorage.removeItem(unique_id);
         },
 

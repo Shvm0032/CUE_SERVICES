@@ -729,7 +729,7 @@ Router.put('/api/Update_Question/:id', (req, res) => {
 //   end faq question
 
 Router.get("/api/faq/Get", (req, res) => {
-    
+
     let sql = `SELECT * FROM faq_category LEFT OUTER JOIN faq ON faq_category.id = faq.category_id;`;
 
     sqlDbconnect.query(sql, (err, rows) => {
@@ -747,7 +747,7 @@ Router.get("/api/faq/Get", (req, res) => {
 
 // Function to transform the data
 function transformData(data) {
-    console.log(data,'data');
+    console.log(data, 'data');
     const transformedResult = [];
 
     // Group data by category_id
@@ -760,7 +760,7 @@ function transformData(data) {
 
         acc[category_id].push({
             question: item.question || '',
-            answer: item.answer|| ''
+            answer: item.answer || ''
         });
 
         return acc;
@@ -770,13 +770,13 @@ function transformData(data) {
     for (const category_id in groupedData) {
         const categoryData = groupedData[category_id];
         const categoryInfo = data.find(item => item.category_id === category_id);
-        if (categoryInfo){
+        if (categoryInfo) {
             transformedResult.push({
                 category: categoryInfo.category || '',
                 items: categoryData
             });
         }
-        
+
     }
 
     return transformedResult;
@@ -919,11 +919,11 @@ Router.post('/api/NewRegistration', (req, res) => {
 
                 console.log('User registered:', { firstName, lastName, username, email, phone, gender, pincode, address1, address2, country, state, city });
                 let emailObject = {
-                    user_name:username,
-                    receiver:email,
-                    subject:'Account Created successfully.',
-                    content:''
-               };
+                    user_name: username,
+                    receiver: email,
+                    subject: 'Account Created successfully.',
+                    content: ''
+                };
                 sendEmail(emailObject);
                 // Respond with success
                 res.status(200).json({ success: true, message: 'Registration successful' });
@@ -1340,26 +1340,53 @@ Router.post('/api/updateprofile', (req, res) => {
 
 // testing api
 Router.get("/api/testing", async (req, res) => {
-   let emailObject = {
-        user_name:'nAVJOT',
-        receiver:'navjotsingh@yopmail.com',
-        subject:'Account Created successfully.',
-        content:''
-   };
+    let emailObject = {
+        user_name: 'nAVJOT',
+        receiver: 'navjotsingh@yopmail.com',
+        subject: 'Account Created successfully.',
+        content: ''
+    };
     let response = await sendEmail(emailObject);
-    const err = null;  
+    const err = null;
     const result = { message: 'Data fetched successfully' };
-  
-    if (!err) {
-      res.status(200).json({ response: 'yes', response });
-    } else {
-      console.log(err);
-      res.status(500).json({ response: 'no', error: 'Internal Server Error' });
-    }
-  });
- 
 
-   
+    if (!err) {
+        res.status(200).json({ response: 'yes', response });
+    } else {
+        console.log(err);
+        res.status(500).json({ response: 'no', error: 'Internal Server Error' });
+    }
+});
+
+
+Router.get("/api/Order/get", (req, res) => {
+    try {
+        let token = req.headers.authorization;
+        if (token && token.startsWith('Bearer ')) {
+            token = token.slice(7, token.length);
+        }
+        let jwtSecretKey = process.env.JWT_SECRET_KEY;
+        const decoded = jwt.verify(token, jwtSecretKey);
+        
+        const id = decoded.userId ? decoded.userId : 0;
+
+        const checkEmailQuery = 'SELECT * FROM order_details WHERE user_id = ?';
+        sqlDbconnect.query(checkEmailQuery, [id], (err, result) => {
+            if (!err) {
+                res.status(200).json(result);
+            } else {
+                console.log(err);
+            }
+        });
+    } catch (err) {
+
+    }
+})
+
+
+
+
+
 
 
 

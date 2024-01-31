@@ -1,25 +1,32 @@
 import React, { useState } from "react";
-import '../css/Contact.modules.css'
 import { Link } from "react-router-dom";
+import { toast } from 'react-hot-toast';
+import '../css/Contact.modules.css';
 import http from "../../utils/http-client";
 
 function Contact() {
+
+
   const [formValue, setFormValue] = useState({ username: '', phone: '', email: '', message: '' });
-  const [Returnmessage, setReturnmessage] = useState();
+
   const handleInput = (e) => {
     const { name, value } = e.target;
     setFormValue({ ...formValue, [name]: value });
   }
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const allInputvalue = { username: formValue.username, email: formValue.email, phone: formValue.phone, message: formValue.message };
-    // console.log(allInputvalue);
-    let res = await http.post("user_message", {...formValue});
-    //console.log(res);
-    if (res.status === 200) {
-      setReturnmessage(res.data.success);
-    } else {
-      setReturnmessage("Some error occure");
+
+    try {
+      let res = await http.post("user_message", { ...formValue });
+      if (res.status === 200) {
+        toast.success(res.data.success, { duration: 4000 });
+      } else {
+        toast.error("Some error occurred", { duration: 4000 });
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      toast.error('An error occurred during submission', { duration: 4000 });
     }
   }
   return (
@@ -104,9 +111,9 @@ function Contact() {
                   </div>
 
                   <div className="col mt-2">
-                    <button type="submit" className="btn btn-primary btn-lg mb-3">Submit</button>
+                    <button type="submit" className=" button2addtocark">Submit</button>
                   </div>
-                  <p className="text-success text-center">{Returnmessage}</p>
+                  {/* <p className="text-success text-center">{Returnmessage}</p> */}
 
                 </form>
               </div>

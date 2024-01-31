@@ -5,8 +5,7 @@ import { removeFromCart } from '../../redux/cartSlice';
 import { selectCartItems } from '../../redux/cartSlice';
 import http from "../../utils/http-client";
 import { useNavigate } from 'react-router-dom';
-
-
+import { toast } from 'react-hot-toast';
 
 const AddToCart = () => {
   const [selectedCourseId, setSelectedCourseId] = useState(null);
@@ -19,8 +18,16 @@ const AddToCart = () => {
   // console.log();
   const dispatch = useDispatch();
 
-  const handleRemove = (itemId) => {
+  const handleRemove = (itemId, itemName) => {
     dispatch(removeFromCart(itemId));
+    // Show toast message using react-hot-toast
+    toast.error(`"${itemName}" has been removed from the cart!`, {
+      duration: 6000,
+      style: {
+        fontSize: '16px',
+        whiteSpace: 'pre-line', // Enables multiline
+      },
+    });
   };
 
   const handleApplyCoupon = async () => {
@@ -162,7 +169,7 @@ const AddToCart = () => {
                         <input type="text" className="form-control text-center" placeholder={item?.qty} value={item?.qty} />
                         <button onClick={() => handleDecreaseQuantity(item?.course_id)}>-</button></td>
                       <td className="text-right fs-4 font-weight-semibold align-middle p-4"> ${item.totalPrice * item.qty}  </td> */}
-                      <td className="text-center align-middle  px-0"><button className='btn btn-danger' onClick={() => handleRemove(item.course_id)}><i className="fas fa-trash-alt fa-lg"></i></button></td>
+                      <td className="text-center align-middle  px-0"><button className='btn btn-danger' onClick={() => handleRemove(item.course_id, item.course_title)}><i className="fas fa-trash-alt fa-lg"></i></button></td>
                     </tr>
 
                   </tbody>

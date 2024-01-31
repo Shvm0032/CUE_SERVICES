@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { toast } from 'react-hot-toast';
 import '../css/Register.modules.css';
-export default function Register() {
+import http from "../../utils/http-client";
 
+
+export default function Register() {
 
     const [formData, setFormData] = useState({
         firstName: '',
@@ -30,12 +33,9 @@ export default function Register() {
         if (registrationSuccess) {
             const redirectTimer = setTimeout(() => {
                 // Redirect to the login page after 5 seconds
-                // You should replace '/login' with the actual login route
-                // You may use the react-router Redirect component for navigation
-                window.location.replace('/Login');
+                window.location.replace('/login'); // Replace with the actual login route
             }, 5000);
 
-            // Clear the timer when the component unmounts
             return () => clearTimeout(redirectTimer);
         }
     }, [registrationSuccess]);
@@ -107,39 +107,37 @@ export default function Register() {
 
         if (isFormValid) {
             try {
-                const response = await fetch('http://localhost:8000/api/NewRegistration', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        // Send only the necessary data to the server
-                        firstName: formData.firstName,
-                        lastName: formData.lastName,
-                        username: formData.username,
-                        email: formData.email,
-                        phone: formData.phone,
-                        gender: formData.gender,
-                        pincode: formData.pincode,
-                        address1: formData.address1,
-                        address2: formData.address2,
-                        country: formData.country,
-                        state: formData.state,
-                        city: formData.city,
-                        password: formData.password,
-                    }),
+                // ... (existing form submission logic)
+                const response = await http.post('/NewRegistration', {
+                    // Send only the necessary data to the server
+                    firstName: formData.firstName,
+                    lastName: formData.lastName,
+                    username: formData.username,
+                    email: formData.email,
+                    phone: formData.phone,
+                    gender: formData.gender,
+                    pincode: formData.pincode,
+                    address1: formData.address1,
+                    address2: formData.address2,
+                    country: formData.country,
+                    state: formData.state,
+                    city: formData.city,
+                    password: formData.password,
                 });
-
-                if (response.ok) {
+                
+                if (response?.data?.success) {
+                    toast.success('Registration successful! Redirecting to login page...', { duration: 5000 });
                     setRegistrationSuccess(true);
                 } else {
-                    console.log('Failed to submit form data.');
+                    toast.error('This email is register already', { duration: 4000 });
                 }
             } catch (error) {
+               // console.log(error);
                 console.error('Error submitting form data:', error);
+                toast.error('An error occurred during registration. Please try again.', { duration: 4000 });
             }
         } else {
-            console.log('Form is invalid. Please fix errors.');
+            toast.error('Form is invalid. Please fix errors.', { duration: 4000 });
         }
     };
 

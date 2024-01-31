@@ -13,10 +13,10 @@ async function paymentUpdate() {
     let response =  await queryAsync(itemSql);
 
     const orderItemsPromises = response.map(async (orderItem) => {
-        console.log(orderItem.hash_id,'orderItem');
+       // console.log(orderItem.hash_id,'orderItem');
         const hashId = orderItem.hash_id;
         const session = await stripe.checkout.sessions.retrieve(hashId);
-        console.log(session,'session');
+       // console.log(session,'session');
         if (session) {
             const sessionStatus = session.payment_status;
             console.log(session, 'sessionStatus');
@@ -40,7 +40,7 @@ async function paymentUpdate() {
             let response = await queryAsync(updateCourseQuery, itemValuesU);
             let responseUpdate = await queryAsync(updateCourseQueryc, itemValuesU);
 
-            console.log(response, 'response');
+          //  console.log(response, 'response');
             return Promise.resolve();
         }
         
