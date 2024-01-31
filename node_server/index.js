@@ -121,8 +121,8 @@ VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 
 
                 })),
-                success_url: STRIPE_SUCCESS_URL,
-                cancel_url: STRIPE_FAILED_URL
+                success_url: process.env.STRIPE_SUCCESS_URL,
+                cancel_url: process.env.STRIPE_FAILED_URL
             });
             console.log(orderItemsResults, 'orderItemsResults');
             const updateCourseQuery = ` UPDATE order_details SET hash_id = ? WHERE id = ?`;
