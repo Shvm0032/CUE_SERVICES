@@ -28,7 +28,7 @@ export default function Navbar() {
     const handleLogout = async () => {
         authService.logout();
         dispatch(logout()); // Dispatch the logout action
-        navigate('/login',{ replace: true });
+        navigate('/login', { replace: true });
         // in this when userlogout there is no way to go back to the dashboard
 
     };
@@ -50,7 +50,7 @@ export default function Navbar() {
 
             {/*----------------- main nav bar start here---------------------------------------- */}
 
-            <nav class="navbar navbar-expand-lg navbar-light bg-light shadow p-3">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light shadow">
 
                 <div class="container-fluid">
 
@@ -114,16 +114,12 @@ export default function Navbar() {
                             </li>
 
                         </ul>
-                        <ul className="navbar-nav ms-auto d-none d-lg-inline-flex">
+                        <ul className="navbar-nav ms-auto d-none d-lg-inline-flex align-items-center  gap-3">
                             <li>
-                                <Link class="nav-link mx-2  position-relative " to="/Add_cart" tabindex="-1" aria-disabled="true">
-                                    <button type="button" class="btn  d-inline-flex  position-relative">
-                                        <i class="fas fa-cart-arrow-down fa-2 me-2 mt-1" style={{ color: '#ff9b24' }}></i>Cart
-                                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                            {cartItems.length}
-
-                                            <span class="visually-hidden">unread messages</span>
-                                        </span>
+                                <Link className=" mx-2 cart-button me-3" to="/Add_cart" tabindex="-1" aria-disabled="true">
+                                    <button type="button  " className=" add-to-cart-btn">
+                                        <i className="fas fa-shopping-cart"></i>Cart
+                                        <span className="badge"> {cartItems.length}</span>
                                     </button>
                                 </Link>
                             </li>
@@ -150,7 +146,7 @@ export default function Navbar() {
                                 </li>
                             )}
                         </ul>
-                        
+
                     </div>
 
                 </div>

@@ -1,24 +1,27 @@
 import React, { useState } from 'react';
-import axios from 'axios';
-
+import { toast } from 'react-hot-toast';
+import http from "../../utils/http-client";
 export default function Subscribe() {
   const [email, setEmail] = useState('');
-  const [modalMessage, setModalMessage] = useState('');
-  const [modalType, setModalType] = useState('');
 
   const handleSubscribe = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await axios.post('http://localhost:8000/api/NewSubscribe', { email });
+      const response = await http.post('/NewSubscribe', { email });
 
-      setModalType(response.data.success ? 'success' : 'danger');
-      setModalMessage(response.data.message);
-
-      // Open the modal
-      document.getElementById('subscriptionModalButton').click();
+      toast(response.data.message, {
+        duration: 4000,
+        icon: response.data.success ? '🎉' : '❌', // You can customize the icon
+        style: {
+          border: response.data.success ? '1px solid #4CAF50' : '1px solid #FF3232',
+          padding: '16px',
+          color: response.data.success ? '#4CAF50' : '#FF3232',
+        },
+      });
     } catch (error) {
       console.error('Error:', error);
+      toast.error('An error occurred during subscription', { duration: 4000 });
     }
   };
 
@@ -52,39 +55,6 @@ export default function Subscribe() {
           </div>
         </div>
       </div>
-
-      {/* Bootstrap 5 Modal */}
-      <div className="modal fade" id="subscriptionModal" tabIndex="-1">
-        <div className="modal-dialog">
-          <div className={`modal-content bg-${modalType}`}>
-            <div className="modal-header">
-              <h5 className="modal-title">Subscription Status</h5>
-              <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div className="modal-body">
-              <p>{modalMessage}</p>
-            </div>
-            <div className="modal-footer">
-              <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
-                Close
-              </button>
-              {/* Additional modal footer buttons can be added here */}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Hidden button to trigger the modal */}
-      <button
-        id="subscriptionModalButton"
-        type="button"
-        className="btn btn-primary"
-        data-bs-toggle="modal"
-        data-bs-target="#subscriptionModal"
-        style={{ display: 'none' }}
-      >
-        Hidden Button
-      </button>
     </div>
   );
 }

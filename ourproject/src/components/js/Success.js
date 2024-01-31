@@ -1,11 +1,10 @@
-import React, { useEffect } from 'react'
-import { useParams } from 'react-router-dom'
+import React from 'react'
 
 export default function Success() {
  
   return (
-    <div >
-      <h1>Success</h1>
+    <div className='container'>
+      <p className='fs-1'>Success</p>
     </div>
   )
 }

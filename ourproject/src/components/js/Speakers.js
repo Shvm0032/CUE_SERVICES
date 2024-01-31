@@ -27,11 +27,12 @@ console.log(speakers);
             <section className="WaveHeaderBox">
                 <div className='row  faq-heads'>
                     <div className='row faq-headers p-5 mt-5'>
-                        <div className='col-md-12 faq mains'>
-                            <h1 className="mt-5 " style={{ fontSize: "80px", marginBottom: "5px", fontWeight: '500' }}>Our Speaker</h1>
-                            <Link to='#' className='faq-lnk-main'><i class="fa-solid fa-house" style={{ "color": "#719dea;" }}></i> CuService </Link>
-                        </div>
+                        <div className='col-md-12 faq mains '>
+                            <h1 className="mt-5 text-white " style={{ fontSize: "80px", marginBottom: "5px", fontWeight: '500' }}>Our Speaker</h1>
 
+                            <Link to='/' className='text-white'>
+                                <i class="fa-solid fa-house" style={{ "color": "#719dea;" }}></i> CuService - FAQ</Link>
+                        </div>
                     </div>
                     <div className='wave wave1'></div>
                     <div className='wave wave5'></div>
@@ -39,7 +40,6 @@ console.log(speakers);
             </section >
             <section style={{ marginBottom: '300px' }}>
                 <div className="container-fluid bg-body p-lg-5 p-3">
-
                     {/* speaker card  container start here */}
                     <div className="container mt-5">
                         <div className="row p-lg-5">

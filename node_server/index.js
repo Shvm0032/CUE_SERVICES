@@ -121,8 +121,8 @@ VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 
 
                 })),
-                success_url: `http://127.0.1:3000/Success`,
-                cancel_url: `http://127.0.1:3000/cancle`
+                success_url: STRIPE_SUCCESS_URL,
+                cancel_url: STRIPE_FAILED_URL
             });
             console.log(orderItemsResults, 'orderItemsResults');
             const updateCourseQuery = ` UPDATE order_details SET hash_id = ? WHERE id = ?`;
