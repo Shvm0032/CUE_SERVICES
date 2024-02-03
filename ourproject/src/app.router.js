@@ -33,6 +33,7 @@ import Faqrear from './components/js/Faqrear';
 import Contactus from './components/js/Contactus';
 import Checkout from './components/js/Checkout';
 
+
 const AppRouter = () => {
 
     const dispatch = useDispatch();
@@ -57,7 +58,6 @@ const AppRouter = () => {
             <Route element={<AuthGuard />}>
                 <Route path='/Dashboard' element={<Dashboard />} />
             </Route>
-            <Route path='/Success' element={<Success />} />
 
             <Route path='/course' element={<Cources />} />
             <Route path='/Course_Detail/:id' element={<CourseDetail />} />
@@ -75,7 +75,9 @@ const AppRouter = () => {
             <Route path='/Contactus' element={<Contactus />} />
             <Route path='/Subscribe' element={<Subscribe />} />
 
+            <Route path='/Success' element={<Success />} />
             <Route path='/Cancle' element={<Cancle />} />
+           
             <Route path='*' element={<Error />} />
 
         </Routes>

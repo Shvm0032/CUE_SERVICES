@@ -2,17 +2,18 @@ import '../css/Webinar.modules.css'
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchCourses } from '../../redux/courseSlice'; 
+import { fetchCourses } from '../../redux/courseSlice';
 
 
 
 export default function Cources() {
-  
+  const IMGurl = process.env.REACT_APP_IMG_URL;
+  // console.log(IMGurl);
   const dispatch = useDispatch();
   const courses = useSelector((state) => state.course.courses);
   const status = useSelector((state) => state.course.status);
   const error = useSelector((state) => state.course.error);
- 
+
 
   useEffect(() => {
     // Fetch courses data when the component mounts
@@ -27,7 +28,7 @@ export default function Cources() {
   if (status === 'failed') {
     return <p>Error: {error}</p>;
   }
- 
+
 
   return (
     <>
@@ -50,34 +51,34 @@ export default function Cources() {
           <div className='row mb-5 p-4'>
             {courses.map((course) => (
               <div className='col-lg-4 col-md-6 col-12 mb-5' key={course.id}>
-                <div className='newsCard news-Slide-up '>
-                  <div className='img-div'>
-                    <img src={`/${course.course_thumbail}` } className='course-img' alt="" />
-                  </div>
-                  <div className='newsCaption'>
-                    <div className='d-flex'>
-                      <p className='newsCaption-content mb-2' >
-                        <i class="fas fa-chalkboard-teacher fa-lg" style={{ color: '#00bbae' }}></i>&emsp;{course.name}
-                      </p>
-                      <p className='newsCaption-content mb-2 ms-5'>
-                        <i class="fas fa-chalkboard-teacher fa-lg" style={{ color: '#00bbae' }}></i>&emsp;
-                      </p>
+                <Link to={`/Course_Detail/${course?.id}`}>
+                  <div className='newsCard news-Slide-up '>
+                    <div className='img-div'>
+                      <img src={`${IMGurl}/${course.course_thumbail}`} className='course-img' alt="Course_thumnail" />
                     </div>
-                    <div className='newsCaption-title'>
-                      <h5>{course.title}</h5>
-                    </div>
-                    <div className="row  mt-0">
-                      <div className="p-3">
-                        <div className="d-flex justify-content-center align-items-center p-3 text-center mstt">
-                          <div className="col border-end boder-4"><h6>Time<br />{course.time}</h6></div>
-                          {/* <div className="col border-end boder-4"><h6>Date<br /></h6></div> */}
-                          <div className="col"><h6>Duration <br />{course.duration}</h6>
+                    <div className='newsCaption'>
+                      <div className='d-flex'>
+                        <p className='newsCaption-content mb-2' >
+                          <i class="fas fa-chalkboard-teacher fa-lg" style={{ color: '#00bbae' }}></i>&emsp;{course.name}
+                        </p>
+                        <p className='newsCaption-content mb-2 ms-5'>
+                          <i class="fas fa-chalkboard-teacher fa-lg" style={{ color: '#00bbae' }}></i>&emsp;
+                        </p>
+                      </div>
+                      <div className='newsCaption-title'>
+                        <h5>{course.title}</h5>
+                      </div>
+                      <div className="row  mt-0">
+                        <div className="p-3">
+                          <div className="d-flex justify-content-center align-items-center p-3 text-center mstt">
+                            <div className="col border-end boder-4"><h6 className=''> {course.time}<br />Time</h6></div>
+                            {/* <div className="col border-end boder-4"><h6>Date<br /></h6></div> */}
+                            <div className="col"><h6>   {course.duration} <br/>Duration </h6>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                    <div className='d-flex ps-3'>
-                      <Link to={`/Course_Detail/${course?.id}`}>
+                      <div className='d-flex ps-3'>
                         <button className="animated-button" >
                           <svg viewBox="0 0 24 24" className="arr-2" xmlns="http://www.w3.org/2000/svg">
                             <path
@@ -92,11 +93,10 @@ export default function Cources() {
                             ></path>
                           </svg>
                         </button>
-                      </Link>
+                      </div>
                     </div>
-
                   </div>
-                </div>
+                </Link>
               </div>
             ))}
 

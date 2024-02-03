@@ -1,14 +1,15 @@
+import LoadingOverlay from 'react-loading-overlay-ts';
 import React, { useState, useEffect } from 'react'
 import { loadStripe } from '@stripe/stripe-js';
 import { Link, } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectCartItems, removeFromCart, removeAllItemsFromCart, } from '../../redux/cartSlice';
-import LoadingSpinner from './LoadingSpinner';
 import http from "../../utils/http-client";
+import FadeLoader from "react-spinners/FadeLoader";
 const stripePromise = loadStripe('pk_test_51OGHZSSA3p9Dwv0NaccoiuEfDXTNtWgvxuPleUcdSBFVbnBTwoa1KZcXPVzBxmNRXW1GNwpPZcX5YGY8FfiBSdpH00ZkIQDWaC'); // Replace with your Stripe public key
-
 function Checkout() {
+
     const [isLoading, setIsLoading] = useState(false);
     const [selectedCourseId, setSelectedCourseId] = useState(null);
     const navigate = useNavigate();
@@ -89,9 +90,6 @@ function Checkout() {
 
     };
 
-
-
-
     const ItemComponent = ({ itemName, itemPrice }) => (
         <table className='table  table-hover '>
             <tbody>
@@ -138,15 +136,13 @@ function Checkout() {
         setFormData(prevState => ({ ...prevState, [name]: value }));
     };
 
-
-
-    console.log(getTotalPrice(), 'gt');
-    console.log(sum);
-    console.log(discount, 'discount-price');
-    console.log(couponCode);
-    console.log(cartItems);
-    console.log(cartItems.length);
-    console.log(formData, 'fd');
+    // console.log(getTotalPrice(), 'gt');
+    // console.log(sum);
+    // console.log(discount, 'discount-price');
+    // console.log(couponCode);
+    // console.log(cartItems);
+    // console.log(cartItems.length);
+    // console.log(formData, 'fd');
 
     const [orderId, setOrderId] = useState('');
     useEffect(() => {
@@ -165,7 +161,7 @@ function Checkout() {
         setOrderId(generateRandomOrderId());
     }, []);
 
-    console.log(orderId, 'hellow')
+    // console.log(orderId, 'hellow')
 
     const purchaseDetails = {
         'OrderID': orderId,
@@ -177,14 +173,14 @@ function Checkout() {
         'card_detail': cartItems,
         'detail': formData
     };
-    console.log(purchaseDetails);
+    // console.log(purchaseDetails);
 
     const stripe = stripePromise;
     const handleCheckout = async () => {
 
 
         setIsLoading(true);
-        console.log(validateForm())
+        // console.log(validateForm())
         if (!validateForm()) {
             console.log('validateForm');
             // Form validation failed
@@ -206,11 +202,11 @@ function Checkout() {
             if (result.error) {
                 console.error(result.error.message);
                 // Handle error
-            } 
+            }
 
         } catch (error) {
             console.error('Error during checkout:', error);
-            
+
             // Handle error
         }
 
@@ -246,7 +242,12 @@ function Checkout() {
 
 
     return (
-        <div>
+        <div><LoadingOverlay
+            active={isLoading}
+            spinner={<FadeLoader color="#36d7b7" />}
+            text="Loading..."
+        >
+
             <section className="h-100 gradient-custom " style={{ marginTop: '100px', marginBottom: "200px" }}>
                 <div className="container-fluid py-5">
                     <div className="row d-flex justify-content-center my-4">
@@ -308,41 +309,40 @@ function Checkout() {
                                     </div>
                                     {/* / Shopping cart table */}
                                     <div className="d-flex= flex-wrap flex-column justify-content-end align-items-center pb-4">
-                                        <div className='row pt-5'>
-                                            <div className='d-flex justify-content-end'>
-                                                <table className='table table-striped'>
-                                                    <tr>
-                                                        <td colSpan={3}>
-                                                            <label className="text-muted  mt-0">Total price</label>
-                                                        </td>
-                                                        <td><div className="text-large"><strong>{sum}</strong></div></td>
-                                                    </tr>
-                                                </table>
+                                        <div className='row mt-5'>
+                                            <div className='col-4 offset-8  border text-center pt-2'>
+                                                <div className='row'>
+                                                    <div className='col mt-2'> <p className='fs-4'>Total price</p></div>
+                                                    <div className='col mt-2'><p className='fs-4'>${sum}</p></div>
+                                                </div>
+
+
                                             </div>
                                         </div>
-
                                         {/* coupan section  */}
                                         <div className='row justify-content-end'>
-                                            <div className='d-flex  gap-2'>
-                                                {!applied ? (
-                                                    <div className=" col mt-4">
-                                                        <label className="text-muted font-weight-normal">Promocode</label>
-                                                        <input type="text" placeholder="ABC" className="form-control" value={couponCode}
-                                                            onChange={(e) => setCouponCode(e.target.value)} />
-                                                    </div>
+                                            <div className='row'>
+                                                <div className='col-8 offset-4 p-5'>
+                                                    {!applied ? (
+                                                        <div className="row">
+                                                            <label className="text-end fs-3 font-weight-normal">Promocode</label>
+                                                            <input type="text" placeholder="ABC" className="form-control" value={couponCode}
+                                                                onChange={(e) => setCouponCode(e.target.value)} />
+                                                        </div>
 
 
-                                                ) : null}
-                                                {!applied ? (
+                                                    ) : null}
+                                                    {!applied ? (
 
-                                                    <div className='col mt-4'>
-                                                        <button className='btn mt-4' onClick={handleApplyCoupon}  >
-                                                            Apply coupon
-                                                        </button>
-                                                    </div>
+                                                        <div className='row'>
 
-                                                ) : null}
+                                                            <button className='btn mt-2 btn-success' onClick={handleApplyCoupon}  >
+                                                                Apply coupon
+                                                            </button>
+                                                        </div>
 
+                                                    ) : null}
+                                                </div>
                                             </div>
                                         </div>
                                         {applied ? (
@@ -374,7 +374,7 @@ function Checkout() {
                                         ) : null}
                                         {applied ? (
                                             <div className="d-flex justify-content-end mt-3">
-                                                <button className="btn btn-outline-secondary" onClick={handleCancelCoupon}>
+                                                <button className="btn btn-success" onClick={handleCancelCoupon}>
                                                     Cancel
                                                 </button>
                                             </div>
@@ -396,12 +396,12 @@ function Checkout() {
                                 <div className="card-body">
                                     <ul className="list-group list-group-flush">
                                         <li className="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
-                                            <strong>Products</strong>
+                                            <strong>Quantity</strong>
                                             <span className='fs-4'>{cartItems?.length}</span>
                                         </li>
 
                                         <li className="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
-                                            <strong>Total amount</strong><span className='fs-4'>${getTotalPrice()}</span>
+                                            <strong>Total Price</strong><span className='fs-4'>${getTotalPrice()}</span>
                                         </li>
                                     </ul>
                                     {/* <button type="button" className="btn btn-primary btn-lg btn-block" onClick={showRegistrationForm}>
@@ -488,8 +488,8 @@ function Checkout() {
 
                                                 <div className='row'>
                                                     <div className='col'>
-                                                        <button type='button' className='btn btn-warning' onClick={handleCheckout} disabled={isLoading}>checkout</button>
-                                                        {isLoading ? <LoadingSpinner /> : null}
+                                                        <button type='button' className='button2addtocark' onClick={handleCheckout} disabled={isLoading}>checkout</button>
+
                                                     </div>
                                                 </div>
 
@@ -534,8 +534,8 @@ function Checkout() {
                     </div>
                 </div>
             </section>
-
-        </div>
+        </LoadingOverlay>
+        </div >
     )
 }
 

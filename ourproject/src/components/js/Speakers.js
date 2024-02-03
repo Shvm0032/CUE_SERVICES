@@ -5,12 +5,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchSpeakers } from '../../redux/speakerSlice';
 
 function Speakers() {
-
+    const IMGurl = process.env.REACT_APP_IMG_URL;
     const dispatch = useDispatch();
     const speakers = useSelector((state) => state.speaker.speakers);
     const status = useSelector((state) => state.speaker.status);
     const error = useSelector((state) => state.speaker.error);
-console.log(speakers);
+    console.log(speakers);
     useEffect(() => {
         dispatch(fetchSpeakers());
     }, [dispatch]);
@@ -49,24 +49,23 @@ console.log(speakers);
 
                                 <div className="col-lg-4 mb-4" key={speaker.speaker_id} >
                                     <div className='wrapper'>
+                                        <Link to={`/speaker/${speaker?.speaker_id}`}>
+                                            <div className='pcard'>
+                                                <img src={`${IMGurl}/${speaker.images}`} className="ProfilePicture" alt='ProfilePicture' />
+                                                <div className='ProfileName'>
+                                                    <h5 className="text-center">{speaker.name}</h5>
+                                                    <p className="text-center">{speaker.title}</p>
 
-                                        <div className='pcard'>
-                                            <img src='/' className="ProfilePicture" alt='ProfilePicture' />
-                                            <div className='ProfileName'>
-                                                <h5 className="text-center">{speaker.name}</h5>
-                                                <p className="text-center">{speaker.title}</p>
-
-                                                <Link to={`/speaker/${speaker?.speaker_id}`}>
                                                     <ul className="SocialIcon ">
                                                         <li><Link className="fab fa-facebook" /></li>
                                                         <li><Link className="fab fa-twitter" /></li>
                                                         <li><Link className="fab fa-google-plus" /></li>
                                                         <li><Link className="fab fa-linkedin" /></li>
                                                     </ul>
-                                                </Link>
-                                            </div>
+                                                </div>
 
-                                        </div>
+                                            </div>
+                                        </Link>
                                     </div>
                                 </div>
                             ))}
