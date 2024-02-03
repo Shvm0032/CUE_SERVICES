@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect } from "react"
 import 'bootstrap'
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
@@ -6,17 +6,45 @@ import { Link } from "react-router-dom";
 import '../css/Home.modules.css';
 import CountUp from 'react-countup';
 import { v4 as uuid } from "uuid";
-
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchCourses } from '../../redux/courseSlice';
+import { fetchSpeakers } from '../../redux/speakerSlice';
 const Home = () => {
+  const IMGurl = process.env.REACT_APP_IMG_URL;
+  console.log(IMGurl);
+
+  
+  const dispatch = useDispatch();
+  const courses = useSelector((state) => state.course.courses);
+  const speakers = useSelector((state) => state.speaker.speakers);
+  const status = useSelector((state) => state.course.status);
+  const error = useSelector((state) => state.course.error);
+
+
+  useEffect(() => {
+    
+    // Fetch courses data when the component mounts
+    dispatch(fetchCourses());
+    dispatch(fetchSpeakers());
+  }, [dispatch]);
+
+  // Render based on the status
+  if (status === 'loading') {
+    return <p>Loading...</p>;
+  }
+
+  if (status === 'failed') {
+    return <p>Error: {error}</p>;
+  }
 
   const unique_id = uuid();
-  if (localStorage.getItem('unique_id')){
+  if (localStorage.getItem('unique_id')) {
 
   }
-  else{
+  else {
     localStorage.setItem('unique_id', unique_id);
   }
-  
+
 
 
   const Siderresponsive = {
@@ -81,13 +109,13 @@ const Home = () => {
         <div className="container-xl  container-fluid p-lg-3 p-md-3 p-3">
           <div className="row py-4 align-items-center">
             <div className=" col-lg-6 col-md-6 col-12  p-lg-5 p-5  ">
-              <div className=" d-sm-none d-lg-flex" style={{width:'100px', marginLeft: "75%", }}>
-                <img src="img/curved-line-2.webp" class=" w-100 h-100 BouncingImg" alt="img"/>
+              <div className=" d-sm-none d-lg-flex" style={{ width: '100px', marginLeft: "75%", }}>
+                <img src="img/curved-line-2.webp" class=" w-100 h-100 BouncingImg" alt="img" />
               </div>
               <div className="row my-lg-3 my-md-3 my-3">
                 <span className="" style={{ color: "rgb(19, 187, 175)", fontSize: "23px", fontWeight: '600' }}>CEU Services<br /></span>
                 <h1 >Best Online Courses</h1>
-                <h5>{localStorage.getItem('unique_id')}</h5>
+                {/* <h5>{localStorage.getItem('unique_id')}</h5> */}
                 <div class="p-lg-2 p-2">
                   <Link to="/Webinar"><button class="button1 rounded-pill"> View All Cources</button></Link> &emsp; &emsp;
                 </div>
@@ -96,7 +124,7 @@ const Home = () => {
 
             <div className="col-lg-6 col-md-6 col-12 p-lg-2 px-lg-2  p-2">
               <div className=" align-items-center">
-       <img src="img/2.webp" className="shapesimg" alt="" style={{mixBlendMode:"darken"}}/>
+                <img src="img/2.webp" className="shapesimg" alt="" style={{ mixBlendMode: "darken" }} />
               </div>
             </div>
           </div>
@@ -307,306 +335,59 @@ const Home = () => {
               renderButtonGroupOutside={true}
               renderDotsOutside={true} responsive={responsive}>
               {/* first card */}
-              <div style={{ margin: '0 12px' }}>
-                <article>
-                  <div className="article-wrapper p-3">
-                    <figure>
-                      <img src='images/WhatsApp Image 2023-10-22 at 20.49.00_5b7b6b67.jpg' alt="" style={{ borderRadius: '24px' }} />
+              {courses.map((course) => (
+                <div style={{ margin: '0 12px' }} key={course.id}>
+                  <div className='col-lg-4 col-md-6 col-12 mb-5' style={{ width: '23rem' }}>
+                    <Link to={`/Course_Detail/${course?.id}`}>
+                      <div className='newsCard news-Slide-up '>
+                        <div className='img-div'>
+                          <img src={`${IMGurl}/${course.course_thumbail}`} className='course-img' alt="Course_thumnail" />
+                        </div>
+                        <div className='newsCaption'>
+                          <div className='d-flex'>
+                            <p className='newsCaption-content mb-2' >
+                              <i class="fas fa-chalkboard-teacher fa-lg" style={{ color: '#00bbae' }}></i>&emsp;{course.name}
+                            </p>
+                            <p className='newsCaption-content mb-2 ms-5'>
+                              <i class="fas fa-chalkboard-teacher fa-lg" style={{ color: '#00bbae' }}></i>&emsp;
+                            </p>
+                          </div>
+                          <div className='newsCaption-title'>
+                            <h5>{course.title}</h5>
+                          </div>
+                          <div className="row  mt-0">
+                            <div className="p-3">
+                              <div className="d-flex justify-content-center align-items-center p-3 text-center mstt">
+                                <div className="col border-end boder-4"><h6>Time<br />{course.time}</h6></div>
+                                {/* <div className="col border-end boder-4"><h6>Date<br /></h6></div> */}
+                                <div className="col"><h6>Duration <br />{course.duration}</h6>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div className='d-flex ps-3'>
+                            <button className="animated-button" >
+                              <svg viewBox="0 0 24 24" className="arr-2" xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                  d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"
+                                ></path>
+                              </svg>&emsp;
+                              <span className="text">Read More</span>
+                              <span className="circle"></span>&emsp;
+                              <svg viewBox="0 0 24 24" class="arr-1" xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                  d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"
+                                ></path>
+                              </svg>
+                            </button>
+                          </div>
 
-                    </figure>
-                    <div className="article-body">
-                      <div>
-                        <h6 className="mt-2 text-center">
-                          <i class="fa-solid fa-volume-high" style={{ "color": "#e13214" }}></i>
-                          &emsp; Schwartz
-                        </h6>
-                        <h5 className="cssut text-center">
-                          Travel Pay &amp; FLSA Compliance 2023 Travel Pay &amp; FLSA
-                          Compliance...
-                        </h5>
-                      </div>
-
-                      <div className="row  mt-0">
-                        <div className="p-3">
-                          <div className="row p-3 text-center mstt">
-                            <div className="col border-end boder-4"><h6>1 PM<br /> EST</h6></div>
-                            <div className="col border-end boder-4">   <h6>JUNE <br /> 30</h6></div>
-                            <div className="col">  <h6>
-                              Duration <br />90 min</h6>
-                            </div></div>
                         </div>
                       </div>
-                      <Link to="/" className="read-more">
-                        Read more <span className="sr-only">about this is some title</span>
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="icon"
-                          viewBox="0 0 20 20"
-                          fill="currentColor"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
-                      </Link>
-                    </div>
+                    </Link>
                   </div>
-                </article>
-              </div>
-              {/* second card */}
-              <div style={{ margin: '0 12px' }}>
-                <article>
-                  <div className="article-wrapper p-3">
-                    <figure>
-                      <img src='images/WhatsApp Image 2023-10-22 at 20.49.00_5b7b6b67.jpg' alt="" style={{ borderRadius: '24px' }} />
-
-                    </figure>
-                    <div className="article-body">
-                      <div>
-                        <h6 className="mt-2 text-center">
-                          <i class="fa-solid fa-volume-high" style={{ "color": "#e13214" }}></i>
-                          &emsp; Schwartz
-                        </h6>
-                        <h5 className="cssut text-center">
-                          Travel Pay &amp; FLSA Compliance 2023 Travel Pay &amp; FLSA
-                          Compliance...
-                        </h5>
-                      </div>
-
-                      <div className="row  mt-0">
-                        <div className="p-3">
-                          <div className="row p-3 text-center mstt">
-                            <div className="col border-end boder-4"><h6>1 PM<br /> EST</h6></div>
-                            <div className="col border-end boder-4">   <h6>JUNE <br /> 30</h6></div>
-                            <div className="col">  <h6>
-                              Duration <br />90 min</h6>
-                            </div></div>
-                        </div>
-                      </div>
-                      <Link to="/" className="read-more">
-                        Read more <span className="sr-only">about this is some title</span>
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="icon"
-                          viewBox="0 0 20 20"
-                          fill="currentColor"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
-                      </Link>
-                    </div>
-                  </div>
-                </article>
-              </div>
-              {/* third card */}
-              <div style={{ margin: '0 12px' }}>
-
-                <article>
-                  <div className="article-wrapper  p-3">
-                    <figure>
-                      <img src='images/WhatsApp Image 2023-10-22 at 20.49.00_5b7b6b67.jpg' alt="" />
-
-                    </figure>
-                    <div className="article-body">
-                      <div>
-                        <h6 className="mt-2 text-center">
-                          <i class="fa-solid fa-volume-high" style={{ "color": "#e13214" }}></i>
-                          &emsp; Schwartz
-                        </h6>
-                        <h5 className="cssut text-center">
-                          Travel Pay &amp; FLSA Compliance 2023 Travel Pay &amp; FLSA
-                          Compliance...
-                        </h5>
-                      </div>
-
-                      <div className="row  mt-0">
-                        <div className="p-3">
-                          <div className="row p-3 text-center mstt">
-                            <div className="col border-end boder-4"><h6>1 PM<br /> EST</h6></div>
-                            <div className="col border-end boder-4">   <h6>JUNE <br /> 30</h6></div>
-                            <div className="col">  <h6>
-                              Duration <br />90 min</h6>
-                            </div></div>
-                        </div>
-                      </div>
-                      <Link to="/" className="read-more">
-                        Read more <span className="sr-only">about this is some title</span>
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="icon"
-                          viewBox="0 0 20 20"
-                          fill="currentColor"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
-                      </Link>
-                    </div>
-                  </div>
-                </article>
-
-              </div>
-              {/* forth card  */}
-              <div style={{ margin: '0 12px' }}>
-                <article>
-                  <div className="article-wrapper p-3">
-                    <figure>
-                      <img src='images/WhatsApp Image 2023-10-22 at 20.49.00_5b7b6b67.jpg' alt="" />
-
-                    </figure>
-                    <div className="article-body">
-                      <div>
-                        <h6 className="mt-2 text-center">
-                          <i class="fa-solid fa-volume-high" style={{ "color": "#e13214" }}></i>
-                          &emsp; Schwartz
-                        </h6>
-                        <h5 className="cssut text-center">
-                          Travel Pay &amp; FLSA Compliance 2023 Travel Pay &amp; FLSA
-                          Compliance...
-                        </h5>
-                      </div>
-
-                      <div className="row  mt-0">
-                        <div className="p-3">
-                          <div className="row p-3 text-center mstt">
-                            <div className="col border-end boder-4"><h6>1 PM<br /> EST</h6></div>
-                            <div className="col border-end boder-4">   <h6>JUNE <br /> 30</h6></div>
-                            <div className="col">  <h6>
-                              Duration <br />90 min</h6>
-                            </div></div>
-                        </div>
-                      </div>
-                      <Link to="/" className="read-more">
-                        Read more <span className="sr-only">about this is some title</span>
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="icon"
-                          viewBox="0 0 20 20"
-                          fill="currentColor"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
-                      </Link>
-                    </div>
-                  </div>
-                </article>
-
-
-              </div>
-              {/* fifth card */}
-              <div style={{ margin: '0 12px' }}>
-                <article>
-                  <div className="article-wrapper p-3">
-                    <figure>
-                      <img src='images/WhatsApp Image 2023-10-22 at 20.49.00_5b7b6b67.jpg' alt="" />
-
-                    </figure>
-                    <div className="article-body">
-                      <div>
-                        <h6 className="mt-2 text-center">
-                          <i class="fa-solid fa-volume-high" style={{ "color": "#e13214" }}></i>
-                          &emsp; Schwartz
-                        </h6>
-                        <h5 className="cssut text-center">
-                          Travel Pay &amp; FLSA Compliance 2023 Travel Pay &amp; FLSA
-                          Compliance...
-                        </h5>
-                      </div>
-
-                      <div className="row  mt-0">
-                        <div className="p-3">
-                          <div className="row p-3 text-center mstt">
-                            <div className="col border-end boder-4"><h6>1 PM<br /> EST</h6></div>
-                            <div className="col border-end boder-4">   <h6>JUNE <br /> 30</h6></div>
-                            <div className="col">  <h6>
-                              Duration <br />90 min</h6>
-                            </div></div>
-                        </div>
-                      </div>
-                      <Link to="/" className="read-more">
-                        Read more <span className="sr-only">about this is some title</span>
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="icon"
-                          viewBox="0 0 20 20"
-                          fill="currentColor"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
-                      </Link>
-                    </div>
-                  </div>
-                </article>
-
-              </div>
-              {/* sixth card */}
-              <div style={{ margin: '0 12px' }}>
-
-                <article>
-                  <div className="article-wrapper p-3">
-                    <figure>
-                      <img src='images/WhatsApp Image 2023-10-22 at 20.49.00_5b7b6b67.jpg' alt="" />
-
-                    </figure>
-                    <div className="article-body">
-                      <div>
-                        <h6 className="mt-2 text-center">
-                          <i class="fa-solid fa-volume-high" style={{ "color": "#e13214" }}></i>
-                          &emsp; Schwartz
-                        </h6>
-                        <h5 className="cssut text-center">
-                          Travel Pay &amp; FLSA Compliance 2023 Travel Pay &amp; FLSA
-                          Compliance...
-                        </h5>
-                      </div>
-
-                      <div className="row  mt-0">
-                        <div className="p-3">
-                          <div className="row p-3 text-center mstt">
-                            <div className="col border-end boder-4"><h6>1 PM<br /> EST</h6></div>
-                            <div className="col border-end boder-4">   <h6>JUNE <br /> 30</h6></div>
-                            <div className="col">  <h6>
-                              Duration <br />90 min</h6>
-                            </div></div>
-                        </div>
-                      </div>
-                      <Link to="/" className="read-more">
-                        Read more <span className="sr-only">about this is some title</span>
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="icon"
-                          viewBox="0 0 20 20"
-                          fill="currentColor"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
-                      </Link>
-                    </div>
-                  </div>
-                </article>
-
-              </div>
+                </div>
+              ))}
             </Carousel>
 
           </div>
@@ -614,7 +395,7 @@ const Home = () => {
       </section>
 
       {/* home page 2 section end here ******(our cources)************ */}
-    
+
       <div className="container-fluid " style={{ paddingBottom: '120px', }}>
         <div className="container">
           <div className="row pt-5 align-items-center my-5" >
@@ -657,7 +438,7 @@ const Home = () => {
             </div>
             <div className="col-md-6 col-12  " data-aos="fade-up">
               <div className="HeroImage ms-5 mt-lg-0 mt-5">
-                <img src="img/1.webp"alt="..." style={{ width: "100%" }} />
+                <img src="img/1.webp" alt="..." style={{ width: "100%" }} />
               </div>
             </div>
           </div>
@@ -695,87 +476,56 @@ const Home = () => {
           </div>
           <div className="container p-4 mt-4">
             <div className="row">
-              <div className="col-12 col-sm-6 col-md-6 col-lg-3" >
-                <div className="our-team" >
-                  <div className="picture ">
-                    <img className="img-fluid" alt='' src="https://picsum.photos/130/130?image=1027" />
+              <Carousel
+                additionalTransfrom={0}
+                arrows={false}
+                autoPlay={true}
+                autoPlaySpeed={2000}
+                centerMode={false}
+                className="carousel-container" // Add a class to the container
+                containerClass="container-with-dots"
+                dotListClass="dot"
+                draggable
+                focusOnSelect={true}
+                infinite
+                itemClass=""
+                keyBoardControl
+                minimumTouchDrag={80}
+                renderButtonGroupOutside={false}
+                showDots={false}
+                renderDotsOutside={false}
+                partialVisible={true}
+                responsive={Siderresponsive}
+              >
+                {speakers.map((speaker) => (
+                  <div>
+                    <div className="col-12 col-sm-6 col-md-6 col-lg-3" style={{width:'22rem'}} >
+                      <Link to={`/speaker/${speaker?.speaker_id}`}>
+                        <div className="our-team" >
+                          <div className="picture ">
+                            <img className="img-fluid" alt='Speaker' src={`${IMGurl}/${speaker.images}`} />
+                          </div>
+
+                          <div className="team-content">
+                            <h3 className="name">{speaker.name}</h3>
+                            <h4 className="title">{speaker.title}</h4>
+                          </div>
+                          <ul className="social">
+                            <li><Link to="/" className="fab fa-facebook" aria-hidden="true" />
+                            </li>
+                            <li><Link to="/" className="fab fa-twitter" aria-hidden="true" />
+                            </li>
+                            <li><Link to="/" className="fab fa-google-plus" aria-hidden="true" /></li>
+                            <li><Link to="/" className="fab fa-linkedin" aria-hidden="true" />
+                            </li>
+                          </ul>
+                        </div>
+                      </Link>
+                    </div>
                   </div>
-                  <div className="team-content">
-                    <h3 className="name">Michele Miller</h3>
-                    <h4 className="title">Web Developer</h4>
-                  </div>
-                  <ul className="social">
-                    <li><a href="https://codepen.io/collection/XdWJOQ/" className="fab fa-facebook" aria-hidden="true" />
-                    </li>
-                    <li><a href="https://codepen.io/collection/XdWJOQ/" className="fab fa-twitter" aria-hidden="true" />
-                    </li>
-                    <li><a href="https://codepen.io/collection/XdWJOQ/" className="fab fa-google-plus" aria-hidden="true" /></li>
-                    <li><a href="https://codepen.io/collection/XdWJOQ/" className="fab fa-linkedin" aria-hidden="true" />
-                    </li>
-                  </ul>
-                </div>
-              </div>
-              <div className="col-12 col-sm-6 col-md-6 col-lg-3">
-                <div className="our-team">
-                  <div className="picture">
-                    <img className="img-fluid" alt="" src="https://picsum.photos/130/130?image=839" />
-                  </div>
-                  <div className="team-content">
-                    <h3 className="name">Patricia Knott</h3>
-                    <h4 className="title">Web Developer</h4>
-                  </div>
-                  <ul className="social">
-                    <li><a href="https://codepen.io/collection/XdWJOQ/" className="fab fa-facebook" aria-hidden="true" />
-                    </li>
-                    <li><a href="https://codepen.io/collection/XdWJOQ/" className="fab fa-twitter" aria-hidden="true" />
-                    </li>
-                    <li><a href="https://codepen.io/collection/XdWJOQ/" className="fab fa-google-plus" aria-hidden="true" /></li>
-                    <li><a href="https://codepen.io/collection/XdWJOQ/" className="fab fa-linkedin" aria-hidden="true" />
-                    </li>
-                  </ul>
-                </div>
-              </div>
-              <div className="col-12 col-sm-6 col-md-6 col-lg-3">
-                <div className="our-team">
-                  <div className="picture">
-                    <img className="img-fluid" alt src="https://picsum.photos/130/130?image=856" />
-                  </div>
-                  <div className="team-content">
-                    <h3 className="name">Justin Ramos</h3>
-                    <h4 className="title">Web Developer</h4>
-                  </div>
-                  <ul className="social">
-                    <li><a href="https://codepen.io/collection/XdWJOQ/" className="fab fa-facebook" aria-hidden="true" />
-                    </li>
-                    <li><a href="https://codepen.io/collection/XdWJOQ/" className="fab fa-twitter" aria-hidden="true" />
-                    </li>
-                    <li><a href="https://codepen.io/collection/XdWJOQ/" className="fab fa-google-plus" aria-hidden="true" />
-                    </li>
-                    <li><a href="https://codepen.io/collection/XdWJOQ/" className="fab fa-linkedin" aria-hidden="true" />
-                    </li>
-                  </ul>
-                </div>
-              </div>
-              <div className="col-12 col-sm-6 col-md-6 col-lg-3">
-                <div className="our-team">
-                  <div className="picture">
-                    <img className="img-fluid" alt src="https://picsum.photos/130/130?image=836" />
-                  </div>
-                  <div className="team-content">
-                    <h3 className="name">Mary Huntley</h3>
-                    <h4 className="title">Web Developer</h4>
-                  </div>
-                  <ul className="social">
-                    <li><a href="https://codepen.io/collection/XdWJOQ/" className="fab fa-facebook" aria-hidden="true" />
-                    </li>
-                    <li><a href="https://codepen.io/collection/XdWJOQ/" className="fab fa-twitter" aria-hidden="true" />
-                    </li>
-                    <li><a href="https://codepen.io/collection/XdWJOQ/" className="fab fa-google-plus" aria-hidden="true" /></li>
-                    <li><a href="https://codepen.io/collection/XdWJOQ/" className="fab fa-linkedin" aria-hidden="true" />
-                    </li>
-                  </ul>
-                </div>
-              </div>
+                ))}
+              </Carousel>
+
             </div>
           </div>
 
@@ -876,7 +626,7 @@ const Home = () => {
                       <ul className="list-unstyled d-flex justify-content-center text-warning mb-0">
                         <li><i className="fas fa-star fa-sm" /></li>
                         <li><i className="fas fa-star fa-sm" /></li>
-                        <li><i className="fas fa-star fa-sm" /></li>  
+                        <li><i className="fas fa-star fa-sm" /></li>
                         <li><i className="fas fa-star fa-sm" /></li>
                         <li><i className="far fa-star fa-sm" /></li>
                       </ul>
@@ -902,7 +652,7 @@ const Home = () => {
       </section >
       {/* seduu section start here */}
 
-      <section section className=" background " style={{paddingTop:'110px'}} >
+      <section section className=" background " style={{ paddingTop: '110px' }} >
 
         <div className="container">
           <div className="row" data-aos="fade-up">
@@ -914,12 +664,12 @@ const Home = () => {
             </div>
           </div>
 
-          <div className="d-flex flex-column  flex-lg-row gap-5 justify-content-eventuly" style={{paddingTop:'55px'}}>
+          <div className="d-flex flex-column  flex-lg-row gap-5 justify-content-eventuly" style={{ paddingTop: '55px' }}>
             <div className="Offer-card-body">
               <div className="Offer-card-bg" style={{ padding: '40px' }}>
                 <div className="row d-flex align-items-center  justify-content-center  justify-content-center   " >
                   <div className="card-icon">
-                    <img src="images/book.gif " className="rounded-circle" style={{width:'100%'}} alt="" />
+                    <img src="images/book.gif " className="rounded-circle" style={{ width: '100%' }} alt="" />
                   </div>
                   <div className="row offer-card-detail text-center my-2 justify-content-center">
                     <h3>Essential Skills</h3>
@@ -932,7 +682,7 @@ const Home = () => {
                 </div>
               </div>
             </div>
-             
+
             <div className="Offer-card-body ">
               <div className="Offer-card-bg" style={{ padding: '40px' }}>
                 <div className="row d-flex align-items-center  justify-content-center  justify-content-center   " >

@@ -3,15 +3,15 @@ const app = express();
 const util = require('util');
 const jwt = require('jsonwebtoken');
 
-app.use(express.json({limit: '50mb'}));
-app.use(express.static("public"))
+app.use(express.json({ limit: '50mb' }));
+
 // Use the express.urlencoded() middleware to parse URL-encoded bodies
 //app.use(express.urlencoded({ extended: true }));
 const sqlDbconnect = require("./dbconnection");
 const schedular = require('./schedular/payment_status');
 const cron = require('node-cron');
 //app.use(express.json({limit: '50mb'}));
-app.use(express.urlencoded({limit: '50mb',  extended: true}));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
 const RouterPath = require('./router');
 const cors = require('cors');
@@ -24,15 +24,15 @@ const port = 8000;
 // const secretKey = process.env.JWT_SECRET_KEY || 'eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiQWRtaW4iLCJJc3N1ZXIiOiJJc3N1ZXIiLCJVc2VybmFtZSI6IkphdmFJblVzZSIsImV4cCI6MTcwNDg4ODQ3NSwiaWF0IjoxNzA0ODg4NDc1fQ.qgAX2SXjLzNplSOL67ILmVR4a68q9_WPP7vKFcXI4oE';
 
 
-
 app.use(cors());
-
+app.use(express.static('public'));
 app.use(RouterPath)
 
 
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 app.post('/api/create-checkout-session', async (req, res) => {
+
     const queryAsync = util.promisify(sqlDbconnect.query).bind(sqlDbconnect);
 
     const orderDetails = req.body;
@@ -49,7 +49,6 @@ app.post('/api/create-checkout-session', async (req, res) => {
         }
         userId = decoded.userId;
     }
-
 
     const values = [
         userId, // Replace with the actual user_id
@@ -74,15 +73,15 @@ app.post('/api/create-checkout-session', async (req, res) => {
         'Pending',
     ];
 
-    const sql = `
-INSERT INTO order_details (user_id, order_id, grand_total, subtotal, discount, coupon_code, course_quantity,
-card_detail, FName, lName, Company_Name, Job_Title, Country, Street_Address, City, State, Zip, phone, Email, order_status)
-VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-`;
+    const sql = `INSERT INTO order_details (user_id, order_id, grand_total, subtotal, discount, coupon_code, course_quantity,
+        card_detail, FName, lName, Company_Name, Job_Title, Country, Street_Address, City, State, Zip, phone, Email, order_status)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+
     try {
         const result = await queryAsync(sql, values);
         console.log(result, 'result');
         if (result && result.affectedRows) {
+
             let orderId = result.insertId;
 
             const orderItemsPromises = orderDetails.card_detail.map(async (orderItem) => {
@@ -95,7 +94,7 @@ VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                     orderItem.course_title,
                     'Pending'
                 ];
-
+                
                 const itemSql = `
                 INSERT INTO order_course (Order_id, Course_id, qty, Price, Selling_Option, Course_name, status)
                 VALUES (?, ?, ?, ?, ?, ?, ?)`;
@@ -104,6 +103,7 @@ VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             });
 
             const orderItemsResults = await Promise.all(orderItemsPromises);
+            
             const session = await stripe.checkout.sessions.create({
                 payment_method_types: ['card'],
                 mode: "payment",
@@ -125,7 +125,7 @@ VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 cancel_url: process.env.STRIPE_FAILED_URL
             });
             console.log(orderItemsResults, 'orderItemsResults');
-            const updateCourseQuery = ` UPDATE order_details SET hash_id = ? WHERE id = ?`;
+            const updateCourseQuery = `UPDATE order_details SET hash_id = ? WHERE id = ?`;
             const itemValuesU = [
                 session.id,
                 orderId
@@ -135,10 +135,10 @@ VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 session.id,
                 orderId
             ];
-            await queryAsync(updateCourseQuery, itemValuesU);
+            await queryAsync(updateCourseQuery, itemValuesU); 
             await queryAsync(updateCourseQueryC, itemValuesUC);
             res.json({ url: session.url, id: session.id })
-            
+
         }
         else {
             res.status(500).send('Server error');
@@ -152,8 +152,6 @@ VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 
 
 });
-
-
 
 
 app.get('/api/check_session_info', async (req, res) => {

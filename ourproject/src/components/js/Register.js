@@ -124,7 +124,7 @@ export default function Register() {
                     city: formData.city,
                     password: formData.password,
                 });
-                
+
                 if (response?.data?.success) {
                     toast.success('Registration successful! Redirecting to login page...', { duration: 5000 });
                     setRegistrationSuccess(true);
@@ -132,7 +132,7 @@ export default function Register() {
                     toast.error('This email is register already', { duration: 4000 });
                 }
             } catch (error) {
-               // console.log(error);
+                // console.log(error);
                 console.error('Error submitting form data:', error);
                 toast.error('An error occurred during registration. Please try again.', { duration: 4000 });
             }
@@ -168,13 +168,13 @@ export default function Register() {
 
             <section style={{ padddingTop: '140px', paddingBottom: '300px' }}>
                 <div className='container '>
-                    <div className='row  '>
+                    <div className='row mt-5 '>
                         <div className='col-lg-6 offset-lg-3 col-md-8 offset-md-2 col-12 shadow-lg Form-Container'>
-                            <form className='p-2 mt-5 mb-5' onSubmit={handleSubmit}>
-                                
+                            <form className='p-5 mt-5 mb-5' onSubmit={handleSubmit}>
+
                                 <p className='text-center fs-3 fw-bold'>
-                                Sign Up to your account{' '}
-                                   
+                                    Sign Up to your account{' '}
+
                                 </p>
                                 <hr />
                                 <div className='row'>
@@ -471,12 +471,12 @@ export default function Register() {
                                     )}
                                 </div>
                                 <div className='col flex-column text-center'>
-                                <button type='submit' className='  btn sign-buttons '> Register </button><br/>
-                                <Link  className='text-secondary text-center' to='/login'>
+                                    <button type='submit' className='  btn sign-buttons '> Register </button><br />
+                                    <Link className='text-secondary text-center' to='/login'>
                                         Already have account?<span className='text-primary'>LogIn</span>
                                     </Link>
                                 </div>
-                               
+
                             </form>
                         </div>
                     </div>

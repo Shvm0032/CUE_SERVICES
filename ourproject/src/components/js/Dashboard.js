@@ -16,7 +16,6 @@ function Dashboard() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const authUser = authService.getAuthUser();
-  console.log(authUser)
   const userId = authUser ? authUser.userId : null;
   const [orderDetails, setOderDetails] = useState({});
 
@@ -41,7 +40,7 @@ function Dashboard() {
   const [avatarSrc, setAvatarSrc] = useState(deafaultImg); // Default avatar source
 
   const handleSave = async (newAvatarSrc) => {
-    console.log(newAvatarSrc, 'newAvatarSrc');
+   
     // Handle the save logic, for example, updating the avatar source in the state t
     try {
       let data = {
@@ -60,7 +59,7 @@ function Dashboard() {
     setShowModal(false)
   };
 
-  console.log(user)
+  // console.log(user)
   useEffect(() => {
     fetchProfile();
   }, []);
@@ -118,7 +117,7 @@ function Dashboard() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      console.log(formData, 'formData')
+      // console.log(formData, 'formData')
       let data = {
         fname: formData.fname,
         lname: formData.lname,
@@ -146,7 +145,7 @@ function Dashboard() {
   var getData = async () => {
     try {
       var res = await http.get("Order/get");
-      console.log(res.data);
+      // console.log(res.data);
       setOrders(res.data);
 
     } catch (error) {
@@ -158,22 +157,10 @@ function Dashboard() {
     getData();
   }, []);
 
-
-
-  // const ItemComponent = ({ itemName, itemPrice }) => (
-  //   <table className='table  table-hover '>
-  //     <tbody>
-  //       <tr>
-  //         <td className='col border-0 fs-5'>{itemName}</td>
-  //         <td className='col border-0 text-primary fs-5'>${itemPrice}</td>
-  //       </tr>
-  //     </tbody>
-  //   </table>
-  // );
-
   const countries = ["india", "nepal"]
 
-
+  // console.log(authUser)
+  // console.log(newAvatarSrc, 'newAvatarSrc');
   return (
 
     <section style={{ paddingBottom: '120px', paddingTop: '120px', background: '#e9ecf6' }}>

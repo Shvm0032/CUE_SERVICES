@@ -117,20 +117,19 @@ const AddCoupon = () => {
                   <div className="row">
                     <label className="form-label">Discount:</label>
                     <div className="col">
-                      <select
-                        className={`form-select ${errors.discountType ? 'is-invalid' : ''}`}
+                      <input
+                        type="text"
+                        className={`form-control ${errors.discountType ? 'is-invalid' : ''}`}
                         name="discountType"
                         value={formData.discountType}
                         onChange={handleChange}
-                      >
-                        <option value="">Select</option>
-                        <option value="%">%</option>
-                        <option value="$">$</option>
-                      </select>
+                        placeholder="Enter discount type"
+                      />
                       {errors.discountType && (
                         <div className="invalid-feedback">{errors.discountType}</div>
                       )}
                     </div>
+
                   </div>
                   <br />
                   <div className="row">

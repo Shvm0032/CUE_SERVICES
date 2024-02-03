@@ -4,7 +4,7 @@ import authService from '../services/auth.service';
 
 const AuthGuard = () => {
     const authUser = authService.getAuthUser();
-    
+
     return authUser ? <Outlet /> : <Navigate to={'/'} replace />
 }
 
