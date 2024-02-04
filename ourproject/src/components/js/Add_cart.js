@@ -5,8 +5,7 @@ import { removeFromCart } from '../../redux/cartSlice';
 import { selectCartItems } from '../../redux/cartSlice';
 import http from "../../utils/http-client";
 import { useNavigate } from 'react-router-dom';
-
-
+import { toast } from 'react-hot-toast';
 
 const AddToCart = () => {
   const [selectedCourseId, setSelectedCourseId] = useState(null);
@@ -19,8 +18,16 @@ const AddToCart = () => {
   // console.log();
   const dispatch = useDispatch();
 
-  const handleRemove = (itemId) => {
+  const handleRemove = (itemId, itemName) => {
     dispatch(removeFromCart(itemId));
+    // Show toast message using react-hot-toast
+    toast.error(`"${itemName}" has been removed from the cart!`, {
+      duration: 6000,
+      style: {
+        fontSize: '16px',
+        whiteSpace: 'pre-line', // Enables multiline
+      },
+    });
   };
 
   const handleApplyCoupon = async () => {
@@ -162,7 +169,7 @@ const AddToCart = () => {
                         <input type="text" className="form-control text-center" placeholder={item?.qty} value={item?.qty} />
                         <button onClick={() => handleDecreaseQuantity(item?.course_id)}>-</button></td>
                       <td className="text-right fs-4 font-weight-semibold align-middle p-4"> ${item.totalPrice * item.qty}  </td> */}
-                      <td className="text-center align-middle  px-0"><button className='btn btn-danger' onClick={() => handleRemove(item.course_id)}><i className="fas fa-trash-alt fa-lg"></i></button></td>
+                      <td className="text-center align-middle  px-0"><button className='btn btn-danger' onClick={() => handleRemove(item.course_id, item.course_title)}><i className="fas fa-trash-alt fa-lg"></i></button></td>
                     </tr>
 
                   </tbody>
@@ -173,8 +180,8 @@ const AddToCart = () => {
             {/* / Shopping cart table */}
             <div className="d-flex flex-wrap justify-content-end align-items-center pb-4">
               <div className='d-flex'>
-                <table className='table border border-success rounded-4  mt-4 table-success'>
-                  <tr>
+                <table className='table border border-success rounded  mt-4 table-success'>
+                  <tr className='col'>
                     <td><label className="text-muted fs-4 font-weight-normal m-0" style={{ width: 140 }}>Total price</label></td>
                     <td><div className="text-center  fs-4" style={{ width: 140, fontWeight: '500' }}>${sum}</div></td>
                   </tr>
@@ -185,13 +192,12 @@ const AddToCart = () => {
 
 
             </div>
-            <div className=" d-flex justify-content-between ">
-              <div className='row shadow text-center   p-3' style={{ width: 300, background: '#66b2b2', borderRadius: '8px' }}>
-                <Link to='/course' className="text-white fs-5"> <i className="fas fa-arrow-left"></i>  &emsp; Back to shopping</Link>
+            <div className=" d-flex flex-wrap justify-content-between ">
+              <div className='row  p-3 text-center'>
+                <Link to='/course' className="button2addtocark"> <i className="fas fa-arrow-left"></i>  &emsp; Back to shopping</Link>
               </div>
-
-              <div className='row p-3 text-center  shadow' style={{ width: 300, background: '#FFAC1C', borderRadius: '8px' }}>
-                <Link to='/Checkout' className=" text-white fs-5" > <i className="fas fa-money-check-alt"></i> &emsp;Checkout</Link>
+              <div className='row p-3 text-center'>
+                <Link to='/Checkout' className="button2addtocark" ><i className="fas fa-money-check-alt"></i> &emsp; Proceed to Checkout</Link>
               </div>
 
             </div>

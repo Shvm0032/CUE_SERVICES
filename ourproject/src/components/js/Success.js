@@ -1,32 +1,19 @@
-import React, { useEffect } from 'react'
-import { useParams } from 'react-router-dom'
+import React from 'react';
 
 export default function Success() {
-  const {courseId, userId, payment} = useParams();
-  
-  useEffect(()=>{
-    fetch(`http://127.0.1:8000/api/course_added`, {
-      method: "post", 
-      body: JSON.stringify({
-        userId: userId,
-        courseId: courseId,
-        payment: payment
-      }),
-      headers: {
-        "Content-Type": "application/json"
-      }
-    })
-    .then(response => response.json())
-    .then(data => {
-       console.logg(data)
-    })
-    .catch(error => console.error('Error fetching user information:', error));
-  
-  },[])
- 
   return (
-    <div >
-      <h1>Success</h1>
+    <div className='container mt-4'>
+      <div className='d-flex justify-content-center align-items-center'>
+        <div className="card text-center shadow d-flex justify-content-center align-items-center" style={{ background: 'white', padding: '20px', borderRadius: '4px', boxShadow: '0 2px 3px #C8D0D8' }}>
+          <div className='d-flex justify-content-center align-items-center mb-4' style={{ borderRadius: '50%', height: '150px', width: '150px', background: '#F8FAF5' }}>
+            <i style={{ color: '#9ABC66', fontSize: '60px', lineHeight: '150px' }}>✓</i>
+          </div>
+          <h1 className='mb-3' style={{ color: '#88B04B', fontFamily: '"Nunito Sans", "Helvetica Neue", sans-serif', fontWeight: '900', fontSize: '24px' }}>Success</h1>
+          <p style={{ color: '#404F5E', fontFamily: '"Nunito Sans", "Helvetica Neue", sans-serif', fontSize: '16px', margin: '0' }}>
+            We received your purchase request;<br /> we'll be in touch shortly!
+          </p>
+        </div>
+      </div>
     </div>
-  )
+  );
 }

@@ -2,10 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { addToCart } from '../../redux/cartSlice';
-import Toast from 'react-bootstrap/Toast';
 import parse from 'html-react-parser';
 import { selectCartItems } from '../../redux/cartSlice';
-
+import { Toaster, toast } from 'react-hot-toast';
 
 export default function CourseDetail() {
     const cartItems = useSelector(selectCartItems);
@@ -114,7 +113,7 @@ export default function CourseDetail() {
             };
             console.log(resource, 'resource');
             dispatch(addToCart(resource));
-            toggleToast();
+            toast.success('Your Course has been added to the cart!');
         }
     };
 
@@ -360,12 +359,7 @@ export default function CourseDetail() {
                                                 </p>
                                             </div>
                                         </div>
-                                        <Toast show={showToast} onClose={() => setShowToast(false)} className="position-fixed bottom-0 end-0 m-3"style={{zIndex:'3'}}>
-                                            <Toast.Header>
-                                                <strong className="fs-4 text-success  me-auto">Success</strong>
-                                            </Toast.Header>
-                                            <Toast.Body className='fs-5 fw-bold'>Your Course has been added to the cart!</Toast.Body>
-                                        </Toast>
+                                       
 
                                     </div>
                                 </div>

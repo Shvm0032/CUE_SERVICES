@@ -8,6 +8,7 @@ const cartSlice = createSlice({
         itemsInfo: unique_id ? JSON.parse(localStorage.getItem(unique_id)) || [] : []
     },
     reducers: {
+        
         addToCart: (state, action) => {
             const { items, course_id, course_title, totalPrice } = action.payload;
             let unique_id = localStorage.getItem('unique_id');
@@ -44,8 +45,12 @@ const cartSlice = createSlice({
             state.itemsInfo = state.itemsInfo.filter((item) => item.course_id !== itemId);
             localStorage.setItem(unique_id, JSON.stringify(state.itemsInfo));
         },
-
-        
+      
+        removeAllItemsFromCart: (state) => {
+            state.itemsInfo = [];
+            let unique_id = localStorage.getItem('unique_id');
+            localStorage.removeItem(unique_id);
+        },
 
         increaseQuantity: (state, action) => {
             const { course_id } = action.payload;
@@ -77,6 +82,6 @@ const cartSlice = createSlice({
     },
 });
 
-export const { addToCart, removeFromCart, increaseQuantity, decreaseQuantity, getAllSavedValues } = cartSlice.actions;
+export const { addToCart, removeFromCart, removeAllItemsFromCart, increaseQuantity, decreaseQuantity, getAllSavedValues } = cartSlice.actions;
 export const selectCartItems = (state) => state.cart.itemsInfo;
 export default cartSlice.reducer;

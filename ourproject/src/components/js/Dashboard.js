@@ -4,19 +4,20 @@ import toast from 'react-hot-toast';
 import authService from '../../services/auth.service';
 import { useNavigate } from 'react-router-dom';
 import ProfileModal from './ProfileModal';
-import { Button } from 'react-bootstrap';
-
+// import { Button } from 'react-bootstrap';
+import http from "../../utils/http-client";
+import { useDispatch } from 'react-redux';
+import { logout } from '../../redux/authSlice'; // Update the path
+import { Link } from 'react-router-dom';
 const deafaultImg = "img/friend.jpg";
 
 
-
 function Dashboard() {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const authUser = authService.getAuthUser();
-  console.log(authUser)
   const userId = authUser ? authUser.userId : null;
-  console.log(userId)
-  
+  const [orderDetails, setOderDetails] = useState({});
 
   const [user, setUser] = useState([]);
   const [formData, setFormData] = useState({
@@ -34,12 +35,12 @@ function Dashboard() {
     city: '',
     password: '',
   });
-  
+
   const [showModal, setShowModal] = useState(false);
   const [avatarSrc, setAvatarSrc] = useState(deafaultImg); // Default avatar source
 
   const handleSave = async (newAvatarSrc) => {
-    console.log(newAvatarSrc,'newAvatarSrc');
+   
     // Handle the save logic, for example, updating the avatar source in the state t
     try {
       let data = {
@@ -54,11 +55,11 @@ function Dashboard() {
   };
 
   const onClose = () => {
-  //  setAvatarSrc(deafaultImg);
+    //  setAvatarSrc(deafaultImg);
     setShowModal(false)
   };
-  
-  console.log(user)
+
+  // console.log(user)
   useEffect(() => {
     fetchProfile();
   }, []);
@@ -85,10 +86,10 @@ function Dashboard() {
         image: userInfo.image,
 
       });
-      if(userInfo?.image){
+      if (userInfo?.image) {
         setAvatarSrc(userInfo?.image);
       }
-      
+
     } catch (error) {
       toast.error(error.data.message);
     }
@@ -97,7 +98,8 @@ function Dashboard() {
   const handleLogout = async () => {
     try {
       await authService.logout();
-      navigate('/');
+      dispatch(logout()); // Dispatch the logout action
+      navigate('/login', { replace: true });
     } catch (error) {
       toast.error(error.data.message);
     }
@@ -115,7 +117,7 @@ function Dashboard() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      console.log(formData, 'formData')
+      // console.log(formData, 'formData')
       let data = {
         fname: formData.fname,
         lname: formData.lname,
@@ -133,26 +135,32 @@ function Dashboard() {
       };
       await authService.updateProfile(data);
 
-    //  fetchProfile(' http://127.0.1:8000/api/save-image');
+      fetchProfile(' http://127.0.1:8000/api/save-image');
       toast.success('Profile updated successfully');
     } catch (error) {
       toast.error('Failed to update profile');
     }
   };
+  var [Orders, setOrders] = useState([]);
+  var getData = async () => {
+    try {
+      var res = await http.get("Order/get");
+      // console.log(res.data);
+      setOrders(res.data);
 
-  
-  
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
 
+  useEffect(() => {
+    getData();
+  }, []);
 
+  const countries = ["india", "nepal"]
 
-
-
-  const countries = ['india', 'spain', 'france', 'argentina', 'pakistan', 'russia'];
-
-
-
-
-
+  // console.log(authUser)
+  // console.log(newAvatarSrc, 'newAvatarSrc');
   return (
 
     <section style={{ paddingBottom: '120px', paddingTop: '120px', background: '#e9ecf6' }}>
@@ -166,7 +174,7 @@ function Dashboard() {
             </div>
             <div className='row p-2'>
               <div className=' d-flex border-bottom flex-column justify-content-center align-items-center mt-3 mb-3 '>
-                <img src={avatarSrc} className='  rounded-circle' style={{ width: '150px', height: '150px' }} />
+                <img src={avatarSrc} alt='userimage' className='  rounded-circle' style={{ width: '150px', height: '150px' }} />
                 <h4 className='mt-3'>{user[0]?.uname}</h4>
               </div>
             </div>
@@ -187,67 +195,60 @@ function Dashboard() {
               <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab ">
                 <div className='d-flex justify-content-between align-items-center p-4'>
                   <h5>ALL ORDERS</h5>
-                  <a to="/" class="btn btn-success ">Invoice</a>
+                  <Link to="/" class="btn btn-success ">Invoice</Link>
                 </div>
-                <table class="table table-responsive  border  table-hover  table-light mt-3   ">
+                  {Orders?.map((Order, index) => (
+                <table class="table table-responsive  border  table-hover  table-light mt-3">
                   <thead className='border-bottom'>
                     <tr>
-                      <th scope="col">#</th>
-                      <th scope="col">PHOTO</th>
                       <th scope="col">PRODUCT</th>
-                      <th scope="col">QTY</th>
-                      <th scope="col">PRICE</th>
-                      <th scope="col">Total</th>
                     </tr>
                   </thead>
-                  <tbody>
-                    <tr>
-                      <th scope="row">1</th>
-                      <td><img src="img/course.jpg" alt='' style={{ height: "70px", width: "70px" }} /></td>
-                      <td>Otto</td>
-                      <td>@mdo</td>
-                      <td>@mdo</td>
-                      <td>@mdo</td>
-                    </tr>
-                    <tr>
-                      <th scope="row">2</th>
-                      <td><img src="img/course.jpg" alt='' style={{ height: "70px", width: "70px" }} /></td>
-                      <td>Thornton</td>
-                      <td>@fat</td>
-                      <td>@fat</td>
-                      <td>@fat</td>
-                    </tr>
-                    <tr>
-                      <th scope="row">3</th>
-                      <td><img src="img/course.jpg" alt='' style={{ height: "70px", width: "70px" }} /></td>
-                      <td>@twitter</td>
-                      <td>@twitter</td>
-                      <td>@twitter</td>
-                    </tr>
+                    <tbody key={index}>
+                      <tr>
+                        {/* <th scope="row">{Order.order_id}</th> */}
+                        {/* <td>{Order.card_detail}</td> */}
+                        <td>
+                          <table className='table'>
+                            <thead>
+                              <tr>
+                                <td>Course Title</td>
+                                <td>total Price</td>
+                                <td>Selling Option</td>
+                              </tr>
+                            </thead>
+                            <tbody>
+                            {JSON.parse(Order.card_detail).map((item, itemIndex) => (
+                              <tr key={itemIndex}>
+                                <td>
+                                  {item.course_title}
+                                </td>
+                                <td>{item.totalPrice}</td>
+                                <td>
+                                  <table className='table'>
+                                    <tbody>
+                                      {item.courseItems && (item.courseItems).map((spitem,spid)=>(
+                                        <tr key={spid}>
+                                          <td>{spitem.itemName}</td>
+                                          <td>{spitem.itemPrice}</td>
+                                        </tr>
+                                      ))}
+                                      
+                                    </tbody>
+                                  </table>
+                                </td>
+                              </tr>
+                              ))}
+                            </tbody>
+                          </table>
 
-                    <tr>
-                      <th scope="row">3</th>
-                      <td><img src="img/course.jpg" alt='' style={{ height: "70px", width: "70px" }} /></td>
-                      <td>@twitter</td>
-                      <td>@twitter</td>
-                      <td>@twitter</td>
-                    </tr>
-                    <tr>
-                      <th scope="row">3</th>
-                      <td><img src="img/course.jpg" alt='' style={{ height: "70px", width: "70px" }} /></td>
-                      <td>@twitter</td>
-                      <td>@twitter</td>
-                      <td>@twitter</td>
-                    </tr>
-                    <tr>
-                      <th scope="row">3</th>
-                      <td><img src="img/course.jpg" alt='' style={{ height: "70px", width: "70px" }} /></td>
-                      <td>@twitter</td>
-                      <td>@twitter</td>
-                      <td>@twitter</td>
-                    </tr>
-                  </tbody>
+                        </td>
+
+                      </tr>
+
+                    </tbody>
                 </table>
+                  ))}
               </div>
 
               {/* //Profile form // */}
@@ -258,23 +259,23 @@ function Dashboard() {
                   <div className='container'>
 
                     <div className='d-flex gap-3'>
-                      <div className='mt-2 position-relative  d-flex justify-content-center ' style={{ width: '90px', height: '90px', borderRadius: '50%', marginLeft:'55px'}}>
-                      {
-                            user[0] && 
-                            <ProfileModal
+                      <div className='mt-2 position-relative  d-flex justify-content-center ' style={{ width: '90px', height: '90px', borderRadius: '50%', marginLeft: '55px' }}>
+                        {
+                          user[0] &&
+                          <ProfileModal
                             showModal={showModal}
                             onClose={onClose}
                             onSave={handleSave}
                             avatarSrc={avatarSrc}
                           />
-                          }
-                     
+                        }
+
                       </div>
-                      <br/>
+                      <br />
                       {/* <div className='d-flex flex-column align-item-center justify-content-center'>
                         <h6 className='mt-3'></h6>
                       </div> */}
-                    </div><br/><br/>
+                    </div><br /><br />
 
                     <div className='row'>
                       <div className='col p-5'>
@@ -404,8 +405,8 @@ function Dashboard() {
                           <p class="card-text">{user[0]?.address1}.</p>
                           <p>{user[0]?.email}</p>
                           <hr />
-                          <a href="#" class="btn btn-primary "><i class="fa-solid fa-pencil"></i></a>&emsp;
-                          <a href="#" class="btn btn-primary"><i class="fa-solid fa-trash"></i></a>
+                          <Link to="#" class="btn btn-primary "><i class="fa-solid fa-pencil"></i></Link>&emsp;
+                          <Link to="#" class="btn btn-primary"><i class="fa-solid fa-trash"></i></Link>
                         </div>
                       </div>
                     </div>
@@ -417,8 +418,8 @@ function Dashboard() {
                           <p class="card-text">{user[0]?.address2}</p>
                           <p>john54@gmail.com</p>
                           <hr />
-                          <a href="#" class="btn btn-primary"><i class="fa-solid fa-pencil"></i></a>&emsp;
-                          <a href="#" class="btn btn-primary"><i class="fa-solid fa-trash"></i></a>
+                          <Link href="#" class="btn btn-primary"><i class="fa-solid fa-pencil"></i></Link>&emsp;
+                          <Link href="#" class="btn btn-primary"><i class="fa-solid fa-trash"></i></Link>
                         </div>
                       </div>
                     </div>

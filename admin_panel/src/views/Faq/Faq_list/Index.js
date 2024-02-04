@@ -26,6 +26,7 @@ function Index() {
     }
   };
 
+
   const handleAddQuestion = async () => {
     try {
       const response = await axios.post('http://localhost:8000/api/Add_Question', {
@@ -195,7 +196,7 @@ function Index() {
                   >
                     <option value="" disabled>Select a category</option>
                     {faqCategories.map((category) => (
-                      <option key={category.category} value={category.category}>
+                      <option key={category.category} value={category.id}>
                         {category.category}
                       </option>
                     ))}
