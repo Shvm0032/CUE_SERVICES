@@ -148,7 +148,7 @@ const EditCourseDetail = () => {
                   ))}
                 </select>
               </div>
-            </div>
+            </div><br/>
             <div className="row">
               <div className="col-2">
                 <label>Speaker</label>
@@ -166,7 +166,7 @@ const EditCourseDetail = () => {
                   ))}
                 </select>
               </div>
-            </div>
+            </div><br/>
             <div className="row">
               <div className="col-2">
                 <label>Name</label>
@@ -202,7 +202,7 @@ const EditCourseDetail = () => {
                   value={course.Description}
                 />
               </div>
-            </div>
+            </div><br/>
 
             <div className='row'>
               <div className='col-2 mt-4'>
@@ -224,7 +224,7 @@ const EditCourseDetail = () => {
                 />
               </div>
             </div>
-
+            <br/>
             <div className="row">
               <div className="col-2">
                 <label> Duration</label>
@@ -240,7 +240,7 @@ const EditCourseDetail = () => {
               </div>
             </div>
 
-
+            <br/>
 
             <div className="row">
               <div className="col-2">
@@ -256,7 +256,7 @@ const EditCourseDetail = () => {
                 />
               </div>
             </div>
-
+            <br/>
             <div className="row">
               <div className="col-2">
                 <label>Date</label>
@@ -271,7 +271,7 @@ const EditCourseDetail = () => {
                 />
               </div>
             </div>
-
+            <br/>
             {/* ... rest of the form ... */}
             <div className='row'>
               <div className='col-2'>

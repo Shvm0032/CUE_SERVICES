@@ -79,7 +79,10 @@ const EditCopons = () => {
   return (
     <div>
       <h2>Edit Coupons</h2>
-      <div className="container">
+      <div className="container my-4">
+        <div className='row'>
+          <div className='col-md-3'></div>
+          <div className='col-md-6 shadow p-2 bg-light z-index ' style={{height:"auto"}}>
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
             <label className="form-label">Coupon Code</label>
@@ -145,6 +148,8 @@ const EditCopons = () => {
             Update
           </button>
         </form>
+        </div>
+        </div>
       </div>
 
       {/* Modal for success message */}
