@@ -160,35 +160,21 @@ app.get('/api/check_session_info', async (req, res) => {
 
     const queryAsync = util.promisify(sqlDbconnect.query).bind(sqlDbconnect);
     const hashId = req.query.id;
-    const session = await stripe.checkout.sessions.retrieve(hashId);
-
-    if (session) {
-        const sessionStatus = session.payment_status;
-        console.log(session, 'sessionStatus');
-        res.json({ session, status: sessionStatus });
-        let paymentUpdateStatus = '';
-        if (sessionStatus == 'paid') {
-            paymentUpdateStatus = 'Paid';
-        }
-        else if (sessionStatus == 'pending') {
-            paymentUpdateStatus = 'Pending';
-        }
-        else {
-            paymentUpdateStatus = 'Failed';
-        }
-
-        const updateCourseQuery = ` UPDATE order_details SET order_status = ? WHERE hash_id = ?`;
-        const itemValuesU = [
-            paymentUpdateStatus,
-            hashId
-        ];
-        let response = await queryAsync(updateCourseQuery, itemValuesU);
-        console.log(response, 'response');
-
+    const checkEmailQuery = 'SELECT * FROM order_details WHERE hash_id = ?';
+    const values = [
+        hashId
+    ];
+    try {
+    const result = await queryAsync(checkEmailQuery, values);
+    console.log(result,'result');
+    res.status(200).json(result);
     }
-    console.log(sessionStatus)
-    console.log(session, 'hash id');
-    res.status(200).send(session);
+    catch (err) {
+        console.log(err);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+
+      
 });
 
 

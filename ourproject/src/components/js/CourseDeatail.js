@@ -37,7 +37,7 @@ export default function CourseDetail() {
         // return () => clearInterval(interval);
     }, []);
 
-   
+
 
     const ItemComponent = ({ id, name, price, selected, onSelect }) => (
         <table className='table table-success table-hover '>
@@ -326,7 +326,7 @@ export default function CourseDetail() {
                                             <div className='col-12 mt-4 p-2 ' key={category}>
                                                 <h3 className='mt-4 mb-5 fw-bold text-center'>{category}</h3>
                                                 <form>
-                                                    {categoryMap[category].map((item, index) => (
+                                                    {categoryMap[category]?.map((item, index) => (
                                                         <ItemComponent
                                                             key={index}
                                                             {...item}
@@ -359,7 +359,7 @@ export default function CourseDetail() {
                                                 </p>
                                             </div>
                                         </div>
-                                       
+
 
                                     </div>
                                 </div>
