@@ -13,9 +13,6 @@ const jwt = require('jsonwebtoken');
 const { json } = require("body-parser");
 const { sendEmail } = require("./lib/mail");
 // const { Route } = require("react-browser-router");
-
-
-
 dotenv.config();
 
 var filename = "";
@@ -45,7 +42,8 @@ Router.use(session({
         secure: true, // Set to true if your app is served over HTTPS
     }
 }));
-
+var path = require('path');
+Router.use(express.static(path.join(__dirname, 'public')));
 
 
 // admin login
@@ -321,7 +319,7 @@ Router.post("/api/Speaker_add", upload.single("file"), (req, res) => {
     const experience = req.body.experience;
 
     // Get the original name of the uploaded file
-    const filename = req.file ? req.file.originalname : null;
+    const filename = req.file ? req.file.filename : null;
 
     console.log(req.body, "<<<<");
     console.log("File Name is =  " + filename);
@@ -399,7 +397,7 @@ Router.put('/api/update_speaker/:speaker_id', upload.single('image'), async (req
     const { name, email, phone_no, bio, designation, experience } = req.body;
 
     // Handle file upload
-    const image = req.file ? req.file.originalname : null;
+    const image = req.file ? req.file.filename : null;
 
     // Update speaker data in the database
     const updateQuery = `
@@ -1325,7 +1323,6 @@ Router.post('/api/updateprofile', (req, res) => {
             return;
         }
         console.log(req.body);
-
         res.status(200).json({ result, message: 'Profile updated successfully' });
     });
 });
@@ -1383,7 +1380,52 @@ Router.get("/api/Order/get", (req, res) => {
     }
 })
 
+const util = require('util');
 
+Router.get('/api/get_total_lengths', async (req, res) => {
+    try {
+        const queryAsync = util.promisify(sqlDbconnect.query).bind(sqlDbconnect);
+
+        // Define queries to get the total length of each table
+        const query1 = 'SELECT COUNT(*) AS total1 FROM course_detail';
+        const query2 = 'SELECT COUNT(*) AS total2 FROM order_details';
+        const query3 = 'SELECT COUNT(*) AS total3 FROM registration';
+        const query4 = 'SELECT COUNT(*) AS total4 FROM speaker_info';
+        const query5 = 'SELECT COUNT(*) AS total5 FROM user_message';
+        const query6 = 'SELECT COUNT(*) AS total6 FROM subscribe';
+
+        // Execute the queries asynchronously using Promise.all
+        const [result1, result2, result3, result4, result5, result6] = await Promise.all([
+            queryAsync(query1),
+            queryAsync(query2),
+            queryAsync(query3),
+            queryAsync(query4),
+            queryAsync(query5),
+            queryAsync(query6)
+        ]);
+
+        // Extract the total lengths from the query results
+        const total1 = result1[0].total1;
+        const total2 = result2[0].total2;
+        const total3 = result3[0].total3;
+        const total4 = result4[0].total4;
+        const total5 = result5[0].total5;
+        const total6 = result6[0].total6;
+
+        // Send JSON response with the total lengths
+        res.json({
+            total_Course_table1: total1,
+            total_Orders_table2_: total2,
+            total_Register_users_table3: total3,
+            total_Speaker_table4: total4,
+            total_user_message_table5: total5,
+            total_New_Subscribe_table6: total6
+        });
+    } catch (error) {
+        console.error('Error fetching total lengths:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
 
 
 

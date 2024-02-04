@@ -180,8 +180,8 @@ const AddToCart = () => {
             {/* / Shopping cart table */}
             <div className="d-flex flex-wrap justify-content-end align-items-center pb-4">
               <div className='d-flex'>
-                <table className='table border border-success rounded-4  mt-4 table-success'>
-                  <tr>
+                <table className='table border border-success rounded  mt-4 table-success'>
+                  <tr className='col'>
                     <td><label className="text-muted fs-4 font-weight-normal m-0" style={{ width: 140 }}>Total price</label></td>
                     <td><div className="text-center  fs-4" style={{ width: 140, fontWeight: '500' }}>${sum}</div></td>
                   </tr>
@@ -192,13 +192,12 @@ const AddToCart = () => {
 
 
             </div>
-            <div className=" d-flex justify-content-between ">
-              <div className='row shadow text-center   p-3' style={{ width: 300, background: '#66b2b2', borderRadius: '8px' }}>
-                <Link to='/course' className="text-white fs-5"> <i className="fas fa-arrow-left"></i>  &emsp; Back to shopping</Link>
+            <div className=" d-flex flex-wrap justify-content-between ">
+              <div className='row  p-3 text-center'>
+                <Link to='/course' className="button2addtocark"> <i className="fas fa-arrow-left"></i>  &emsp; Back to shopping</Link>
               </div>
-
               <div className='row p-3 text-center'>
-                <Link to='/Checkout' className="button2addtocark" ><i className="fas fa-money-check-alt"></i> &emsp;Checkout</Link>
+                <Link to='/Checkout' className="button2addtocark" ><i className="fas fa-money-check-alt"></i> &emsp; Proceed to Checkout</Link>
               </div>
 
             </div>

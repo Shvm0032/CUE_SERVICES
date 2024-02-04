@@ -557,19 +557,21 @@ a {
     box-shadow: 0 0 0 45px rgba(193, 244, 246, 0);
   }
 }
+
+
 .button2addtocark {
   display: inline-block;
   transition: all 0.2s ease-in;
   position: relative;
   overflow: hidden;
-  width:  200px;
+  width:  300px;
   z-index: 1;
-  color: #090909;
+  color: #ffffff;
   padding: 0.7em 1.7em;
   cursor: pointer;
   font-size: 18px;
   border-radius: 0.5em;
-  background: #ff9b24;
+  background: #009087;
   border: 1px solid #e8e8e8;
   box-shadow: 6px 6px 12px #c5c5c5, -6px -6px 12px #ffffff;
 }
@@ -602,7 +604,7 @@ a {
   top: 180%;
   width: 160%;
   height: 190%;
-  background-color: #009087;
+  background-color:#ff9b24;
   border-radius: 50%;
   display: block;
   transition: all 0.5s 0.1s cubic-bezier(0.55, 0, 0.1, 1);
@@ -611,18 +613,18 @@ a {
 
 .button2addtocark:hover {
   color: #ffffff;
-  border: 1px solid #009087;
+  border: 1px solid #ff9b24;
 }
 
 .button2addtocark:hover:before {
   top: -35%;
-  background-color: #009087;
+  background-color:#ff9b24;
   transform: translateX(-50%) scaleY(1.3) scaleX(0.8);
 }
 
 .button2addtocark:hover:after {
   top: -45%;
-  background-color: #009087;
+  background-color: #ff9b24;
   transform: translateX(-50%) scaleY(1.3) scaleX(0.8);
 }
 

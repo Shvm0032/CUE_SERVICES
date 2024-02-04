@@ -8,7 +8,7 @@ import aboutImage1 from '../../assets/about1.webp';
 import aboutImage2 from '../../assets/about2.webp';
 import aboutImage3 from '../../assets/about3.webp';
 const responsive = {
-
+  // const IMGurl = process.env.REACT_APP_IMG_URL;
   
   superLargeDesktop: {
     // the naming can be any, depends on you.

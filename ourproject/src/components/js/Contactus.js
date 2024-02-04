@@ -48,14 +48,14 @@ function Contact() {
         <div className="container mt-5">
           <div className="row">
             <div className="col-lg-10 col-12 offset-lg-1">
-            <h2 className="text-center fw-4 mt-1">We're always eager to hear from you!</h2>
-            <p className="text-center mb-5 fs-5 text-secondary mt-1">We value your feedback and are always looking for ways to improve. If you have any suggestions or ideas, feedback, or you need technical support, have a billing question, or just want to say Hello, we are here for you. Contact us anytime!</p>
-          </div>
+              <h2 className="text-center fw-4 mt-1">We're always eager to hear from you!</h2>
+              <p className="text-center mb-5 fs-5 text-secondary mt-1">We value your feedback and are always looking for ways to improve. If you have any suggestions or ideas, feedback, or you need technical support, have a billing question, or just want to say Hello, we are here for you. Contact us anytime!</p>
+            </div>
           </div>
           <div className="d-flex flex-column flex-md-row  align-items-center justify-content-evenly gap-3 pt-5">
 
             <div className="d-flex flex-column p-4 justify-content-center align-items-center contcard boxmodel mb-5">
-              <div className="d-flex justify-content-center align-items-center p-4 " style={{ background: '#0eada3', borderRadius: "50%", width: "130px",  }}>
+              <div className="d-flex justify-content-center align-items-center p-4 " style={{ background: '#0eada3', borderRadius: "50%", width: "130px", }}>
                 <i className="fa-solid fa-phone fa-4x rounded-circle" style={{ color: '#fff' }} />
               </div>
               <p className="text-center mt-3 fs-5 fw-4">907-200-3462</p>
@@ -85,9 +85,9 @@ function Contact() {
         <div className="container p-5 my-2">
           <div className="row mt-4">
             <div className="col-lg-8  offset-lg-2 col-12">
-                <h2 className="fs-1 text-center my-4">Fill the form below so we can get to know  you and your needs better.</h2>
+              <h2 className="fs-1 text-center my-4">Fill the form below so we can get to know  you and your needs better.</h2>
               <div className="row  bg-light  p-4 " style={{ borderRadius: '1.563rem' }}>
-                
+
                 <form className="p-3" onSubmit={handleSubmit}>
 
                   <div className="mb-3 input-group-lg">
@@ -110,7 +110,7 @@ function Contact() {
                     <textarea typeof="text" className="form-control" name="message" value={formValue.message} onChange={handleInput} placeholder="Leave a comment here" id="floatingTextarea2" style={{ height: "100px" }}></textarea>
                   </div>
 
-                  <div className="col mt-2">
+                  <div className="col mt-4 text-center">
                     <button type="submit" className=" button2addtocark">Submit</button>
                   </div>
                   {/* <p className="text-success text-center">{Returnmessage}</p> */}
@@ -123,7 +123,7 @@ function Contact() {
       </section>
 
 
-      
+
     </>
   );
 }
