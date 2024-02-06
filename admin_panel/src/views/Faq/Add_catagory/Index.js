@@ -119,6 +119,7 @@ function App() {
                             <div className="modal-body">
                                 <label>New Category</label>
                                 <input
+                                className='form-control'
                                     type="text"
                                     value={newCategory}
                                     onChange={(e) => setNewCategory(e.target.value)}

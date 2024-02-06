@@ -133,10 +133,11 @@ function Index() {
       <div className="container mt-4">
         <div className="row">
           <div className="col-md-12">
-            <table className="table table-striped">
+          <div style={{ height: '60vh', overflowY: 'auto' }}>
+            <table className="table table-border  table-striped table-hover table-light table-shadow table-scroll">
               <thead>
                 <tr>
-                  <th scope="col">#</th>
+                  {/* <th scope="col">#</th> */}
                   <th scope="col">Category_id</th>
                   <th scope="col">Question</th>
                   <th scope="col">Answer</th>
@@ -146,7 +147,7 @@ function Index() {
               <tbody>
                 {questions.map((question) => (
                   <tr key={question.id}>
-                    <td scope="row">{question.id}</td>
+                    {/* <td scope="row">{question.id}</td> */}
                     <td>{question.category_id}</td>
                     <td>{question.question}</td>
                     <td>{question.answer}</td>
@@ -172,6 +173,7 @@ function Index() {
                 ))}
               </tbody>
             </table>
+            </div>
           </div>
         </div>
       </div>
