@@ -53,49 +53,51 @@ export default function AllCopons() {
           <button onClick={exportPdf} className='ms-auto btn btn-outline-primary'><i className="fa-solid fa-file-pdf"></i> Convert to pdf</button>
         </div><br />
         {Coupans.length > 0 ? (
-          <table className="table table-striped table-hover shadow" id='my-table'>
-            <thead>
-              <tr className='table-dark'>
-                <th scope="col">#</th>
-                <th scope="col">Coupon Code</th>
-                <th scope="col">Discount</th>
-                <th scope="col">Start Date</th>
-                <th scope="col">Expire_Date</th>
-                <th scope="col">Coupons_Status</th>
-                <th scope="col">Coupons_Limit</th>
-                <th scope="col">Hashid</th>
-                <th scope="col">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {Coupans.map((row, index) => (
-                <tr key={index}>
-                  <th >{row.id}</th>
-                  <td>{row.coupon_code}</td>
-                  <td>{row.discount}</td>
-                  <td>{row.start_date}</td>
-                  <td>{row.expire_date}</td>
-                  <td>{row.coupons_status}</td>
-                  <td>{row.coupons_limit}</td>
-                  <td>{row.hashid}</td>
-                  <td>
-                    <button type="submit" onClick={() => deleteFunc(row)} className="btn btn-outline-danger">
-                    <i className="fa-solid fa-trash-can"></i>&nbsp;Delete
-                    </button>
-                    &nbsp;&nbsp;
-                    <Link to={`/Copons/EditCopons/${row.id}`} className="btn btn-success">
-                      <i className="fa fa-edit"></i>&nbsp;Edit
-                    </Link>
-
-                   
-                  </td>
+          <div style={{ height: '60vh', overflowY: 'auto' }}>
+            <table className="table table-striped table-hover table-responsive shadow  table-scroll text-center" id='my-table'>
+              <thead>
+                <tr className='table-dark'>
+                  <th scope="col">ID</th>
+                  <th scope="col">Coupon Code</th>
+                  <th scope="col">Discount</th>
+                  <th scope="col">Start Date</th>
+                  <th scope="col">Expire_Date</th>
+                  <th scope="col">Coupons_Status</th>
+                  <th scope="col">Coupons_Limit</th>
+                  {/* <th scope="col">Hashid</th> */}
+                  <th scope="col">Action</th>
                 </tr>
+              </thead>
+              <tbody>
+                {Coupans.map((row, index) => (
+                  <tr key={index}>
+                    <th >{row.id}</th>
+                    <td>{row.coupon_code}</td>
+                    <td>{row.discount}</td>
+                    <td>{row.start_date}</td>
+                    <td>{row.expire_date}</td>
+                    <td>{row.coupons_status}</td>
+                    <td>{row.coupons_limit}</td>
+                    {/* <td>{row.hashid}</td> */}
+                    <td>
+                      <button type="submit" onClick={() => deleteFunc(row)} className="btn btn-outline-danger">
+                        <i className="fa-solid fa-trash-can"></i>&nbsp;Delete
+                      </button>
+                      &nbsp;&nbsp;
+                      <Link to={`/Copons/EditCopons/${row.id}`} className="btn btn-success">
+                        <i className="fa fa-edit"></i>&nbsp;Edit
+                      </Link>
 
-              ))}
 
-            </tbody>
+                    </td>
+                  </tr>
 
-          </table>
+                ))}
+
+              </tbody>
+
+            </table>
+          </div>
         ) : (
           <p>Loading data.....</p>
         )}

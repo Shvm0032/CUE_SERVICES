@@ -97,8 +97,10 @@ const AddCoupon = () => {
                     {successMessage}
                   </div>
                 )}
-                <form onSubmit={handleSubmit}>
-                  <div className="row">
+
+
+                <form className="shadow p-5 my-3" onSubmit={handleSubmit} >
+                  <div className="row ">
                     <label className="form-label">Name of the coupon:</label>
                     <div className="col">
                       <input
