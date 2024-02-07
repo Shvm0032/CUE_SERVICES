@@ -1119,7 +1119,8 @@ Router.post("/api/sending_email", (req, res) => {
         res.status(500).json({ message: "Error" })
     }
 
-})
+});
+
 
 
 Router.post("/api/user_info", (req, res) => {
@@ -1376,6 +1377,8 @@ Router.get("/api/Order/get", (req, res) => {
             }
         });
     } catch (err) {
+        console.error('Error checking email:', error);
+        res.status(500).json({ error: 'Internal server error' });
 
     }
 })
@@ -1426,6 +1429,26 @@ Router.get('/api/get_total_lengths', async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
+
+Router.post('/api/check-email', async (req, res) => {
+    const queryAsync = util.promisify(sqlDbconnect.query).bind(sqlDbconnect);
+    const { email }= req.body
+    console.log(email);
+    try {
+        const result = await queryAsync('SELECT Count(*) AS count from  registration WHERE email =? ',[email] );
+      if (result[0].count>0) {
+          res.json({ exists: true });
+      } else{
+        res.json({exists: false})
+      }
+
+    } catch (error) {
+        console.error('Error checking email:', error);
+        res.status(500).json({ error: 'Internal server error' });
+       
+    }
+});
+
 
 
 

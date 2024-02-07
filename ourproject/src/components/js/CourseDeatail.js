@@ -7,6 +7,7 @@ import { selectCartItems } from '../../redux/cartSlice';
 import { Toaster, toast } from 'react-hot-toast';
 
 export default function CourseDetail() {
+    const IMGurl = process.env.REACT_APP_IMG_URL;
     const cartItems = useSelector(selectCartItems);
     const [showToast, setShowToast] = useState(false);
     const [days, setDays] = useState(0);
@@ -37,10 +38,10 @@ export default function CourseDetail() {
         // return () => clearInterval(interval);
     }, []);
 
-   
+
 
     const ItemComponent = ({ id, name, price, selected, onSelect }) => (
-        <table className='table table-success table-hover '>
+        <table className='table  table-hover '>
             <tbody>
                 <tr>
                     <td className='col border-0'>
@@ -52,8 +53,8 @@ export default function CourseDetail() {
                             checked={selected}
                         />
                     </td>
-                    <td className='col border-0'>{name}</td>
-                    <td className='col border-0 text-primary fs-4'>${price}</td>
+                    <td className='col border-0 text-start'>{name}</td>
+                    <td className='col border-0 text-primary text-end fs-4'>${price}</td>
                 </tr>
             </tbody>
         </table>
@@ -80,10 +81,6 @@ export default function CourseDetail() {
         addData(id, price);
         setSelectedCourseId(id);
     };
-
-    // ...
-
-
 
     const handleAddToCart = () => {
 
@@ -133,8 +130,6 @@ export default function CourseDetail() {
         categoryMap[category].push(item);
     });
 
-
-
     const toggleToast = () => {
         setShowToast(true);
         // Hide the Toast after 3 seconds (adjust the timeout as needed)
@@ -147,7 +142,7 @@ export default function CourseDetail() {
     // your selected course
     const YourSelectedIitem = (optionId) => {
         const { id } = useParams();
-        let course = cartItems.find(item => item.course_id == id);
+        let course = cartItems.find(item => item.course_id === id);
         if (course) {
             let itemid = course.courseItems.find(item => item.itemId === optionId);
             if (itemid) {
@@ -165,35 +160,41 @@ export default function CourseDetail() {
         <div>
             <section className='Cource-Detail'>
                 <div className='container-fluid' >
-                    <div className='container  p-5'>
-                        <div className='row Course-title p-lg-5 p-2'>
+                    <div className='container p-2'>
+                        <div className='row  p-2'>
                             <div className='col-12'>
                                 <h3 className=' mt-5' style={{ fontSize: '36px', fontStyle: 'normal' }}>
                                     {course.title}
                                 </h3>
+                               
                             </div>
-                            <div className='col-lg-6 col-12'>
-                                <div className='d-flex gap-5 flex-row align-item-center justify-content-start mt-4'>
-                                    <div className='d-flex align-item-center justify-content-start'>
-                                        <i class="far fa-clock fa-2x"></i>&emsp;<span className='fs-5'>{course.time} min</span>
+                            <div className='col-lg-6'>
+                                <div className='row d-flex justify'>
+                                    <div className='col-12 mt-3'>
+                                        <div className='d-flex gap-5 flex-row align-item-center justify-content-center mt-4'>
+                                            <div className='d-flex align-item-center justify-content-start'><i className="far fa-user fa-2x"></i>&emsp;<span className='fs-5'>{course.name}</span></div>
+                                            <div className='d-flex align-item-center justify-content-start'><i className="fas fa-stopwatch fa-2x"></i>&emsp;<span className='fs-5'>{course.duration} </span></div>
+                                            <div className='d-flex align-item-center justify-content-start'><i className="fas fa-calendar-alt fa-2x"></i>&emsp;<span className='fs-5'>{course.date} </span></div>
+                                        </div>
+                                        <div className='d-flex gap-lg-5 gap-5 align-item-center justify-content-center mt-4'>
+                                            <div className='d-flex align-item-center justify-content-start'>
+                                                <i class="far fa-clock fa-2x"></i>&emsp;<span className='fs-5'>{course.time} min</span>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div className='d-flex align-item-center justify-content-start'>
-                                        <i class="far fa-user fa-2x"></i>&emsp;<span className='fs-5'>{course.name}</span>
+                                    <div className='col-12 '>
+                                        <div className='col-lg-12 col-12 mt-3 d-flex   text-center align-item-center justify-content-lg-around justify-content-sm-start p-lg-3  gap-2 p-3' style={{ borderRadius: '10px', color: '#fff' }}>
+                                            <div className='Clock-box d-flex flex-column  justify-content-center align-items-center border border-4 border-danger  shadow-lg'><span className='text-dark' style={{ color: 'black', fontSize: '27px!important', fontWeight: '600' }}>Days</span><span className='text-dark' style={{ color: 'black', fontSize: '27px !important', fontWeight: '600' }}>{days < 10 ? "0" + days : days}</span></div>
+                                            <div className='Clock-box d-flex  flex-column justify-content-center align-items-center border border-4 border-danger  shadow-lg'><span className='text-dark' style={{ color: 'black', fontSize: '27px!important', fontWeight: '600' }}>Hours</span><span className='text-dark' style={{ color: 'black', fontSize: '27px !important', fontWeight: '600' }}>{days < 10 ? "0" + hours : hours}</span></div>
+                                            <div className='Clock-box d-flex  flex-column justify-content-center align-items-center border border-4 border-danger  shadow-lg'><span className='text-dark' style={{ color: 'black', fontSize: '27px!important', fontWeight: '600' }}>Mins</span><span className='text-dark' style={{ color: 'black', fontSize: '27px !important', fontWeight: '600' }}>{days < 10 ? "0" + mins : mins}</span></div>
+                                            <div className='Clock-box d-flex  flex-column justify-content-center align-items-center border border-4 border-danger  shadow-lg'><span className='text-dark' style={{ color: 'black', fontSize: '27px!important', fontWeight: '600' }}>Sec</span><span className='text-dark' style={{ color: 'black', fontSize: '27px !important', fontWeight: '600' }}>{days < 10 ? "0" + secs : secs}</span></div>
+                                        </div>
                                     </div>
                                 </div>
-                                <div className='d-flex gap-lg-5 gap-5 align-item-center justify-content-start mt-4'>
-                                    <div className='d-flex align-item-center justify-content-start'><i class="fas fa-stopwatch fa-2x"></i>&emsp;<span className='fs-5'>{course.duration} </span></div>
-                                    <div className='d-flex align-item-center justify-content-start'><i class="fas fa-calendar-alt fa-2x"></i>&emsp;<span className='fs-5'>{course.date} </span></div>
-                                </div>
+                                
                             </div>
-                            <div className='col-lg-6 col-12'>
-                                <div className='col-lg-12 col-12 mt-3 d-flex   text-center align-item-center justify-content-lg-around justify-content-sm-start p-lg-3  gap-2 p-3' style={{ borderRadius: '10px', color: '#fff' }}>
-                                    <div className='Clock-box d-flex flex-column  justify-content-center align-items-center border border-4  border-danger  shadow-lg' ><span className='text'>Days</span><span>{days < 10 ? "0" + days : days}</span></div>
-                                    <div className='Clock-box d-flex  flex-column justify-content-center align-items-center border  border-4 border-primary  shadow-lg'><span className='text'>Hours</span><span>{days < 10 ? "0" + hours : hours}</span></div>
-                                    <div className='Clock-box d-flex  flex-column justify-content-center align-items-center border border-4 border-warning  shadow-lg'><span className='text'>Mins</span><span>{days < 10 ? "0" + mins : mins}</span></div>
-                                    <div className='Clock-box d-flex  flex-column justify-content-center align-items-center border border-4 border-white  shadow-lg'><span className='text'>Sec</span><span>{days < 10 ? "0" + secs : secs}</span></div>
-                                </div>
-                            </div>
+
+
                         </div>
                         {/* <div className="row  start-50  position-absolute top-100 translate-middle" style={{ width: '100%', height: '40px' }}>
                             <img src="/imgs/wave-section-break.webp" className="img-fluid" width={"100%"}></img>
@@ -211,38 +212,35 @@ export default function CourseDetail() {
                     <div className='container'>
                         <div className='d-flex flex-lg-row flex-column gap-5 mt-5'>
                             <div className='col-lg-7 col-12 '>
-                                <div className='row' >
-                                    <nav >
-                                        <div class="nav nav-tabs p-2" id="nav-tab" role="tablist" style={{ background: '#d7f8e9' }}>
-                                            <button class="nav-link fs-5 active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Overview</button>
-                                            <button class="nav-link fs-5" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Speaker</button>
-                                            <button class="nav-link fs-5" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Certification</button>
-                                            <button class="nav-link fs-5" id="nav-FAQ-tab" data-bs-toggle="tab" data-bs-target="#nav-FAQ" type="button" role="tab" aria-controls="nav-FAQ" aria-selected="false">FAQ</button>
-                                        </div>
-                                    </nav>
-                                </div>
-
-                                <div class="tab-content" id="nav-tabContent" >
-                                    <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
-                                        <div className='row p-2  fs-5'>
-                                            <div className='col-12 p-3 mt-2' style={{ textAlign: 'justify' }} >
-                                                {/* course description page */}
-                                                {parse(course.description)}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
-                                        <div className='row p-3' >
+                                <div className='row ' >
+                                    <ul class="nav fs-5 gap-5 justify-content-center nav-pills mb-4 " id="pills-tab" role="tablist" style={{ fontWeight: '500', borderBottom:'2px solid #ff9b24'}}>
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link active" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Overview</button>
+                                        </li>
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Speaker</button>
+                                        </li>
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link" id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#pills-contact" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Certification</button>
+                                        </li>
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link" id="pills-faq-tab" data-bs-toggle="pill" data-bs-target="#pills-faq" type="button" role="tab" aria-controls="pills-faq" aria-selected="false">FAQ</button>
+                                        </li>
+                                    </ul>
+                                    <div class="tab-content" id="pills-tabContent">
+                                        <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab" style={{ textAlign: 'justify' }}>{parse(course?.description)}</div>
+                                        <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab"><div className='row p-3' >
 
                                             <div className='col-lg-12 col-12 p-3'>
-                                                <div className='float-left w-25 bg-info '>
-                                                    <img src='img/img2.jpg' alt="/" style={{ width: '300px', height: '300px', float: 'left', borderRadius: '50%' }} />
+                                                <div className='float-left w-25'>
+                                                    <img src={`${IMGurl}/${course.images}`} alt="Speaker" style={{ width: '270px', height: '270px', float: 'left', borderRadius: '50%' }} />
+
                                                 </div>
                                                 <div className='float-none'>
                                                     <h4 className='my-2'>{course.name}</h4>
-                                                    <h6 className='my-1'>Speaker</h6>
-                                                    <p className=' text-dark'>
-                                                        {parse(course.bio)}
+                                                    <h5 className='my-2'>Speaker</h5>
+                                                    <p className='my-2 text-dark ' style={{ textAlign: 'justify' }}>
+                                                        {course?.bio ? parse(course.bio) : ''}
                                                     </p>
                                                 </div>
                                                 <div className='d-flex gap-2 p-'>
@@ -287,44 +285,27 @@ export default function CourseDetail() {
                                                     </tr>
                                                 </table>
                                             </div>
-                                        </div>
+                                        </div></div>
+                                        <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">Certification</div>
+                                        <div class="tab-pane fade" id="pills-faq" role="tabpanel" aria-labelledby="pills-faq-tab">FAQ</div>
                                     </div>
-                                    <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
-                                        <div className='row p-5' >
-                                            <h3 className=' py-4 text-center'>Credits</h3>
-                                            <div className='row ' >
-                                                <div className=' col-4'>
-                                                    <img src='images/img6.jpg' alt='' />
-                                                </div>
-                                                <div className=' col-8'>
-                                                    <p className=' mt-3 text-dark'>
-                                                        <span className='text-bold'> Clatid </span>is recognized by SHRM to offer Professional Development Credits (PDCs) for the SHRM-CPSM or SHRM-SCPSM. This program is valid for 1.5 PDCs for the SHRM-CPSM or SHRM-SCPSM. For more information about certification or recertification, please portal.shrm.org.
-                                                    </p>
-                                                </div>
-                                            </div>
-                                            <div className='row mt-3 ' >
-                                                <div className=' col-4'>
-                                                    <img src='images/img6.jpg' alt='' />
-                                                </div>
-                                                <div className=' col-8'>
-                                                    <p className=' my-4 text-dark'>
-                                                        Clatid is recognized by SHRM to offer Professional Development Credits (PDCs) for the SHRM-CPSM or SHRM-SCPSM. This program is valid for 1.5 PDCs for the SHRM-CPSM or SHRM-SCPSM. For more information about certification or recertification, please portal.shrm.org.
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="tab-pane fade" id="nav-FAQ" role="tabpanel" aria-labelledby="nav-FAQ-tab">..4.</div>
+                                    {/* OLD ONE  */}
+
                                 </div>
+
+
                             </div>
 
-                            <div className='col-lg-4 col-12  fs-5'  >
-
-                                <div className='row  ps-2'> <h3 className='fw-4 text-center p-3' style={{ background: '#d7f8e9' }}> Registration Options</h3>
+                            <div className='col-lg-5  col-12 p-5 fs-5' style={{ marginTop: '-410px' }}>
+                                <div className='row'>
+                                    <img src={`${IMGurl}/${course.course_thumbail}`} className='course-img' style={{ borderRadius: "32px" }} height={330} width={100} alt="Course_thumnail" />
+                                </div>
+                                <div className='row bg-light  p-2 shadow-lg '>
+                                    <h3 className=' display-6 text-center p-3 mt-2 ' style={{ fontWeight: '600', color: '#ff9b24', borderBottom: '2px solid #ff9b24' }}>Registration Options</h3>
                                     <div className='row  p-2'>
                                         {Object.keys(categoryMap).map(category => (
-                                            <div className='col-12 mt-4 p-2 ' key={category}>
-                                                <h3 className='mt-4 mb-5 fw-bold text-center'>{category}</h3>
+                                            <div className='col-12 p-2 ' key={category}>
+                                                <h3 className='mt-2 mb-2 fw-bold text-center'>{category}</h3>
                                                 <form>
                                                     {categoryMap[category].map((item, index) => (
                                                         <ItemComponent
@@ -359,7 +340,7 @@ export default function CourseDetail() {
                                                 </p>
                                             </div>
                                         </div>
-                                       
+
 
                                     </div>
                                 </div>

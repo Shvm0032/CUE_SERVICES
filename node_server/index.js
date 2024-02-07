@@ -39,6 +39,14 @@ app.post('/api/create-checkout-session', async (req, res) => {
     const userDetail = req.body.detail;
     let userId = 'null';
     let token = req.headers.authorization;
+
+    let userRegister = [
+        userDetail.firstName,
+        userDetail.lastName,
+        userDetail.email,
+        userDetail.phone,
+        userDetail.email,
+    ];
     if (token && token.startsWith('Bearer ')) {
 
         token = token.slice(7, token.length);
@@ -191,7 +199,7 @@ app.get('/api/check_session_info', async (req, res) => {
 
 
 cron.schedule('* * * * *', () => {
-    schedular.paymentUpdate();
+  //  schedular.paymentUpdate();
 });
 app.listen(port, () => {
     console.log(`Example app listening on port at http://${hostname}:${port}/`);

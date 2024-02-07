@@ -7,6 +7,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { selectCartItems, removeFromCart, removeAllItemsFromCart, } from '../../redux/cartSlice';
 import http from "../../utils/http-client";
 import FadeLoader from "react-spinners/FadeLoader";
+
 const stripePromise = loadStripe('pk_test_51OGHZSSA3p9Dwv0NaccoiuEfDXTNtWgvxuPleUcdSBFVbnBTwoa1KZcXPVzBxmNRXW1GNwpPZcX5YGY8FfiBSdpH00ZkIQDWaC'); // Replace with your Stripe public key
 function Checkout() {
 
@@ -64,6 +65,7 @@ function Checkout() {
         setDiscount(0);
         setApplied(false);
     };
+
 
 
 
@@ -135,6 +137,7 @@ function Checkout() {
         const { name, value } = e.target;
         setFormData(prevState => ({ ...prevState, [name]: value }));
     };
+
 
     // console.log(getTotalPrice(), 'gt');
     // console.log(sum);

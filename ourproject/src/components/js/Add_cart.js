@@ -8,6 +8,8 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 
 const AddToCart = () => {
+
+
   const [selectedCourseId, setSelectedCourseId] = useState(null);
   const navigate = useNavigate();
   const [applied, setApplied] = useState(false);
@@ -93,11 +95,11 @@ const AddToCart = () => {
   console.log(getTotalPrice)
 
   const ItemComponent = ({ itemName, itemPrice }) => (
-    <table className='table  table-hover '>
+    <table className='table '>
       <tbody>
         <tr>
-          <td className='col border-0 fs-5'>{itemName}</td>
-          <td className='col border-0 text-primary fs-5'>${itemPrice}</td>
+          <td className='col  border-0 fs-5 text-start'>{itemName}</td>
+          <td className='col  border-0 text-primary fs-5 text-end'>${itemPrice}</td>
         </tr>
       </tbody>
     </table>
@@ -121,89 +123,93 @@ const AddToCart = () => {
       </section >
 
 
-      <div className="container px-3 my-5 clearfix ">
+      <div className="container-fluid px-5 my-5 clearfix ">
         {/* Shopping cart table */}
-        <div className="card shadow">
+        {/* <div className="card shadow">
           <div className="card-header">
             <h3>Shopping Cart</h3>
           </div>
-          <div className="card-body p-5">
-            <div className="table-responsive">
-              <table className="table table-bordered m-0" >
-                <thead className='  fs-6' style={{ background: '#FFAA33', borderRadius: '10px' }}>
+          <div className="card-body p-5"> */}
+        <div className='row'>
+          <div className="table-responsive" style={{}}>
+            <table className="table table-striped table-bordered m-0" >
+              <thead className='fs-6' style={{ background: '#FFAA33', borderRadius: '10px', borderBottom: '2px solid #ff9b24' }}>
+                <tr>
+                  {/* Set columns width */}
+                  <th className="text-center fs-4 " style={{ minWidth: 220 }}>Product Name </th>
+                  <th className="text-center fs-4" style={{ minWidth: 400 }}>Selling option</th>
+                  <th className="text-right fs-4 " style={{ width: 120 }}>Price</th>
+                  {/* <th className="text-center py-3 px-4" style={{ width: 120 }}>Quantity</th> */}
+                  {/* <th className="text-right py-3 px-4" style={{ width: 120 }}>Total</th> */}
+                  <th className="text-center fs-4 align-middle py-3 px-0" style={{ width: 170 }}>Remove</th>
+                </tr>
+              </thead>
+              {cartItems?.map((item) => (
+                <tbody key={item.id}>
                   <tr>
-                    {/* Set columns width */}
-                    <th className="text-center fs-4 py-3 px-4" style={{ minWidth: 250 }}>Product Name </th>
-                    <th className="text-center fs-4 py-3 px-4" style={{ minWidth: 300 }}>Selling option</th>
-                    <th className="text-right fs-4 py-3 px-4" style={{ width: 120 }}>Price</th>
-                    {/* <th className="text-center py-3 px-4" style={{ width: 120 }}>Quantity</th> */}
-                    {/* <th className="text-right py-3 px-4" style={{ width: 120 }}>Total</th> */}
-                    <th className="text-center fs-4 align-middle py-3 px-0" style={{ width: 170 }}>Remove</th>
-                  </tr>
-                </thead>
-                {cartItems?.map((item) => (
-                  <tbody key={item.id}>
-                    <tr>
-                      <td className="p-4">
-                        <div className="media align-items-center">
-                          {/* <img src="https://bootdey.com/img/Content/avatar/avatar1.png" className="d-block ui-w-40 ui-bordered mr-4" alt /> */}
-                          <div className="media-body">
-                            <Link to={`/Course_Detail/${item.course_id}`} onClick={() => {
-                              setSelectedCourseId(item.course_id); navigate(`/Course_Detail/${item.course_id}`);
-                            }} className="d-block fs-5 fw-4 ">{item?.course_title}</Link>
-                          </div>
+
+                    <td className="p-4" >
+                      <div className="media align-items-center">
+                        <div className="media-body">
+                          <Link to={`/Course_Detail/${item.course_id}`} onClick={() => {
+                            setSelectedCourseId(item.course_id); navigate(`/Course_Detail/${item.course_id}`);
+                          }} className="d-block fs-5 fw-4 ">{item?.course_title}</Link>
                         </div>
-                      </td>
-                      <td className='p-2'>
-                        {item.courseItems.map((item, index) => (
-                          <ItemComponent
-                            key={index}
-                            {...item}
-                            id={item.id}
-                          />
-                        ))}
-                      </td>
-                      <td className="text-right fs-4 font-weight-semibold align-middle p-4"> ${item?.totalPrice}</td>
-                      {/* <td className="align-middle  d-flex p-4">
+                      </div>
+                    </td>
+                    <td className='p-2'>
+                      {item.courseItems.map((item, index) => (
+                        <ItemComponent
+                          key={index}
+                          {...item}
+                          id={item.id}
+                        />
+                      ))}
+                    </td>
+                    <td className="text-right fs-4 font-weight-semibold align-middle p-4"> ${item?.totalPrice}</td>
+                    {/* <td className="align-middle  d-flex p-4">
                         <button onClick={() => handleIncreaseQuantity(item?.course_id)}>+</button>
                         <input type="text" className="form-control text-center" placeholder={item?.qty} value={item?.qty} />
                         <button onClick={() => handleDecreaseQuantity(item?.course_id)}>-</button></td>
                       <td className="text-right fs-4 font-weight-semibold align-middle p-4"> ${item.totalPrice * item.qty}  </td> */}
-                      <td className="text-center align-middle  px-0"><button className='btn btn-danger' onClick={() => handleRemove(item.course_id, item.course_title)}><i className="fas fa-trash-alt fa-lg"></i></button></td>
-                    </tr>
-
-                  </tbody>
-
-                ))}
-              </table>
-            </div>
-            {/* / Shopping cart table */}
-            <div className="d-flex flex-wrap justify-content-end align-items-center pb-4">
-              <div className='d-flex'>
-                <table className='table border border-success rounded  mt-4 table-success'>
-                  <tr className='col'>
-                    <td><label className="text-muted fs-4 font-weight-normal m-0" style={{ width: 140 }}>Total price</label></td>
-                    <td><div className="text-center  fs-4" style={{ width: 140, fontWeight: '500' }}>${sum}</div></td>
+                    <td className="text-center align-middle  px-0"><button className='btn ' onClick={() => handleRemove(item.course_id, item.course_title)}><i class="fa-solid fa-xmark fa-3x"></i></button></td>
                   </tr>
-                </table>
+
+                </tbody>
+
+              ))}
+            </table>
+          </div>
+        </div>
+        <div className='row mt-5'>
+          {/* / Shopping cart table */}
+          <div className="d-flex flex-wrap  flex-column justify-content-center align-items-start pb-4">
+            <div className='row'>
+              <h3 className='mb-3'>Cart Total</h3>
+              <div className='row border p-3 rounded-3'>
+                <div className='col-6  text-start'><label className="text-muted fs-4 font-weight-normal m-0">Subtotal price</label></div>
+                <div className='col-6 text-end'><div className="text-center text-danger fs-4" style={{fontWeight: '500' }}>${sum}</div></div>
               </div>
-
-              {/* coupan section  */}
-
-
+              <div className='row border p-3 border-top-0 rounded-3'>
+                <div className='col-6 text-start'><label className="text-muted fs-4 font-weight-normal m-0" >Total price</label></div>
+                <div className='col-6 text-end'><div className="text-center text-danger fs-4" style={{ fontWeight: '500' }}>${sum}</div></div>
+              </div>
             </div>
-            <div className=" d-flex flex-wrap justify-content-between ">
-              <div className='row  p-3 text-center'>
-                <Link to='/course' className="button2addtocark"> <i className="fas fa-arrow-left"></i>  &emsp; Back to shopping</Link>
-              </div>
-              <div className='row p-3 text-center'>
-                <Link to='/Checkout' className="button2addtocark" ><i className="fas fa-money-check-alt"></i> &emsp; Proceed to Checkout</Link>
-              </div>
 
+            {/* coupan section  */}
+          </div>
+          <div className=" d-flex flex-wrap justify-content-between ">
+            <div className='row p-3 text-center'>
+              <Link to='/Checkout' className="btn btn-outline-warning p-3 rounded-pill" ><i className="fas fa-money-check-alt"></i> &emsp; Proceed to Checkout</Link>
+            </div>
+            <div className='row  p-3 text-center '>
+              <Link to='/course' className="button2addtocark rounded-pill"> <i className="fas fa-arrow-left"></i>  &emsp; Back to shopping</Link>
             </div>
           </div>
         </div>
       </div>
+      {/* </div>
+      </div> */}
     </>
   );
 };
