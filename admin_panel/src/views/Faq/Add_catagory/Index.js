@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import http from "../../../utils/http-client";
 
 function App() {
     const [faqCategories, setFaqCategories] = useState([]);
@@ -10,7 +11,7 @@ function App() {
 
     const getData = async () => {
         try {
-            const res = await axios.get('http://localhost:8000/api/Faq_Category');
+            const res = await http.get('/Faq_Category');
             setFaqCategories(res.data);
         } catch (error) {
             console.error('Error fetching data:', error);
@@ -23,12 +24,12 @@ function App() {
 
             if (editCategory) {
                 // Update existing category
-                response = await axios.put(`http://localhost:8000/api/Update_Category/${editCategory.id}`, {
+                response = await http.put(`/Update_Category/${editCategory.id}`, {
                     category: newCategory,
                 });
             } else {
                 // Add new category
-                response = await axios.post('http://localhost:8000/api/Add_Category', { category: newCategory });
+                response = await http.post('/Add_Category', { category: newCategory });
             }
 
             if (response.status === 200) {

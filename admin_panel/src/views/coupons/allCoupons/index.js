@@ -3,13 +3,14 @@ import axios from 'axios';
 import { jsPDF } from "jspdf";
 import 'jspdf-autotable'
 import { Link } from 'react-router-dom';
+import http from "../../../utils/http-client";
 
 export default function AllCopons() {
   var [Coupan, setCoupan] = useState([]);
   var [Coupans, setCoupans] = useState([]);
   var getData = async () => {
     try {
-      var res = await axios.get("http://localhost:8000/api/Coupan");
+      var res = await http.get("/Coupan");
       console.log(res);
       setCoupans(res.data);
     } catch (error) {
@@ -25,7 +26,7 @@ export default function AllCopons() {
     console.log("hii")
     console.log(r)
     try {
-      var res = await axios.delete(`http://localhost:8000/api/delete_Coupans?id=${r.id}`);
+      var res = await http.delete(`/delete_Coupans?id=${r.id}`);
       console.log(res);
       if (res.status === 200) {
         setCoupan(Coupan.filter((ele) => { if (ele.id !== r.id) { return true } else { return false } }))

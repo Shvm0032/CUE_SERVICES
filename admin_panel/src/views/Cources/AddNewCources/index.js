@@ -4,6 +4,7 @@ import 'react-quill/dist/quill.snow.css';
 import axios from 'axios';
 // import Dropify from 'dropify';
 import { useNavigate } from 'react-router';
+import http from "../../../utils/http-client";
 
 const modules = {
     toolbar: [
@@ -21,6 +22,30 @@ const modules = {
 };
 
 export default function AddCourse() {
+    const [slug, setSlug] = useState('');
+
+    // Function to generate URL slug from the title
+    const generateSlug = (input) => {
+        return input
+            .toLowerCase()
+            .replace(/[^a-z0-9]/g, '-') // Replace non-alphanumeric characters with dashes
+            .replace(/-+/g, '-') // Replace multiple dashes with a single dash
+            .replace(/^-|-$/g, ''); // Trim dashes from start and end
+    };
+
+    // Event handler for title input change
+    const handleTitleChange = (event) => {
+        const newTitle = event.target.value;
+        // setTitle(newTitle);
+        setCourse((previous) => ({
+            ...previous,
+            Name: newTitle
+        }));
+        const newSlug = generateSlug(newTitle);
+        setSlug(newSlug);
+    };
+
+
     const [formFields, setFormFields] = useState([
         { category: '', name: '', price: '' },
     ]);
@@ -167,8 +192,9 @@ export default function AddCourse() {
         data.append('cstdate', Course.CSTDate);
         data.append('fields', JSON.stringify(selling));
         data.append('file', filedata);
+        data.append('slug', slug);
         console.log(data, 'data');
-        axios.post('http://localhost:8000/api/Course_add', data)
+        http.post('/Course_add', data)
 
             .then(response => {
                 if (response.status === 200) {
@@ -191,7 +217,7 @@ export default function AddCourse() {
                     <div className="row">
                         <div className="col-12 p-4">
                             <h4 className="text-center mt-2">Add New Course</h4>
-                            <form className='shadow p-5 bg-light ' style={{height:"70vh", overflowY:"auto"}}>
+                            <form className='shadow p-5 bg-light '>
                                 <div className='row'>
                                     <div className='col-2'>
                                         <label>Industry</label>
@@ -209,7 +235,7 @@ export default function AddCourse() {
                                             ))}
                                         </select>
                                     </div>
-                                </div><br/>
+                                </div><br />
                                 <div className='row'>
                                     <div className='col-2'>
                                         <label>Speaker</label>
@@ -227,26 +253,48 @@ export default function AddCourse() {
                                             ))}
                                         </select>
                                     </div>
-                                </div><br/>
+                                </div><br />
                                 <div className='row'>
                                     <div className='col-2'>
                                         <label>Name</label>
                                     </div>
                                     <div className='col'>
                                         <input
-                                            onChange={(e) => {
-                                                setCourse((previous) => ({
-                                                    ...previous,
-                                                    Name: e.target.value
-                                                }))
-                                            }}
+                                            // onChange={(e) => {
+                                            //     setCourse((previous) => ({
+                                            //         ...previous,
+                                            //         Name: e.target.value
+                                            //     }))
+                                            // }}
+                                            onChange={handleTitleChange}
                                             type="text"
                                             name='courseName'
                                             className="form-control"
                                             placeholder="Course Name"
                                         />
                                     </div>
-                                </div><br/>
+                                </div><br />
+                                <div className='row'>
+                                <div className='col-2'>
+                                        <label>Url</label>
+                                    </div>
+                                    <div className='col'>
+
+                                        <div className="input-group">
+                                            <div className="input-group-prepend">
+                                                <div className="input-group-text">http://localhost:3000/course</div>
+                                            </div>
+                                            <input
+                                                type="text"
+                                                id="url"
+                                                className="form-control"
+                                                value={slug}
+                                                readOnly
+                                                placeholder="Course Name"
+                                            />
+                                        </div>
+                                    </div>
+                                </div><br />
                                 <div className='row'>
                                     <div className='col-2'>
                                         <label>Description</label>
@@ -267,7 +315,7 @@ export default function AddCourse() {
                                             }}
                                         />
                                     </div>
-                                </div><br/>
+                                </div><br />
                                 <div className='row'>
                                     <div className='col-2 mt-4'>
                                         <label>Thumbnail</label>
@@ -303,7 +351,7 @@ export default function AddCourse() {
 
 
                                     </div>
-                                </div><br/>
+                                </div><br />
                                 <div className='row'>
                                     <div className='col-2'>
                                         <label>Duration</label>
@@ -322,7 +370,7 @@ export default function AddCourse() {
                                             placeholder="Duration"
                                         />
                                     </div>
-                                </div><br/>
+                                </div><br />
                                 <div className='row'>
                                     <div className='col-2'>
                                         <label>CST Date</label>
@@ -340,7 +388,7 @@ export default function AddCourse() {
                                             className="form-control"
                                         />
                                     </div>
-                                </div><br/>
+                                </div><br />
                                 <div className='row'>
                                     <div className='col-2'>
                                         <label>Time</label>
@@ -358,7 +406,7 @@ export default function AddCourse() {
                                             className="form-control"
                                         />
                                     </div>
-                                </div><br/>
+                                </div><br />
                                 <div className='row'>
                                     <div className='col-2'>
                                         <label>Selling Option</label>

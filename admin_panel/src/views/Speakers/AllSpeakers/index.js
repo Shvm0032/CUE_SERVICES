@@ -3,13 +3,14 @@ import axios from 'axios';
 import { jsPDF } from "jspdf";
 import 'jspdf-autotable'
 import { Link } from 'react-router-dom';
+import http from "../../../utils/http-client";
 
 
 export default function AllSpeakers() {
   var [speakers, setSpeakers] = useState([]);
   var getData = async () => {
     try {
-      var res = await axios.get("http://localhost:8000/api/Speaker");
+      var res = await http.get("/Speaker");
       console.log(res);
       setSpeakers(res.data.data);
     } catch (error) {
@@ -25,7 +26,7 @@ export default function AllSpeakers() {
     console.log("hii")
     console.log(r)
     try {
-      var res = await axios.delete(`http://localhost:8000/api/delete_speaker?id=${r.speaker_id}`);
+      var res = await http.delete(`/delete_speaker?id=${r.speaker_id}`);
       console.log(res);
       if (res.status === 200) {
         setSpeakers(speakers.filter((ele) => { if (ele.speaker_id !== r.speaker_id) { return true } else { return false } }))

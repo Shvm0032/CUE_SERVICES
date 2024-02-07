@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
+import http from "../../../utils/http-client";
 
 export default function ViewIndustary() {
   const [industries, setIndustries] = useState([]);
@@ -15,7 +16,7 @@ export default function ViewIndustary() {
 
   const getData = async () => {
     try {
-      const res = await axios.get("http://localhost:8000/api/Industary");
+      const res = await http.get("/Industary");
       setIndustries(res.data);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -60,7 +61,7 @@ export default function ViewIndustary() {
       formData.append('industry_name', editForm.industry_name);
       formData.append('image', editForm.image);
 
-      const response = await axios.put(`http://localhost:8000/api/update_industry/${selectedIndustry.id}`, formData, {
+      const response = await http.post(`/update_industry/${selectedIndustry.id}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },

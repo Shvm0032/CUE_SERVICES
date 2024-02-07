@@ -3,12 +3,13 @@ import { jsPDF } from "jspdf";
 import 'jspdf-autotable'
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import http from "../../../utils/http-client";
 
 function AllCourses() {
   var [courses, setCourses] = useState([]);
   var getData = async () => {
     try {
-      var res = await axios.get("http://localhost:8000/api/Course");
+      var res = await http.get("/Course");
       console.log(res);
       setCourses(res.data);
     } catch (error) {
@@ -34,7 +35,7 @@ function AllCourses() {
     console.log("hii")
     console.log(r)
     try {
-      var res = await axios.delete(`http://localhost:8000/api/delete_course?id=${r.id}`);
+      var res = await http.Delete(`/delete_course?id=${r.id}`);
       console.log(res);
       if (res.status === 200) {
         setCourses(courses.filter((ele) => { if (ele.id !== r.id) { return true } else { return false } }))

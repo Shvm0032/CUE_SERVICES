@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Modal, Button } from 'react-bootstrap';
+import http from "../../../utils/http-client";
 
 function Index() {
   const { id } = useParams();
@@ -14,7 +15,7 @@ function Index() {
 
 
   useEffect(() => {
-    axios.get(`http://localhost:8000/api/selling_edit/${id}`)
+    http.get(`/selling_edit/${id}`)
       .then((res) => {
         if (res.data[0]) {
           setSellingCategory(res.data[0].selling_category);
@@ -34,7 +35,7 @@ function Index() {
     e.preventDefault();
 
     try {
-      const response = await axios.put(`http://localhost:8000/api/update_option/${id}`, {
+      const response = await http.put(`/update_option/${id}`, {
         selling_category,
         name,
         price,
