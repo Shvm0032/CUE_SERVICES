@@ -3,6 +3,7 @@ import { useParams, useHistory, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
+import http from "../../../utils/http-client";
 
 
 
@@ -26,7 +27,7 @@ const EditCopons = () => {
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
-    axios.get(`http://localhost:8000/api/cu_edit/${id}`)
+    http.get(`/cu_edit/${id}`)
       .then((res) => {
         const data = res.data[0];
         if (data) {
@@ -66,7 +67,7 @@ const EditCopons = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.put(`http://localhost:8000/api/update_Coupon/${id}`, coupon);
+      const response = await http.put(`/update_Coupon/${id}`, coupon);
       console.log(response.data);
 
       setSuccessMessage('Coupon updated successfully');

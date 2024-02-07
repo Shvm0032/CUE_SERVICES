@@ -5,6 +5,7 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
+import http from "../../../utils/http-client";
 
 const modules = {
   toolbar: [
@@ -38,7 +39,7 @@ const EditSpeakersComponent = () => {
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
-    axios.get(`http://localhost:8000/api/speaker/edit/${speaker_id}`)
+    http.get(`/speaker/edit/${speaker_id}`)
       .then((res) => {
         setName(res.data[0].name);
         setEmail(res.data[0].email);
@@ -76,7 +77,7 @@ const EditSpeakersComponent = () => {
     formData.append('image', file);
 
     try {
-      const response = await axios.put(`http://localhost:8000/api/update_speaker/${speaker_id}`, formData, {
+      const response = await http.put(`/update_speaker/${speaker_id}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },

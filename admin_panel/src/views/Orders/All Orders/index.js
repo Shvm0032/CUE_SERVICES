@@ -2,13 +2,14 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { jsPDF } from "jspdf";
 import 'jspdf-autotable'
+import http from "../../../utils/http-client";
 
 export default function AllOrders() {
 
   var [Orders, setOrders] = useState([]);
   var getData = async () => {
     try {
-      var res = await axios.get("http://localhost:8000/api/Order_Details");
+      var res = await http.get("/Order_Details");
       console.log(res);
       setOrders(res.data);
     } catch (error) {

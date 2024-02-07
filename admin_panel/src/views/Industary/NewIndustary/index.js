@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router';
+import http from "../../../utils/http-client";
 
 export default function NewIndustary() {
   const [formValue, setFormValue] = useState({ industry_name: '', image: '' });
@@ -18,7 +19,7 @@ export default function NewIndustary() {
 
     console.log(filedata, data);
 
-    axios.post('http://localhost:8000/api/Industary_add', data)
+    http.post('/Industary_add', data)
       .then(response => {
         console.log(response.data);
         setReturnmessage(response.data.message);

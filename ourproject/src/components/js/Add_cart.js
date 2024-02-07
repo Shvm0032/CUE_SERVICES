@@ -31,6 +31,7 @@ const AddToCart = () => {
   };
 
   const handleApplyCoupon = async () => {
+    // try{
     // Make a request to your backend to check the coupon code and get the discount
     // Update 'your-backend-endpoint' with the actual endpoint
     const response = await http.post('/check-coupon', { couponCode });
@@ -57,6 +58,11 @@ const AddToCart = () => {
       setDiscount(0);
       setApplied(false);
     }
+  // }
+  // catch(error){
+  //   console.error('Error updating category:', error);
+  //   res.status(502).json({ error: 'Internal Server Error' });
+  // }
   };
 
   const handleCancelCoupon = () => {
