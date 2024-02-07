@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { CWidgetStatsD, CRow, CCol } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
-import { cibFacebook, cibLinkedin, cibTwitter, cilCalendar } from '@coreui/icons'
+import { cilUser, cilSpeak,cilCalculator,cilCommand, cilCalendar,cilStar } from '@coreui/icons'
 import { CChart } from '@coreui/react-chartjs'
 
 const WidgetsBrand = ({ withCharts }) => {
@@ -36,13 +36,14 @@ const WidgetsBrand = ({ withCharts }) => {
 
   return (
     <CRow>
-      <CCol sm={6} lg={3}>
+      <CCol sm={6} lg={4}>
         <CWidgetStatsD
           className="mb-4"
+          style={{"backgroundColor":"#c9b8b8"}}
           {...(withCharts && {
             chart: (
               <CChart
-                className="position-absolute w-100 h-100"
+                className="position-absolute w-100 h-50"
                 type="line"
                 data={{
                   labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
@@ -61,24 +62,23 @@ const WidgetsBrand = ({ withCharts }) => {
               />
             ),
           })}
-          icon={<CIcon icon={cibFacebook} height={52} className="my-4 text-white" />}
+          icon={<CIcon icon={cilUser} height={52} className="my-4 text-danger" />}
           values={[
-            { title: 'friends', value: '89K' },
-            { title: 'feeds', value: '459' },
+            { title: 'CUSTOMERS',  },
+            {  value: '1.792' },
           ]}
-          style={{
-            '--cui-card-cap-bg': '#3b5998',
-          }}
+  
         />
       </CCol>
 
-      <CCol sm={6} lg={3}>
+      <CCol sm={6} lg={4}>
         <CWidgetStatsD
           className="mb-4"
+          style={{"backgroundColor":"#CFF4FC"}}
           {...(withCharts && {
             chart: (
               <CChart
-                className="position-absolute w-100 h-100"
+                className="position-absolute w-100 h-50"
                 type="line"
                 data={{
                   labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
@@ -97,24 +97,22 @@ const WidgetsBrand = ({ withCharts }) => {
               />
             ),
           })}
-          icon={<CIcon icon={cibTwitter} height={52} className="my-4 text-white" />}
+          icon={<CIcon icon={cilSpeak} height={52} className="my-4 text-success" />}
           values={[
-            { title: 'followers', value: '973k' },
-            { title: 'tweets', value: '1.792' },
+            { title: 'SPEAKER',  },
+            {  value: '1.792' },
           ]}
-          style={{
-            '--cui-card-cap-bg': '#00aced',
-          }}
+        
         />
       </CCol>
 
-      <CCol sm={6} lg={3}>
+      <CCol sm={6} lg={4}>
         <CWidgetStatsD
           className="mb-4"
           {...(withCharts && {
             chart: (
               <CChart
-                className="position-absolute w-100 h-100"
+                className="position-absolute w-100 h-50"
                 type="line"
                 data={{
                   labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
@@ -133,10 +131,10 @@ const WidgetsBrand = ({ withCharts }) => {
               />
             ),
           })}
-          icon={<CIcon icon={cibLinkedin} height={52} className="my-4 text-white" />}
+          icon={<CIcon icon={cilCommand} height={52} className="my-4 text-info" />}
           values={[
-            { title: 'contacts', value: '500' },
-            { title: 'feeds', value: '1.292' },
+            { title: 'Top Selling Item',  },
+            {  value: '1.792' },
           ]}
           style={{
             '--cui-card-cap-bg': '#4875b4',
@@ -144,14 +142,14 @@ const WidgetsBrand = ({ withCharts }) => {
         />
       </CCol>
 
-      <CCol sm={6} lg={3}>
+      <CCol sm={6} lg={4}>
         <CWidgetStatsD
           className="mb-4"
-          color="warning"
+          style={{"backgroundColor":"#CFF4FC"}}
           {...(withCharts && {
             chart: (
               <CChart
-                className="position-absolute w-100 h-100"
+                className="position-absolute w-100 h-50"
                 type="line"
                 data={{
                   labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
@@ -170,10 +168,78 @@ const WidgetsBrand = ({ withCharts }) => {
               />
             ),
           })}
-          icon={<CIcon icon={cilCalendar} height={52} className="my-4 text-white" />}
+          icon={<CIcon icon={cilCalendar} height={52} className="my-4 text-Primary" />}
           values={[
-            { title: 'events', value: '12+' },
-            { title: 'meetings', value: '4' },
+            { title: 'WEBINARS',  },
+            {  value: '1.792' },
+          ]}
+        />
+      </CCol>
+
+      <CCol sm={6} lg={4}>
+        <CWidgetStatsD
+          className="mb-4"
+          style={{"backgroundColor":"#c9b8b8"}}
+          {...(withCharts && {
+            chart: (
+              <CChart
+                className="position-absolute w-100 h-50"
+                type="line"
+                data={{
+                  labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+                  datasets: [
+                    {
+                      backgroundColor: 'rgba(255,255,255,.1)',
+                      borderColor: 'rgba(255,255,255,.55)',
+                      pointHoverBackgroundColor: '#fff',
+                      borderWidth: 2,
+                      data: [35, 23, 56, 22, 97, 23, 64],
+                      fill: true,
+                    },
+                  ],
+                }}
+                options={chartOptions}
+              />
+            ),
+          })}
+          icon={<CIcon icon={cilCalculator} height={52} className="my-4 text-Light" />}
+          values={[
+            { title: 'DAILY AVERAGE SELL',  },
+            {  value: '1.792' },
+          ]}
+        />
+      </CCol>
+
+      <CCol sm={6} lg={4}>
+        <CWidgetStatsD
+          className="mb-4"
+          style={{"backgroundColor":"#badbcc"}}
+          {...(withCharts && {
+            chart: (
+              <CChart
+                className="position-absolute w-100 h-50"
+                type="line"
+                data={{
+                  labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+                  datasets: [
+                    {
+                      backgroundColor: 'rgba(255,255,255,.1)',
+                      borderColor: 'rgba(255,255,255,.55)',
+                      pointHoverBackgroundColor: '#fff',
+                      borderWidth: 2,
+                      data: [35, 23, 56, 22, 97, 23, 64],
+                      fill: true,
+                    },
+                  ],
+                }}
+                options={chartOptions}
+              />
+            ),
+          })}
+          icon={<CIcon icon={cilStar} height={52} className="my-4 text-warning" />}
+          values={[
+            { title: 'TOTAL SELL',  },
+            {  value: '$1.792' },
           ]}
         />
       </CCol>

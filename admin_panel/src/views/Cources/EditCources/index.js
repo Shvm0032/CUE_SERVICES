@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useParams } from 'react-router';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import http from "../../../utils/http-client";
 
 const modules = {
   toolbar: [
@@ -43,7 +44,7 @@ const EditCourseDetail = () => {
   useEffect(() => {
     const fetchCourseDetails = async () => {
       try {
-        const responseCourse = await axios.get(`http://localhost:8000/api/edit/${course_id}`);
+        const responseCourse = await http.get(`/edit/${course_id}`);
         if (responseCourse.status === 200) {
           const dataCourse = responseCourse.data[0];
           setCourse({
@@ -60,14 +61,14 @@ const EditCourseDetail = () => {
           console.error('Error fetching course details:', responseCourse.statusText);
         }
 
-        const responseSellingOptions = await axios.get('http://localhost:8000/api/GetsellingOptions');
+        const responseSellingOptions = await http.get('/GetsellingOptions');
         if (responseSellingOptions.status === 200) {
           setSellingOptions(responseSellingOptions.data);
         } else {
           console.error('Error fetching selling options:', responseSellingOptions.statusText);
         }
 
-        const responseSpeakers = await axios.get('http://127.0.1:8000/api/speaker');
+        const responseSpeakers = await http.get('/speaker');
         if (responseSpeakers.status === 200) {
           setSpeakers(responseSpeakers.data.data);
         } else {
@@ -75,7 +76,7 @@ const EditCourseDetail = () => {
         }
 
         // Fetch industries and set the state
-        const responseIndustries = await axios.get('http://localhost:8000/api/industry');
+        const responseIndustries = await http.get('/industry');
         if (responseIndustries.status === 200) {
           setIndustries(responseIndustries.data);
         } else {
@@ -110,7 +111,7 @@ const EditCourseDetail = () => {
       data.append('date', course.Date);
       data.append('fields', JSON.stringify(sellingOptions));
 
-      const response = await axios.put(`http://localhost:8000/api/update/${course_id}`, data);
+      const response = await http.post(`/update/${course_id}`, data);
 
       if (response.status === 200) {
         console.log('Course updated successfully!');
@@ -148,7 +149,7 @@ const EditCourseDetail = () => {
                   ))}
                 </select>
               </div>
-            </div>
+            </div><br/>
             <div className="row">
               <div className="col-2">
                 <label>Speaker</label>
@@ -166,7 +167,7 @@ const EditCourseDetail = () => {
                   ))}
                 </select>
               </div>
-            </div>
+            </div><br/>
             <div className="row">
               <div className="col-2">
                 <label>Name</label>
@@ -202,7 +203,7 @@ const EditCourseDetail = () => {
                   value={course.Description}
                 />
               </div>
-            </div>
+            </div><br/>
 
             <div className='row'>
               <div className='col-2 mt-4'>
@@ -224,7 +225,7 @@ const EditCourseDetail = () => {
                 />
               </div>
             </div>
-
+            <br/>
             <div className="row">
               <div className="col-2">
                 <label> Duration</label>
@@ -240,7 +241,7 @@ const EditCourseDetail = () => {
               </div>
             </div>
 
-
+            <br/>
 
             <div className="row">
               <div className="col-2">
@@ -256,7 +257,7 @@ const EditCourseDetail = () => {
                 />
               </div>
             </div>
-
+            <br/>
             <div className="row">
               <div className="col-2">
                 <label>Date</label>
@@ -271,7 +272,7 @@ const EditCourseDetail = () => {
                 />
               </div>
             </div>
-
+            <br/>
             {/* ... rest of the form ... */}
             <div className='row'>
               <div className='col-2'>

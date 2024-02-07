@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import axios from 'axios';
+// import Dropify from 'dropify';
 import { useNavigate } from 'react-router';
+import http from "../../../utils/http-client";
 
 const modules = {
     toolbar: [
@@ -20,6 +22,30 @@ const modules = {
 };
 
 export default function AddCourse() {
+    const [slug, setSlug] = useState('');
+
+    // Function to generate URL slug from the title
+    const generateSlug = (input) => {
+        return input
+            .toLowerCase()
+            .replace(/[^a-z0-9]/g, '-') // Replace non-alphanumeric characters with dashes
+            .replace(/-+/g, '-') // Replace multiple dashes with a single dash
+            .replace(/^-|-$/g, ''); // Trim dashes from start and end
+    };
+
+    // Event handler for title input change
+    const handleTitleChange = (event) => {
+        const newTitle = event.target.value;
+        // setTitle(newTitle);
+        setCourse((previous) => ({
+            ...previous,
+            Name: newTitle
+        }));
+        const newSlug = generateSlug(newTitle);
+        setSlug(newSlug);
+    };
+
+
     const [formFields, setFormFields] = useState([
         { category: '', name: '', price: '' },
     ]);
@@ -140,16 +166,16 @@ export default function AddCourse() {
         //     ['l3', rc],
         // ]);
 
-    //    console.log(newMap);
-    //     var res = arr.get('key2');
-    //     console.log(res);
+        //    console.log(newMap);
+        //     var res = arr.get('key2');
+        //     console.log(res);
 
         console.log("Pussing data")
         // console.log(l1)
 
         //console.log(sellingOptions)
 
-        let selling = sellingOptions.map((ele) => ({ 
+        let selling = sellingOptions.map((ele) => ({
             id: ele.id,
             category: ele.selling_category,
             name: ele.name,
@@ -166,9 +192,10 @@ export default function AddCourse() {
         data.append('cstdate', Course.CSTDate);
         data.append('fields', JSON.stringify(selling));
         data.append('file', filedata);
-        console.log(data,'data');
-        axios.post('http://localhost:8000/api/Course_add', data)
-        
+        data.append('slug', slug);
+        console.log(data, 'data');
+        http.post('/Course_add', data)
+
             .then(response => {
                 if (response.status === 200) {
                     console.log('Course added successfully!');
@@ -190,7 +217,7 @@ export default function AddCourse() {
                     <div className="row">
                         <div className="col-12 p-4">
                             <h4 className="text-center mt-2">Add New Course</h4>
-                            <form>
+                            <form className='shadow p-5 bg-light '>
                                 <div className='row'>
                                     <div className='col-2'>
                                         <label>Industry</label>
@@ -208,7 +235,7 @@ export default function AddCourse() {
                                             ))}
                                         </select>
                                     </div>
-                                </div>
+                                </div><br />
                                 <div className='row'>
                                     <div className='col-2'>
                                         <label>Speaker</label>
@@ -226,26 +253,48 @@ export default function AddCourse() {
                                             ))}
                                         </select>
                                     </div>
-                                </div>
+                                </div><br />
                                 <div className='row'>
                                     <div className='col-2'>
                                         <label>Name</label>
                                     </div>
                                     <div className='col'>
                                         <input
-                                            onChange={(e) => {
-                                                setCourse((previous) => ({
-                                                    ...previous,
-                                                    Name: e.target.value
-                                                }))
-                                            }}
+                                            // onChange={(e) => {
+                                            //     setCourse((previous) => ({
+                                            //         ...previous,
+                                            //         Name: e.target.value
+                                            //     }))
+                                            // }}
+                                            onChange={handleTitleChange}
                                             type="text"
                                             name='courseName'
                                             className="form-control"
                                             placeholder="Course Name"
                                         />
                                     </div>
-                                </div>
+                                </div><br />
+                                <div className='row'>
+                                    <div className='col-2'>
+                                        <label>Url</label>
+                                    </div>
+                                    <div className='col'>
+
+                                        <div className="input-group">
+                                            <div className="input-group-prepend">
+                                                <div className="input-group-text">http://localhost:3000/course</div>
+                                            </div>
+                                            <input
+                                                type="text"
+                                                id="url"
+                                                className="form-control"
+                                                value={slug}
+                                                readOnly
+                                                placeholder="Course Name"
+                                            />
+                                        </div>
+                                    </div>
+                                </div><br />
                                 <div className='row'>
                                     <div className='col-2'>
                                         <label>Description</label>
@@ -266,7 +315,7 @@ export default function AddCourse() {
                                             }}
                                         />
                                     </div>
-                                </div>
+                                </div><br />
                                 <div className='row'>
                                     <div className='col-2 mt-4'>
                                         <label>Thumbnail</label>
@@ -276,11 +325,33 @@ export default function AddCourse() {
                                             onChange={(e) => { setFiledata(e.target.files[0]) }}
                                             type="file"
                                             name='thumbnail'
-                                            className="form-control"
+                                            className="dropify"
                                             id="customFile"
                                         />
+
+                                        {/* <Dropify
+                                            onChange={(e) => { setFiledata(e.target.files[0]) }} name='thumbnail' id="customFile"
+                                            maxFileSize={2}
+                                            allowedFileFormats={['portrait', 'square']}
+                                            maxFileHeight={2000}
+                                            style={{
+                                                border: '1px solid #ced4da',
+                                                borderRadius: '.25rem',
+                                                padding: '.375rem .75rem',
+                                                fontSize: '1rem',
+                                                lineHeight: '1.5',
+                                                color: '#495057',
+                                                backgroundColor: '#fff',
+                                                backgroundClip: 'padding-box',
+                                                boxShadow: 'none',
+                                                cursor: 'pointer',
+                                            }}
+                                        /> */}
+
+
+
                                     </div>
-                                </div>
+                                </div><br />
                                 <div className='row'>
                                     <div className='col-2'>
                                         <label>Duration</label>
@@ -299,7 +370,7 @@ export default function AddCourse() {
                                             placeholder="Duration"
                                         />
                                     </div>
-                                </div>
+                                </div><br />
                                 <div className='row'>
                                     <div className='col-2'>
                                         <label>CST Date</label>
@@ -317,7 +388,7 @@ export default function AddCourse() {
                                             className="form-control"
                                         />
                                     </div>
-                                </div>
+                                </div><br />
                                 <div className='row'>
                                     <div className='col-2'>
                                         <label>Time</label>
@@ -335,13 +406,13 @@ export default function AddCourse() {
                                             className="form-control"
                                         />
                                     </div>
-                                </div>
+                                </div><br />
                                 <div className='row'>
                                     <div className='col-2'>
                                         <label>Selling Option</label>
                                     </div>
                                     <div className='col'>
-                                        <table className='table table-active table-hover'>
+                                        <table className='table  table-striped table-light shadow  table-hover'>
                                             <thead>
                                                 <tr className='fw-bold'>
                                                     <td></td>
@@ -370,23 +441,23 @@ export default function AddCourse() {
                                 </center>
                             </form>
                             <div className="modal" tabIndex="-1" role="dialog" style={{ display: showSuccessModal ? 'block' : 'none' }}>
-            <div className="modal-dialog" role="document">
-              <div className="modal-content">
-                <div className="modal-header">
-                  <h5 className="modal-title">Success!</h5>
-                  <button type="button" className="close" onClick={() => setShowSuccessModal(false)} aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                </div>
-                <div className="modal-body">
-                  Course updated successfully!
-                </div>
-                <div className="modal-footer">
-                  <button type="button" className="btn btn-primary" onClick={() => setShowSuccessModal(false)}>Close</button>
-                </div>
-              </div>
-            </div>
-          </div>
+                                <div className="modal-dialog" role="document">
+                                    <div className="modal-content">
+                                        <div className="modal-header">
+                                            <h5 className="modal-title">Success!</h5>
+                                            <button type="button" className="close" onClick={() => setShowSuccessModal(false)} aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div className="modal-body">
+                                            Course updated successfully!
+                                        </div>
+                                        <div className="modal-footer">
+                                            <button type="button" className="btn btn-primary" onClick={() => setShowSuccessModal(false)}>Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

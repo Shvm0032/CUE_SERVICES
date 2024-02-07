@@ -2,12 +2,13 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { jsPDF } from "jspdf";
 import 'jspdf-autotable'
+import http from "../../utils/http-client";
 
 export default function Index() {
     var [Subscribe, setSubscribe] = useState([]);
     var getData = async () => {
         try {
-            var res = await axios.get("http://localhost:8000/api/Subscribe");
+            var res = await http.get("/Subscribe");
             console.log(res);
             setSubscribe(res.data);
         } catch (error) {

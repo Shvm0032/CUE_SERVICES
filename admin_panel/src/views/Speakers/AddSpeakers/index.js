@@ -3,6 +3,7 @@ import ReactQuill from 'react-quill';
 import axios from 'axios';
 import 'react-quill/dist/quill.snow.css';
 import { useNavigate } from 'react-router';
+import http from "../../../utils/http-client";
 
 const modules = {
   toolbar: [
@@ -44,7 +45,7 @@ export default function AddSpeakers() {
     data.append('bio', formValue.bio);
     data.append("file", filedata);
 
-    axios.post('http://localhost:8000/api/Speaker_add', data)
+    http.post('/Speaker_add', data)
       .then(response => {
         console.log(response.data);
         setReturnMessage(response.data.message);

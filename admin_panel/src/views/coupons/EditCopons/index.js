@@ -3,6 +3,7 @@ import { useParams, useHistory, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
+import http from "../../../utils/http-client";
 
 
 
@@ -26,7 +27,7 @@ const EditCopons = () => {
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
-    axios.get(`http://localhost:8000/api/cu_edit/${id}`)
+    http.get(`/cu_edit/${id}`)
       .then((res) => {
         const data = res.data[0];
         if (data) {
@@ -66,7 +67,7 @@ const EditCopons = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.put(`http://localhost:8000/api/update_Coupon/${id}`, coupon);
+      const response = await http.put(`/update_Coupon/${id}`, coupon);
       console.log(response.data);
 
       setSuccessMessage('Coupon updated successfully');
@@ -79,7 +80,10 @@ const EditCopons = () => {
   return (
     <div>
       <h2>Edit Coupons</h2>
-      <div className="container">
+      <div className="container my-4">
+        <div className='row'>
+          <div className='col-md-3'></div>
+          <div className='col-md-6 shadow p-2 bg-light z-index ' style={{height:"auto"}}>
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
             <label className="form-label">Coupon Code</label>
@@ -145,6 +149,8 @@ const EditCopons = () => {
             Update
           </button>
         </form>
+        </div>
+        </div>
       </div>
 
       {/* Modal for success message */}

@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom'; // Import the useHistory hook
 import './Login.css'; // Import the CSS file
+import http from "../../../utils/http-client";
 
 const AdminLoginForm = () => {
   const [username, setUsername] = useState('');
@@ -21,7 +22,7 @@ const AdminLoginForm = () => {
     event.preventDefault();
 
     try {
-      const response = await axios.post('http://localhost:8000/api/admin_login', {
+      const response = await http.post('/admin_login', {
         username,
         password,
       });

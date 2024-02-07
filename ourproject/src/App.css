@@ -57,9 +57,9 @@ p {
   font-size: 18px !important;
 }
 
-li {
+/* li {
   list-style: none;
-}
+} */
 
 @keyframes fadeInUp {
   0% {

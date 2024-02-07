@@ -3,13 +3,14 @@ import axios from 'axios';
 import { jsPDF } from "jspdf";
 import 'jspdf-autotable'
 import { Link } from 'react-router-dom';
+import http from "../../../utils/http-client";
 
 
 export default function AllSpeakers() {
   var [speakers, setSpeakers] = useState([]);
   var getData = async () => {
     try {
-      var res = await axios.get("http://localhost:8000/api/Speaker");
+      var res = await http.get("/Speaker");
       console.log(res);
       setSpeakers(res.data.data);
     } catch (error) {
@@ -25,7 +26,7 @@ export default function AllSpeakers() {
     console.log("hii")
     console.log(r)
     try {
-      var res = await axios.delete(`http://localhost:8000/api/delete_speaker?id=${r.speaker_id}`);
+      var res = await http.delete(`/delete_speaker?id=${r.speaker_id}`);
       console.log(res);
       if (res.status === 200) {
         setSpeakers(speakers.filter((ele) => { if (ele.speaker_id !== r.speaker_id) { return true } else { return false } }))
@@ -44,7 +45,7 @@ export default function AllSpeakers() {
     })
     doc.save("data.pdf");
   }
-  
+
   return (
     <div>
       <section>
@@ -54,61 +55,71 @@ export default function AllSpeakers() {
             <button onClick={exportPdf} className='ms-auto btn btn-outline-primary'><i className="fa-solid fa-file-pdf"></i> Convert to pdf</button>
           </div><br />
           {speakers.length > 0 ? (
-            <table className="table table-striped table-hover table-responsive shadow" id='my-table'>
-              <thead>
-                <tr className='table-dark'>
-                  <th scope="col">#</th>
-                  <th scope="col">Name</th>
-                  <th scope="col">Email</th>
-                  <th scope="col">phone_no</th>
+            <div style={{ height: '60vh', overflowY: 'auto' }}>
+              <table className="table table-striped table-hover table-responsive shadow  table-scroll text-center" id='my-table'>
+                <thead>
+                  <tr className='table-dark'>
+                    {/* <th scope="col">#</th> */}
+                    <th scope="col">Name</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">phone_no</th>
 
-                {/*  <th scope="col">Bio</th>*/}
-                  {/* <th scope="col">Designation</th>*/}
+                    {/*  <th scope="col">Bio</th>*/}
+                    {/* <th scope="col">Designation</th>*/}
 
-                  {/* <th scope="col">Bio</th> */}
-                  <th scope="col">Designation</th>
+                    {/* <th scope="col">Bio</th> */}
+                    <th scope="col">Designation</th>
 
-                  <th scope="col">Experience</th>
-                  <th scope="col">Image</th>
-                  {/* <th scope="col">Resume</th> */}
-                  <th scope="col">Status</th>
-                  <th scope="col">Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {speakers.map((row, index) => (
-                  <tr key={index}>
-                    <th >{row.id}</th>
-                    <td>{row.name}</td>
-                    <td>{row.email}</td>
-                    <td>{row.phone_no}</td>
+                    {/* <th scope="col">Experience</th> */}
+                    {/* <th scope="col">Image</th> */}
+                    {/* <th scope="col">Resume</th> */}
+                    {/* <th scope="col">Status</th> */}
+                    <th scope="col">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {speakers.map((row, index) => (
+                    <tr key={index}>
+                      {/* <th >{row.id}</th> */}
+                      <td>{row.name}</td>
+                      <td>{row.email}</td>
+                      <td>{row.phone_no}</td>
 
-                    {/* <td>{row.bio}</td>*/}
+                      {/* <td>{row.bio}</td>*/}
                       {/* <td>{row.designation}</td>*/}
 
-                    {/* <td>{row.bio}</td> */}
-                    <td>{row.designation}</td>
+                      {/* <td>{row.bio}</td> */}
+                      <td>{row.designation}</td>
 
-                    <td>{row.experience}</td>
-                    <td>{row.images}</td>
-                    {/* <td>{row.resume}</td> */}
-                    <td>{row.status}</td>
-                    <td>
-                      <button type="submit" onClick={() => deleteFunc(row)} className="btn btn-outline-danger">
+                      {/* <td>{row.experience}</td> */}
+                      {/* <td>{row.images}</td> */}
+                      {/* <td>{row.resume}</td> */}
+                      {/* <td>{row.status}</td> */}
+                      <td>
+                        {/* <button type="submit" onClick={() => deleteFunc(row)} className="btn btn-outline-danger">
                         <i className="fa-solid fa-trash-can"></i>&nbsp;Delete
                       </button>
-                      &nbsp;&nbsp;
+                      &nbsp;&nbsp;&emsp;
                      <Link to= {`/Speakers/EditSpeakers/${row.speaker_id}`} className='btn btn-outline-success'>
                         <i className="fa fa-edit"></i>&nbsp;Edit
-                      </Link>
-                    </td>
-                  </tr>
+                      </Link> */}
 
-                ))}
+                        <button type="submit"  onClick={() => deleteFunc(row)} className="btn btn-outline-danger">
+                          <i className="fa-solid fa-trash-can"></i>&emsp;Delete
+                        </button>
+                        &nbsp;&nbsp;
+                        <Link to={`/Speakers/EditSpeakers/${row.speaker_id}`} className="btn btn-outline-success">
+                          <i className="fa fa-edit"></i>&nbsp;Edit
+                        </Link>
+                      </td>
+                    </tr>
 
-              </tbody>
+                  ))}
 
-            </table>
+                </tbody>
+
+              </table>
+            </div>
           ) : (
             <p>Loading data.....</p>
           )}

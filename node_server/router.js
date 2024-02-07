@@ -12,6 +12,7 @@ const dotenv = require('dotenv');
 const jwt = require('jsonwebtoken');
 const { json } = require("body-parser");
 const { sendEmail } = require("./lib/mail");
+const util = require('util');
 // const { Route } = require("react-browser-router");
 dotenv.config();
 
@@ -49,32 +50,39 @@ Router.use(express.static(path.join(__dirname, 'public')));
 // admin login
 
 Router.post('/api/admin_login', (req, res) => {
-    const { username, password } = req.body;
+    try {
+        const { username, password } = req.body;
 
-    // Basic validation
-    if (!username || !password) {
-        return res.status(400).json({ success: false, message: 'All fields are required' });
+        // Basic validation
+        if (!username || !password) {
+            return res.status(400).json({ success: false, message: 'All fields are required' });
+        }
+
+        const sqlQuery = "SELECT * FROM  admin_login  WHERE username = ? AND password = ?";
+        sqlDbconnect.query(sqlQuery, [req.body.username, req.body.password], (err, data) => {
+            if (err) {
+                console.error(err);
+                return res.status(500).json({ error: 'Internal Server Error' });
+            }
+            if (data.length > 0) {
+                req.session.user = data[0].username
+                return res.json({ status: "success" });
+            } else {
+                return res.json({ status: "No record Existed" });
+            }
+        });
     }
-
-    const sqlQuery = "SELECT * FROM  admin_login  WHERE username = ? AND password = ?";
-    sqlDbconnect.query(sqlQuery, [req.body.username, req.body.password], (err, data) => {
-        if (err) {
-            console.error(err);
-            return res.status(500).json({ error: 'Internal Server Error' });
-        }
-        if (data.length > 0) {
-            req.session.user = data[0].username
-            return res.json({ status: "success" });
-        } else {
-            return res.json({ status: "No record Existed" });
-        }
-    });
+    catch (err) {
+        console.log(err);
+        res.status(502).json({ error: 'Internal Server Error' });
+    }
 });
 
 
 
 // Login route
 Router.post('/api/getLogin', (req, res) => {
+    try{
     const { email, password } = req.body;
 
     // Basic validation
@@ -101,10 +109,16 @@ Router.post('/api/getLogin', (req, res) => {
             return res.json({ success: false, message: "No record Existed" });
         }
     });
+}
+catch (err) {
+    console.log(err);
+    res.status(502).json({ error: 'Internal Server Error' });
+}
 });
 
 
 Router.post('/api/logout', (req, res) => {
+    try{
     // Destroy the session
     req.session.destroy(err => {
         if (err) {
@@ -115,9 +129,15 @@ Router.post('/api/logout', (req, res) => {
         // Respond with success
         return res.json({ success: true, message: 'Logout successful' });
     });
+}
+catch (err) {
+    console.log(err);
+    res.status(502).json({ error: 'Internal Server Error' });
+}
 });
 
 Router.get('/Dashboard', (req, res) => {
+    try{
     // Check if the user is authenticated (session exists)
     if (req.session && req.session.user) {
         // Render your dashboard page or send a response indicating success
@@ -126,6 +146,11 @@ Router.get('/Dashboard', (req, res) => {
         // Redirect to the login page if the user is not authenticated
         return res.redirect('/login');
     }
+}
+catch (err) {
+    console.log(err);
+    res.status(502).json({ error: 'Internal Server Error' });
+}
 });
 
 Router.get("/", (req, res) => {
@@ -134,6 +159,7 @@ Router.get("/", (req, res) => {
 });
 
 Router.get("/api/Course", (req, res) => {
+    try{
     sqlDbconnect.query("select * from  course_detail", (err, rows) => {
         console.log(rows)
         if (!err) {
@@ -142,9 +168,15 @@ Router.get("/api/Course", (req, res) => {
             console.log(err);
         }
     });
+}
+catch (err) {
+    console.log(err);
+    res.status(502).json({ error: 'Internal Server Error' });
+}
 });
 
 Router.delete("/api/delete_course", (req, res) => {
+    try{
     console.log(req.query.id, "<<>>")
     sqlDbconnect.query(`DELETE FROM course_detail WHERE id = "${req.query.id}"`, (err, rows) => {
         if (!err) {
@@ -160,9 +192,15 @@ Router.delete("/api/delete_course", (req, res) => {
             console.log(err);
         }
     });
+}
+catch (err) {
+    console.log(err);
+    res.status(502).json({ error: 'Internal Server Error' });
+}
 });
 
 Router.get('/api/coursesData', (req, res) => {
+    try{
     const query = `SELECT * FROM course_detail LEFT OUTER JOIN speaker_info ON course_detail.speaker = speaker_info.speaker_id;`;
 
     sqlDbconnect.query(query, (error, results) => {
@@ -174,14 +212,19 @@ Router.get('/api/coursesData', (req, res) => {
 
         }
     });
+}
+catch (err) {
+    console.log(err);
+    res.status(502).json({ error: 'Internal Server Error' });
+}
 });
 
 
 
-Router.post("/api/Course_add", upload.single("file"), (req, res) => {
+Router.post("/api/Course_add", upload.single("file"), async (req, res) => {
     try {
         console.log(req.body, 'req.body');
-        const { industry, speaker, name, description, duration, time, cstdate, fields } = req.body;
+        const { industry, speaker, name, description, duration, time, cstdate, fields, slug } = req.body;
         const filename = req.file.filename; // Assuming your file is uploaded correctly
         const fieldsData = JSON.parse(fields);
         console.log(fieldsData, 'fieldsData');
@@ -194,45 +237,56 @@ Router.post("/api/Course_add", upload.single("file"), (req, res) => {
         }));
         // sellingOptions = JSON.stringify(sellingOptions);
         // Inserting data into the database, including the new selling_option column
-        sqlDbconnect.query(`INSERT INTO course_detail (industries, speaker, description, title, date, time, duration, course_thumbail, selling_option) VALUES ('${industry}','${speaker}','${description}','${name}','${cstdate}','${time}', '${duration}', '${filename}', '${JSON.stringify(sellingOptions)}')`, (err, rows) => {
-            if (!err) {
-                console.log(rows)
-                // Fetching the inserted row including selling_option
-                sqlDbconnect.query(`SELECT * FROM course_detail WHERE id = ${rows.insertId}`, (err, fetchedRow) => {
-                    if (!err) {
-                        const fetchedSellingOptions = JSON.parse(fetchedRow[0].selling_option);
-                        // Sending response to the client
-                        res.status(200).json({ message: 'Course added successfully', rows, fetchedSellingOptions });
-                    } else {
-                        console.log(err);
-                        res.status(500).json({ error: 'Internal Server Error' });
-                    }
-                });
-            } else {
-                console.log(err);
-                res.status(500).json({ error: 'Internal Server Error' });
-            }
+        const insertQuery = `INSERT INTO course_detail (industries, speaker,title, description, date, time, duration, course_thumbail, selling_option,slug) 
+                             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+        const insertValues = [industry, speaker, name, description, cstdate, time, duration, filename, JSON.stringify(sellingOptions), slug];
+        
+        const rows = await new Promise((resolve, reject) => {
+            sqlDbconnect.query(insertQuery, insertValues, (err, result) => {
+                if (err) reject(err);
+                resolve(result);
+            });
         });
 
+        console.log(rows)
+        // Fetching the inserted row including selling_option
+        const fetchedRow = await new Promise((resolve, reject) => {
+            sqlDbconnect.query(`SELECT * FROM course_detail WHERE id = ?`, [rows.insertId], (err, result) => {
+                if (err) reject(err);
+                resolve(result);
+            });
+        });
+
+        const fetchedSellingOptions = JSON.parse(fetchedRow[0].selling_option);
+        // Sending response to the client
+        res.status(200).json({ message: 'Course added successfully', rows, fetchedSellingOptions });
     } catch (err) {
         console.log(err);
-        res.status(500).json({ error: 'Internal Server Error' });
+        res.status(502).json({ error: 'Internal Server Error' });
     }
 });
 
 
 Router.get("/api/edit/:course_id", (req, res) => {
+    try{
     const id = req.params.course_id;
     const query = "SELECT * FROM course_detail WHERE id = ? AND status IN (?)";
     sqlDbconnect.query(query, [id, [1, 2]], (err, result) => {
         if (err) return res.json({ Error: err });
         return res.json(result);
     });
+}
+catch (err) {
+    console.log(err);
+    res.status(502).json({ error: 'Internal Server Error' });
+}
 
 });
 
 
 Router.put('/api/update/:course_id', upload.single('file'), async (req, res) => {
+    try {
+    
     const courseId = req.params.course_id;
     const { industry, speaker, title, description, duration, time, date, fields } = req.body;
     //const course_thumbnail = req.course_thumbnail ? req.course_thumbnail.buffer : null; // Assuming 'thumbnail' is the name of the file input in your form
@@ -251,7 +305,7 @@ Router.put('/api/update/:course_id', upload.single('file'), async (req, res) => 
         name: option.name,
         price: option.price
     }));
-    try {
+    
         await sqlDbconnect.query(updateCourseQuery, [
             industry,
             speaker,
@@ -280,7 +334,7 @@ Router.put('/api/update/:course_id', upload.single('file'), async (req, res) => 
         res.status(200).send('Course updated successfully!');
     } catch (error) {
         console.error('Error updating course:', error);
-        res.status(500).send('Internal Server Error');
+        res.status(502).send('Internal Server Error');
     }
 });
 
@@ -298,6 +352,7 @@ Router.put('/api/update/:course_id', upload.single('file'), async (req, res) => 
 
 
 Router.get("/api/Speaker", (req, res) => {
+    try{
     sqlDbconnect.query("SELECT * FROM speaker_info WHERE status IN (1,2)", (err, rows) => {
         if (!err) {
             return res.json({ success: true, data: rows, message: "you are logged in." });
@@ -307,9 +362,15 @@ Router.get("/api/Speaker", (req, res) => {
             console.log(err);
         }
     });
+}
+catch (error) {
+    console.error('Error updating course:', error);
+    res.status(502).send('Internal Server Error');
+}
 });
 
 Router.post("/api/Speaker_add", upload.single("file"), (req, res) => {
+    try{
     // insert data in contact form
     const username = req.body.name;
     const phone = req.body.phone;
@@ -335,10 +396,16 @@ Router.post("/api/Speaker_add", upload.single("file"), (req, res) => {
             res.status(500).json({ success: false, message: 'Internal Server Error' });
         }
     });
+}
+catch (error) {
+    console.error('Error updating course:', error);
+    res.status(502).send('Internal Server Error');
+}
 });
 
 
 Router.delete("/api/delete_speaker", (req, res) => {
+    try{
     console.log(req.query.id, "<<>>")
     sqlDbconnect.query(`DELETE FROM speaker_info WHERE speaker_id = "${req.query.id}"`, (err, rows) => {
         if (!err) {
@@ -347,12 +414,18 @@ Router.delete("/api/delete_speaker", (req, res) => {
             console.log(err);
         }
     });
+}
+catch (error) {
+    console.error('Error updating course:', error);
+    res.status(502).send('Internal Server Error');
+}
 })
 
 
 
 // edit speaker
 Router.get("/api/speaker/edit/:speaker_id", (req, res) => {
+    try{
     const id = req.params.speaker_id;
     console.log(id, 'id');
     const query = "SELECT * FROM speaker_info WHERE speaker_id = ? AND status IN (?)";
@@ -360,12 +433,18 @@ Router.get("/api/speaker/edit/:speaker_id", (req, res) => {
         if (err) return res.json({ Error: err });
         return res.json(result);
     });
+}
+catch (error) {
+    console.error('Error updating course:', error);
+    res.status(502).send('Internal Server Error');
+}
 
 });
 
 
 
 Router.get("/api/profile", (req, res) => {
+    try{
     let token = req.headers.authorization;
     if (token && token.startsWith('Bearer ')) {
         token = token.slice(7, token.length);
@@ -388,11 +467,17 @@ Router.get("/api/profile", (req, res) => {
         console.log(result);
         return res.json(result);
     });
+}
+catch (error) {
+    console.error('Error updating course:', error);
+    res.status(502).send('Internal Server Error');
+}
 
 });
 
 // update speaker
 Router.put('/api/update_speaker/:speaker_id', upload.single('image'), async (req, res) => {
+    try{
     const { speaker_id } = req.params;
     const { name, email, phone_no, bio, designation, experience } = req.body;
 
@@ -424,6 +509,11 @@ Router.put('/api/update_speaker/:speaker_id', upload.single('image'), async (req
             res.status(200).json({ success: true, message: 'Speaker updated successfully' });
         }
     );
+}
+catch (error) {
+    console.error('Error updating course:', error);
+    res.status(502).send('Internal Server Error');
+}
 });
 
 
@@ -434,6 +524,7 @@ Router.put('/api/update_speaker/:speaker_id', upload.single('image'), async (req
 
 
 Router.post('/api/check-coupon', (req, res) => {
+    try{
     const { couponCode } = req.body;
 
     // Query the database to check if the coupon code exists
@@ -456,12 +547,17 @@ Router.post('/api/check-coupon', (req, res) => {
             }
         }
     );
+}
+catch (error) {
+    console.error('Error updating course:', error);
+    res.status(502).send('Internal Server Error');
+}
 });
 
 
 
 Router.get("/api/Coupan", (req, res) => {
-
+  try{
     sqlDbconnect.query("SELECT * FROM sales_promotion_coupon", (err, rows) => {
         if (!err) {
             res.send(rows);
@@ -469,10 +565,16 @@ Router.get("/api/Coupan", (req, res) => {
             console.log(err);
         }
     });
+}
+catch (error) {
+    console.error('Error updating course:', error);
+    res.status(502).send('Internal Server Error');
+}
 });
 
 // edit copon
 Router.get("/api/cu_edit/:id", (req, res) => {
+    try{
     const id = req.params.id;
     const query = "SELECT * FROM sales_promotion_coupon WHERE id = ?";
 
@@ -480,10 +582,16 @@ Router.get("/api/cu_edit/:id", (req, res) => {
         if (err) return res.json({ error: err.message });
         return res.json(result);
     });
+}catch (error) {
+    console.error('Error updating course:', error);
+    res.status(502).send('Internal Server Error');
+}
+
 });
 
 // update coppan
 Router.put('/api/update_Coupon/:id', (req, res) => {
+    try{
     const { id } = req.params;
     const { coupon_code, discount, start_date, expire_date, coupons_status, coupons_limit } = req.body;
 
@@ -509,10 +617,16 @@ Router.put('/api/update_Coupon/:id', (req, res) => {
             res.status(200).json({ success: true, message: 'Coupon updated successfully' });
         }
     );
+}
+catch (error) {
+    console.error('Error updating course:', error);
+    res.status(502).send('Internal Server Error');
+}
 });
 
 // delet coopan
 Router.delete("/api/delete_Coupans", (req, res) => {
+    try{
     console.log(req.query.id, "<<>>")
     sqlDbconnect.query(`DELETE FROM sales_promotion_coupon WHERE id = "${req.query.id}"`, (err, rows) => {
         if (!err) {
@@ -521,9 +635,15 @@ Router.delete("/api/delete_Coupans", (req, res) => {
             console.log(err);
         }
     });
+}
+catch (error) {
+    console.error('Error updating course:', error);
+    res.status(502).send('Internal Server Error');
+}
 })
 
 Router.post('/api/InsertCoupons', (req, res) => {
+    try{
     const { couponName, discountType, startDate, expiryDate, coupanlimit, status } = req.body;
 
     sqlDbconnect.query('INSERT INTO sales_promotion_coupon (coupon_code,discount,start_date,expire_date,coupons_limit,coupons_status)VALUES (?, ?, ?, ?,?, ?)',
@@ -536,6 +656,11 @@ Router.post('/api/InsertCoupons', (req, res) => {
                 res.json({ message: 'Form data received and stored successfully' });
             }
         });
+    }
+    catch (error) {
+        console.error('Error updating course:', error);
+        res.status(502).send('Internal Server Error');
+    }
 });
 
 
@@ -544,6 +669,8 @@ Router.post('/api/InsertCoupons', (req, res) => {
 
 
 Router.get("/api/Industary", (req, res) => {
+    try{
+    
     sqlDbconnect.query("SELECT * FROM industry", (err, rows) => {
         if (!err) {
             res.send(rows);
@@ -551,9 +678,15 @@ Router.get("/api/Industary", (req, res) => {
             console.log(err);
         }
     });
+}
+catch (error) {
+    console.error('Error updating course:', error);
+    res.status(502).send('Internal Server Error');
+}
 });
 
 Router.post("/api/Industary_add", upload.single("file"), (req, res) => {
+    try{
     // insert data in contact form
     const industry_name = req.body.industry_name;
     const filename = req.file.filename; // Assuming you are trying to get the uploaded file name
@@ -572,6 +705,11 @@ Router.post("/api/Industary_add", upload.single("file"), (req, res) => {
             }
         }
     );
+}
+catch (error) {
+    console.error('Error updating course:', error);
+    res.status(502).send('Internal Server Error');
+}
 });
 
 
@@ -602,7 +740,7 @@ Router.put('/api/update_industry/:id', upload.single('image'), (req, res) => {
         });
     } catch (error) {
         console.error('Error updating industry:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
+        res.status(502).json({ error: 'Internal Server Error' });
     }
 });
 
@@ -611,6 +749,7 @@ Router.put('/api/update_industry/:id', upload.single('image'), (req, res) => {
 // start faq category
 
 Router.get("/api/Faq_Category", (req, res) => {
+    try{
     sqlDbconnect.query("SELECT * FROM faq_category", (err, rows) => {
         if (!err) {
             res.send(rows);
@@ -618,6 +757,11 @@ Router.get("/api/Faq_Category", (req, res) => {
             console.log(err);
         }
     });
+}
+catch (error) {
+    console.error('Error updating industry:', error);
+    res.status(502).json({ error: 'Internal Server Error' });
+}
 });
 
 
@@ -626,6 +770,7 @@ Router.get("/api/Faq_Category", (req, res) => {
 // edit faq category
 
 Router.post('/api/Add_Category', (req, res) => {
+    try{
     const { category } = req.body;
 
     // Check if category is provided
@@ -643,6 +788,11 @@ Router.post('/api/Add_Category', (req, res) => {
             return res.json({ success: true, message: 'Data inserted successfully' });
         }
     });
+}
+catch (error) {
+    console.error('Error updating industry:', error);
+    res.status(502).json({ error: 'Internal Server Error' });
+}
 });
 
 // update category
@@ -671,7 +821,7 @@ Router.put('/api/Update_Category/:id', (req, res) => {
         });
     } catch (error) {
         console.error('Error updating category:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
+        res.status(502).json({ error: 'Internal Server Error' });
     }
 });
 
@@ -683,6 +833,7 @@ Router.put('/api/Update_Category/:id', (req, res) => {
 // start faq question
 
 Router.get("/api/Faq_Question", (req, res) => {
+    try{
     sqlDbconnect.query("SELECT * FROM faq", (err, rows) => {
         if (!err) {
             res.send(rows);
@@ -690,10 +841,15 @@ Router.get("/api/Faq_Question", (req, res) => {
             console.log(err);
         }
     });
+}catch (error) {
+    console.error('Error updating category:', error);
+    res.status(502).json({ error: 'Internal Server Error' });
+}
 });
 
 
 Router.post('/api/Add_question', (req, res) => {
+    try{
     const { question, answer, category_id } = req.body;
 
 
@@ -707,10 +863,15 @@ Router.post('/api/Add_question', (req, res) => {
             return res.json({ success: true, message: 'Data inserted successfully' });
         }
     });
+    }catch (error) {
+        console.error('Error updating category:', error);
+        res.status(502).json({ error: 'Internal Server Error' });
+    }
 });
 
 // edit and update  question
 Router.put('/api/Update_Question/:id', (req, res) => {
+    try{
     const { category_id, question, answer } = req.body;
     const { id } = req.params;
     const sql = 'UPDATE faq SET category_id=?, question=?, answer=? WHERE id=?';
@@ -722,11 +883,17 @@ Router.put('/api/Update_Question/:id', (req, res) => {
             res.json({ success: true, message: 'Data updated successfully' });
         }
     });
+}
+catch (error) {
+    console.error('Error updating category:', error);
+    res.status(502).json({ error: 'Internal Server Error' });
+}
 });
 
 //   end faq question
 
 Router.get("/api/faq/Get", (req, res) => {
+    try{
 
     let sql = `SELECT * FROM faq_category LEFT OUTER JOIN faq ON faq_category.id = faq.category_id;`;
 
@@ -741,10 +908,16 @@ Router.get("/api/faq/Get", (req, res) => {
             console.log(err);
         }
     });
+}
+catch (error) {
+    console.error('Error updating category:', error);
+    res.status(502).json({ error: 'Internal Server Error' });
+}
 });
 
 // Function to transform the data
 function transformData(data) {
+   
     console.log(data, 'data');
     const transformedResult = [];
 
@@ -776,13 +949,15 @@ function transformData(data) {
         }
 
     }
-
-    return transformedResult;
+     return transformedResult;
+   
+    
 }
 
 
 
 Router.get("/api/Order_Details", (req, res) => {
+    try{
     sqlDbconnect.query("SELECT * FROM order_details", (err, rows) => {
         console.log(rows)
         if (!err) {
@@ -791,12 +966,18 @@ Router.get("/api/Order_Details", (req, res) => {
             console.log(err);
         }
     });
+}
+catch (error) {
+    console.error('Error updating category:', error);
+    res.status(502).json({ error: 'Internal Server Error' });
+}
 });
 
 
 // Selling_option
 
 Router.post('/api/AddSellingOption', (req, res) => {
+    try{
     const { category, name, price } = req.body;
 
     const sql = 'INSERT INTO selling_options (selling_category, name, price) VALUES (?, ?, ?)';
@@ -809,10 +990,16 @@ Router.post('/api/AddSellingOption', (req, res) => {
             res.json({ success: true, message: 'Data inserted successfully' });
         }
     });
+}
+catch (error) {
+    console.error('Error updating category:', error);
+    res.status(502).json({ error: 'Internal Server Error' });
+}
 });
 
 // Endpoint to get all selling options
 Router.get('/api/GetsellingOptions', (req, res) => {
+    try{
     const sql = 'SELECT * FROM selling_options';
     sqlDbconnect.query(sql, (err, result) => {
         if (err) {
@@ -822,12 +1009,18 @@ Router.get('/api/GetsellingOptions', (req, res) => {
             res.json(result);
         }
     });
+}
+catch (error) {
+    console.error('Error updating category:', error);
+    res.status(502).json({ error: 'Internal Server Error' });
+}
 });
 
 
 // edit selling coopan
 
 Router.get("/api/selling_edit/:id", (req, res) => {
+    try{
     const id = req.params.id;
     const query = "SELECT * FROM selling_options WHERE id = ?";
 
@@ -835,9 +1028,15 @@ Router.get("/api/selling_edit/:id", (req, res) => {
         if (err) return res.json({ error: err.message });
         return res.json(result);
     });
+}
+catch (error) {
+    console.error('Error updating category:', error);
+    res.status(502).json({ error: 'Internal Server Error' });
+}
 });
 
 Router.put('/api/update_option/:id', (req, res) => {
+    try{
     const { id } = req.params;
     const { selling_category, name, price } = req.body;
 
@@ -861,11 +1060,17 @@ Router.put('/api/update_option/:id', (req, res) => {
 
         res.status(200).json({ success: true, message: 'Selling option updated successfully' });
     });
+}
+catch (error) {
+    console.error('Error updating category:', error);
+    res.status(502).json({ error: 'Internal Server Error' });
+}
 });
 
 // end selling option
 
 Router.get("/api/Testimonial", (req, res) => {
+    try{
     sqlDbconnect.query("SELECT * FROM testimonial", (err, rows) => {
         if (!err) {
             res.send(rows);
@@ -873,9 +1078,15 @@ Router.get("/api/Testimonial", (req, res) => {
             console.log(err);
         }
     });
+}
+catch (error) {
+    console.error('Error updating category:', error);
+    res.status(502).json({ error: 'Internal Server Error' });
+}
 });
 
 Router.get("/api/Registration", (req, res) => {
+    try{
     sqlDbconnect.query("SELECT * FROM registration", (err, rows) => {
         if (!err) {
             res.send(rows);
@@ -883,11 +1094,17 @@ Router.get("/api/Registration", (req, res) => {
             console.log(err);
         }
     });
+}
+catch (error) {
+    console.error('Error updating category:', error);
+    res.status(502).json({ error: 'Internal Server Error' });
+}
 });
 // Endpoint for user registration
 
 
 Router.post('/api/NewRegistration', (req, res) => {
+    try{
     const { firstName, lastName, username, email, phone, gender, pincode, address1, address2, country, state, city, password } = req.body;
 
     // Basic validation
@@ -927,10 +1144,16 @@ Router.post('/api/NewRegistration', (req, res) => {
                 res.status(200).json({ success: true, message: 'Registration successful' });
             });
     });
+}
+catch (error) {
+    console.error('Error updating category:', error);
+    res.status(502).json({ error: 'Internal Server Error' });
+}
 });
 
 
 Router.get("/api/User_message", (req, res) => {
+    try{
     sqlDbconnect.query("SELECT * FROM user_message", (err, rows) => {
         if (!err) {
             res.send(rows);
@@ -938,9 +1161,15 @@ Router.get("/api/User_message", (req, res) => {
             console.log(err);
         }
     });
+}
+catch (error) {
+    console.error('Error updating category:', error);
+    res.status(502).json({ error: 'Internal Server Error' });
+}
 });
 
 Router.get("/api/User_message", (req, res) => {
+    try{
     sqlDbconnect.query("SELECT * FROM user_message", (err, rows) => {
         if (!err) {
             res.send(rows);
@@ -948,10 +1177,16 @@ Router.get("/api/User_message", (req, res) => {
             console.log(err);
         }
     });
+}
+catch (error) {
+    console.error('Error updating category:', error);
+    res.status(502).json({ error: 'Internal Server Error' });
+}
 });
 
 
 Router.post("/api/user_message", (req, res) => {
+    try{
 
     const username = req.body.username;
     const phone = req.body.phone;
@@ -966,10 +1201,16 @@ Router.post("/api/user_message", (req, res) => {
             console.log(err);
         }
     });
+}
+catch (error) {
+    console.error('Error updating category:', error);
+    res.status(502).json({ error: 'Internal Server Error' });
+}
 });
 
 
 Router.post("/api/add_user", (req, res) => {
+    try{
     console.log(req.body, "<<>>Body")
     let sql = `INSERT INTO user_info (company_name,name,email,password,number,city, job_profile, country, address, address2, state, pin_code, isActive) VALUES ("${req.body.CompanyName}", "${req.body.Name}", "${req.body.Email}", "", "${req.body.Phone}", "${req.body.City}", "${req.body.JobTitle}", "${req.body.Country}", "${req.body.Address1}", "${req.body.Address2}", "${req.body.State}", "${req.body.Zip}", "${0}")`
     sqlDbconnect.query(sql, (err, result) => {
@@ -981,10 +1222,16 @@ Router.post("/api/add_user", (req, res) => {
             res.status(500).json({ success: "There is some error" });
         }
     });
+}
+catch (error) {
+    console.error('Error updating category:', error);
+    res.status(502).json({ error: 'Internal Server Error' });
+}
 
 })
 
 Router.post("/api/course_added", (req, res) => {
+    try{
     console.log(req.body, "<<>>Body")
 
     let sql = `INSERT INTO courses_orders (course_id, customer_id, payment_status) VALUES ("${req.body.courseId}", "${req.body.userId}", "1")`
@@ -1052,6 +1299,11 @@ Router.post("/api/course_added", (req, res) => {
             res.status(500).json({ success: "There is some error" });
         }
     });
+}
+catch (error) {
+    console.error('Error updating category:', error);
+    res.status(502).json({ error: 'Internal Server Error' });
+}
 
 })
 
@@ -1116,7 +1368,7 @@ Router.post("/api/sending_email", (req, res) => {
             }
         })
     } catch (err) {
-        res.status(500).json({ message: "Error" })
+        res.status(502).json({ message: "Error" })
     }
 
 });
@@ -1124,6 +1376,7 @@ Router.post("/api/sending_email", (req, res) => {
 
 
 Router.post("/api/user_info", (req, res) => {
+    try{
 
     const username = req.body.username;
     const phone = req.body.phone;
@@ -1138,6 +1391,11 @@ Router.post("/api/user_info", (req, res) => {
             console.log(err);
         }
     });
+}
+catch (error) {
+    console.error('Error updating category:', error);
+    res.status(502).json({ error: 'Internal Server Error' });
+}
 });
 
 // profile editor//
@@ -1169,17 +1427,25 @@ Router.post('/api/save-image', async (req, res) => {
         });
     } catch (error) {
         console.error('Error processing image:', error);
-        res.status(500).send('Internal Server Error');
+        res.status(502).send('Internal Server Error');
     }
 });
 
 
-
+//Payment Success//
 Router.get("/api/payment_success", (req, res) => {
+    try{
     console.log(req.body, "<<<< Yaha")
     res.send("hi")
+}
+catch (error) {
+    console.error('Error processing image:', error);
+    res.status(502).send('Internal Server Error');
+}
 })
 
+
+//Industry//
 Router.get("/api/industry", (req, res) => {
     try {
         sqlDbconnect.query("SELECT * FROM industry", (err, result) => {
@@ -1189,11 +1455,14 @@ Router.get("/api/industry", (req, res) => {
                 console.log(err);
             }
         });
-    } catch (err) {
-
+    } catch (error) {
+        console.error('Error processing image:', error);
+        res.status(502).send('Internal Server Error');
     }
 })
 
+
+//Speakers//
 Router.get("/api/speaker", (req, res) => {
     try {
         sqlDbconnect.query("SELECT * FROM speaker_info", (err, result) => {
@@ -1203,18 +1472,16 @@ Router.get("/api/speaker", (req, res) => {
                 console.log(err);
             }
         });
-    } catch (err) {
-
+    } catch (error) {
+        console.error('Error processing image:', error);
+        res.status(502).send('Internal Server Error');
     }
 })
 
 
-
-
-
-
-
+//Subscribe//
 Router.get("/api/Subscribe", (req, res) => {
+    try{
     sqlDbconnect.query("select * from  subscribe", (err, rows) => {
         if (!err) {
             res.send(rows);
@@ -1222,10 +1489,17 @@ Router.get("/api/Subscribe", (req, res) => {
             console.log(err);
         }
     });
+}
+catch (error) {
+    console.error('Error processing image:', error);
+    res.status(502).send('Internal Server Error');
+}
 });
 
 
+//New Subscribe//
 Router.post('/api/NewSubscribe', (req, res) => {
+    try{
     const { email } = req.body;
 
     if (!email || !isValidEmail(email)) {
@@ -1257,14 +1531,23 @@ Router.post('/api/NewSubscribe', (req, res) => {
             res.status(200).json({ success: true, message: 'You have successfully subscribed for our Newsletter.' });
         });
     });
+}
+catch (error) {
+    console.error('Error processing image:', error);
+    res.status(502).send('Internal Server Error');
+}
 });
 
+
+//isvalid email//
 function isValidEmail(email) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
 }
 
+// Get Contact DEtails//
 Router.get("/api/GetContact_Details", (req, res) => {
+    try{
     sqlDbconnect.query("SELECT * FROM contact_details", (err, rows) => {
         if (!err) {
             res.send(rows);
@@ -1272,10 +1555,16 @@ Router.get("/api/GetContact_Details", (req, res) => {
             console.log(err);
         }
     });
+}
+catch (error) {
+    console.error('Error processing image:', error);
+    res.status(502).send('Internal Server Error');
+}
 });
 
-
+//Contact Details//
 Router.post("/api/Contact_Details", (req, res) => {
+    try{
 
     const username = req.body.name;
     const phone = req.body.phone;
@@ -1288,6 +1577,11 @@ Router.post("/api/Contact_Details", (req, res) => {
             console.log(err);
         }
     });
+}
+catch (error) {
+    console.error('Error processing image:', error);
+    res.status(502).send('Internal Server Error');
+}
 });
 
 
@@ -1301,6 +1595,7 @@ Router.post("/api/Contact_Details", (req, res) => {
 // Update Profile data
 
 Router.post('/api/updateprofile', (req, res) => {
+    try{
     let token = req.headers.authorization;
     if (token && token.startsWith('Bearer ')) {
         token = token.slice(7, token.length);
@@ -1326,18 +1621,17 @@ Router.post('/api/updateprofile', (req, res) => {
         console.log(req.body);
         res.status(200).json({ result, message: 'Profile updated successfully' });
     });
+}
+catch (error) {
+    console.error('Error processing image:', error);
+    res.status(502).send('Internal Server Error');
+}
 });
 
 
-
-
-
-
-
-
-
-// testing api
+// testing api//
 Router.get("/api/testing", async (req, res) => {
+    try{
     let emailObject = {
         user_name: 'nAVJOT',
         receiver: 'navjotsingh@yopmail.com',
@@ -1354,9 +1648,14 @@ Router.get("/api/testing", async (req, res) => {
         console.log(err);
         res.status(500).json({ response: 'no', error: 'Internal Server Error' });
     }
+}
+catch (error) {
+    console.error('Error processing image:', error);
+    res.status(502).send('Internal Server Error');
+}
 });
 
-
+//Get Order//
 Router.get("/api/Order/get", (req, res) => {
     try {
         let token = req.headers.authorization;
@@ -1376,14 +1675,13 @@ Router.get("/api/Order/get", (req, res) => {
                 console.log(err);
             }
         });
-    } catch (err) {
-        console.error('Error checking email:', error);
-        res.status(500).json({ error: 'Internal server error' });
-
+    } catch (error) {
+        console.error('Error processing image:', error);
+        res.status(502).send('Internal Server Error');
     }
 })
 
-const util = require('util');
+
 
 Router.get('/api/get_total_lengths', async (req, res) => {
     try {

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import http from "../../../utils/http-client";
 
 function Index() {
   const [questions, setQuestions] = useState([]);
@@ -15,11 +16,11 @@ function Index() {
   const getData = async () => {
     try {
       // Fetch FAQ categories
-      const categoriesResponse = await axios.get('http://localhost:8000/api/Faq_Category');
+      const categoriesResponse = await http.get('/Faq_Category');
       setFaqCategories(categoriesResponse.data);
 
       // Fetch FAQ questions
-      const questionsResponse = await axios.get('http://localhost:8000/api/Faq_Question');
+      const questionsResponse = await http.get('/Faq_Question');
       setQuestions(questionsResponse.data);
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -29,7 +30,7 @@ function Index() {
 
   const handleAddQuestion = async () => {
     try {
-      const response = await axios.post('http://localhost:8000/api/Add_Question', {
+      const response = await http.post('/Add_Question', {
         category_id: newCategory,
         question: newQuestion,
         answer: newAnswer,
@@ -64,7 +65,7 @@ function Index() {
 
   const handleUpdateQuestion = async () => {
     try {
-      const response = await axios.put(`http://localhost:8000/api/Update_Question/${editQuestion.id}`, {
+      const response = await http.put(`/Update_Question/${editQuestion.id}`, {
         category_id: newCategory,
         question: newQuestion,
         answer: newAnswer,
@@ -92,7 +93,7 @@ function Index() {
 
   const handleDeleteQuestion = async (questionId) => {
     try {
-      const response = await axios.delete(`http://localhost:8000/api/Delete_Question/${questionId}`);
+      const response = await http.delete(`/Delete_Question/${questionId}`);
 
       if (response.status === 200) {
         console.log('Data deleted successfully');
@@ -133,10 +134,11 @@ function Index() {
       <div className="container mt-4">
         <div className="row">
           <div className="col-md-12">
-            <table className="table table-striped">
+          <div style={{ height: '60vh', overflowY: 'auto' }}>
+            <table className="table table-border  table-striped table-hover table-light table-shadow table-scroll">
               <thead>
                 <tr>
-                  <th scope="col">#</th>
+                  {/* <th scope="col">#</th> */}
                   <th scope="col">Category_id</th>
                   <th scope="col">Question</th>
                   <th scope="col">Answer</th>
@@ -146,7 +148,7 @@ function Index() {
               <tbody>
                 {questions.map((question) => (
                   <tr key={question.id}>
-                    <td scope="row">{question.id}</td>
+                    {/* <td scope="row">{question.id}</td> */}
                     <td>{question.category_id}</td>
                     <td>{question.question}</td>
                     <td>{question.answer}</td>
@@ -172,6 +174,7 @@ function Index() {
                 ))}
               </tbody>
             </table>
+            </div>
           </div>
         </div>
       </div>
