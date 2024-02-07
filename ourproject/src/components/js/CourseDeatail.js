@@ -23,7 +23,7 @@ export default function CourseDetail() {
     const [selectedCourseId, setSelectedCourseId] = useState(null);
     console.log(cartItems)
     // ...
-    
+
 
     const getTime = () => {
         const time = Date.parse(deadline) - Date.now();
@@ -230,7 +230,7 @@ export default function CourseDetail() {
                                                 {/* course description page */}
                                                 {/* <ReactParser html={course.description} /> */}
                                                 {/* {parse(course.description)} */}
-                                               
+
                                                 {ReactHtmlParser(course.description)}
                                             </div>
                                         </div>

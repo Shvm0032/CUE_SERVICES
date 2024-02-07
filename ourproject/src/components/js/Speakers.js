@@ -3,7 +3,7 @@ import React, { useEffect, } from 'react';
 import { Link, } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchSpeakers } from '../../redux/speakerSlice';
-
+import logo from'../../assets/Logo.png';
 function Speakers() {
     const IMGurl = process.env.REACT_APP_IMG_URL;
     const dispatch = useDispatch();
@@ -47,7 +47,7 @@ function Speakers() {
 
                             {speakers.map((speaker) => (
 
-                                <div className="col-lg-4 mb-4" key={speaker.speaker_id} >
+                                <div className="col-lg-4 col-md-6 col-12 mb-4" key={speaker.speaker_id} >
                                     <div className='wrapper'>
                                         <Link to={`/speaker/${speaker?.speaker_id}`}>
                                             <div className='pcard'>
