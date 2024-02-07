@@ -275,7 +275,7 @@ export default function AddCourse() {
                                     </div>
                                 </div><br />
                                 <div className='row'>
-                                <div className='col-2'>
+                                    <div className='col-2'>
                                         <label>Url</label>
                                     </div>
                                     <div className='col'>

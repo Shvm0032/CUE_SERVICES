@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { addToCart } from '../../redux/cartSlice';
-import parse from 'html-react-parser';
+import ReactHtmlParser from 'html-react-parser';
 import { selectCartItems } from '../../redux/cartSlice';
 import { Toaster, toast } from 'react-hot-toast';
 
@@ -23,6 +23,7 @@ export default function CourseDetail() {
     const [selectedCourseId, setSelectedCourseId] = useState(null);
     console.log(cartItems)
     // ...
+    
 
     const getTime = () => {
         const time = Date.parse(deadline) - Date.now();
@@ -227,7 +228,10 @@ export default function CourseDetail() {
                                         <div className='row p-2  fs-5'>
                                             <div className='col-12 p-3 mt-2' style={{ textAlign: 'justify' }} >
                                                 {/* course description page */}
-                                                {parse(course.description)}
+                                                {/* <ReactParser html={course.description} /> */}
+                                                {/* {parse(course.description)} */}
+                                               
+                                                {ReactHtmlParser(course.description)}
                                             </div>
                                         </div>
                                     </div>
@@ -242,7 +246,7 @@ export default function CourseDetail() {
                                                     <h4 className='my-2'>{course.name}</h4>
                                                     <h6 className='my-1'>Speaker</h6>
                                                     <p className=' text-dark'>
-                                                        {parse(course.bio)}
+                                                        {/* {parse(course.bio)} */}
                                                     </p>
                                                 </div>
                                                 <div className='d-flex gap-2 p-'>
