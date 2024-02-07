@@ -221,10 +221,10 @@ catch (err) {
 
 
 
-Router.post("/api/Course_add", upload.single("file"), (req, res) => {
+Router.post("/api/Course_add", upload.single("file"), async (req, res) => {
     try {
         console.log(req.body, 'req.body');
-        const { industry, speaker, name, description, duration, time, cstdate, fields } = req.body;
+        const { industry, speaker, name, description, duration, time, cstdate, fields, slug } = req.body;
         const filename = req.file.filename; // Assuming your file is uploaded correctly
         const fieldsData = JSON.parse(fields);
         console.log(fieldsData, 'fieldsData');
@@ -237,26 +237,29 @@ Router.post("/api/Course_add", upload.single("file"), (req, res) => {
         }));
         // sellingOptions = JSON.stringify(sellingOptions);
         // Inserting data into the database, including the new selling_option column
-        sqlDbconnect.query(`INSERT INTO course_detail (industries, speaker, description, title, date, time, duration, course_thumbail, selling_option) VALUES ('${industry}','${speaker}','${description}','${name}','${cstdate}','${time}', '${duration}', '${filename}', '${JSON.stringify(sellingOptions)}')`, (err, rows) => {
-            if (!err) {
-                console.log(rows)
-                // Fetching the inserted row including selling_option
-                sqlDbconnect.query(`SELECT * FROM course_detail WHERE id = ${rows.insertId}`, (err, fetchedRow) => {
-                    if (!err) {
-                        const fetchedSellingOptions = JSON.parse(fetchedRow[0].selling_option);
-                        // Sending response to the client
-                        res.status(200).json({ message: 'Course added successfully', rows, fetchedSellingOptions });
-                    } else {
-                        console.log(err);
-                        res.status(500).json({ error: 'Internal Server Error' });
-                    }
-                });
-            } else {
-                console.log(err);
-                res.status(500).json({ error: 'Internal Server Error' });
-            }
+        const insertQuery = `INSERT INTO course_detail (industries, speaker,title, description, date, time, duration, course_thumbail, selling_option,slug) 
+                             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+        const insertValues = [industry, speaker, name, description, cstdate, time, duration, filename, JSON.stringify(sellingOptions), slug];
+        
+        const rows = await new Promise((resolve, reject) => {
+            sqlDbconnect.query(insertQuery, insertValues, (err, result) => {
+                if (err) reject(err);
+                resolve(result);
+            });
         });
 
+        console.log(rows)
+        // Fetching the inserted row including selling_option
+        const fetchedRow = await new Promise((resolve, reject) => {
+            sqlDbconnect.query(`SELECT * FROM course_detail WHERE id = ?`, [rows.insertId], (err, result) => {
+                if (err) reject(err);
+                resolve(result);
+            });
+        });
+
+        const fetchedSellingOptions = JSON.parse(fetchedRow[0].selling_option);
+        // Sending response to the client
+        res.status(200).json({ message: 'Course added successfully', rows, fetchedSellingOptions });
     } catch (err) {
         console.log(err);
         res.status(502).json({ error: 'Internal Server Error' });
