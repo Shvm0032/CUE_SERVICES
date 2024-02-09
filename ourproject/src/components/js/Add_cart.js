@@ -60,11 +60,11 @@ const AddToCart = () => {
       setDiscount(0);
       setApplied(false);
     }
-  // }
-  // catch(error){
-  //   console.error('Error updating category:', error);
-  //   res.status(502).json({ error: 'Internal Server Error' });
-  // }
+    // }
+    // catch(error){
+    //   console.error('Error updating category:', error);
+    //   res.status(502).json({ error: 'Internal Server Error' });
+    // }
   };
 
   const handleCancelCoupon = () => {
@@ -189,27 +189,26 @@ const AddToCart = () => {
         </div>
         <div className='row mt-5'>
           {/* / Shopping cart table */}
-          <div className="d-flex flex-wrap  flex-column justify-content-center align-items-start pb-4">
+          <div className="d-flex flex-wrap  flex-column justify-content-center align-items-end pb-4">
             <div className='row'>
               <h3 className='mb-3'>Cart Total</h3>
               <div className='row border p-3 rounded-3'>
                 <div className='col-6  text-start'><label className="text-muted fs-4 font-weight-normal m-0">Subtotal price</label></div>
-                <div className='col-6 text-end'><div className="text-center text-danger fs-4" style={{fontWeight: '500' }}>${sum}</div></div>
+                <div className='col-6 text-end'><div className="text-center text-danger fs-4" style={{ fontWeight: '500' }}>${sum}</div></div>
               </div>
               <div className='row border p-3 border-top-0 rounded-3'>
                 <div className='col-6 text-start'><label className="text-muted fs-4 font-weight-normal m-0" >Total price</label></div>
                 <div className='col-6 text-end'><div className="text-center text-danger fs-4" style={{ fontWeight: '500' }}>${sum}</div></div>
               </div>
             </div>
-
             {/* coupan section  */}
           </div>
-          <div className=" d-flex flex-wrap justify-content-between ">
-            <div className='row p-3 text-center'>
-              <Link to='/Checkout' className="btn btn-outline-warning p-3 rounded-pill" ><i className="fas fa-money-check-alt"></i> &emsp; Proceed to Checkout</Link>
-            </div>
+          <div className="d-flex flex-wrap justify-content-between">
             <div className='row  p-3 text-center '>
-              <Link to='/course' className="button2addtocark rounded-pill"> <i className="fas fa-arrow-left"></i>  &emsp; Back to shopping</Link>
+              <Link to='/course' className="button2addtocark rounded-pill"> <i className="fas fa-arrow-left"></i>&emsp; Back to shopping</Link>
+            </div>
+            <div className='row p-3 text-center'>
+              <Link to='/Checkout' className="btn btn-outline-warning p-3 rounded-pill" ><i className="fas fa-money-check-alt"></i>&emsp; Proceed to Checkout</Link>
             </div>
           </div>
         </div>

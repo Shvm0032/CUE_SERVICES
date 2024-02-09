@@ -18,7 +18,7 @@ function Checkout() {
     const [couponCode, setCouponCode] = useState('');
     const [discount, setDiscount] = useState(0);
     const cartItems = useSelector(selectCartItems);
-
+    const [emailExists, setEmailExists] = useState(false);
     console.log(cartItems);
     // console.log();
     const dispatch = useDispatch();
@@ -121,6 +121,7 @@ function Checkout() {
     console.log(formData)
     const [formErrors, setFormErrors] = useState({});
 
+
     const validateForm = () => {
         const errors = {};
         for (const key in formData) {
@@ -135,10 +136,30 @@ function Checkout() {
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setFormData(prevState => ({ ...prevState, [name]: value }));
+        setFormData(prevState => ({
+            ...prevState, [name]: value
+        }));
+        checkEmailExists(value);
     };
 
 
+    const checkEmailExists = async (email) => {
+        setIsLoading(true);
+        try {
+            const response = await http.post('/check-email', { email });
+            setEmailExists(response?.data?.exists);
+
+            console.log(response);
+
+        } catch (error) {
+            console.error('Error checking email:', error);
+        }
+        setIsLoading(false);
+    };
+
+  
+
+  
     // console.log(getTotalPrice(), 'gt');
     // console.log(sum);
     // console.log(discount, 'discount-price');
@@ -179,9 +200,9 @@ function Checkout() {
     // console.log(purchaseDetails);
 
     const stripe = stripePromise;
+
     const handleCheckout = async () => {
-
-
+       
         setIsLoading(true);
         // console.log(validateForm())
         if (!validateForm()) {
@@ -214,6 +235,7 @@ function Checkout() {
         }
 
     };
+
 
 
     //    {
@@ -304,9 +326,7 @@ function Checkout() {
 
                                                         <td className="text-center align-middle  px-0"><button className='btn btn-danger' onClick={() => handleRemove(item.course_id)}><i className="fas fa-trash-alt fa-lg"></i></button></td>
                                                     </tr>
-
                                                 </tbody>
-
                                             ))}
                                         </table>
                                     </div>
@@ -319,17 +339,16 @@ function Checkout() {
                                                     <div className='col mt-2'><p className='fs-4'>${sum}</p></div>
                                                 </div>
 
-
                                             </div>
                                         </div>
                                         {/* coupan section  */}
                                         <div className='row justify-content-end'>
                                             <div className='row'>
-                                                <div className='col-8 offset-4 p-5'>
+                                                <div className='col'>
                                                     {!applied ? (
-                                                        <div className="row">
-                                                            <label className="text-end fs-3 font-weight-normal">Promocode</label>
-                                                            <input type="text" placeholder="ABC" className="form-control" value={couponCode}
+                                                        <div className="row p-2">
+                                                            {/* <label className="text-end fs-3 form-check-label-lg font-weight-normal">Promocode</label> */}
+                                                            <input type="text" placeholder="ABC" className="form-control form-control-lg" value={couponCode}
                                                                 onChange={(e) => setCouponCode(e.target.value)} />
                                                         </div>
 
@@ -337,9 +356,9 @@ function Checkout() {
                                                     ) : null}
                                                     {!applied ? (
 
-                                                        <div className='row'>
+                                                        <div className='row p-2'>
 
-                                                            <button className='btn mt-2 btn-success' onClick={handleApplyCoupon}  >
+                                                            <button className='btn mt-2 btn-outline-success btn-lg' onClick={handleApplyCoupon}  >
                                                                 Apply coupon
                                                             </button>
                                                         </div>
@@ -350,7 +369,7 @@ function Checkout() {
                                         </div>
                                         {applied ? (
                                             <div className="d-flex">
-                                                <table className=" table table-success text-end mt-4 ml-5">
+                                                <table className=" table  text-end mt-4 ml-5">
                                                     <tbody>
                                                         <tr>
                                                             <td className='col'>
@@ -384,29 +403,31 @@ function Checkout() {
                                         ) : null}
 
                                     </div>
-                                    {/* <div className="  d-flex justify-content-between">
-                                        <Link to='/course'> <button type="button" className="btn btn-sm btn-outline-dark  mt-2 mr-3">Back to shopping</button></Link>
-                                        <Link to='/CardSummary'><button type="button" className="btn btn-lg btn-outline-primary mt-2">Checkout</button></Link>
-                                    </div> */}
+
                                 </div>
                             </div>
                         </div>
-                        <div className="col-md-4  col-12">
+                        <div className="col-md-5  col-12">
                             <div className="card mb-4">
                                 <div className="card-header py-3">
                                     <h5 className="mb-0">Summary</h5>
                                 </div>
                                 <div className="card-body">
-                                    <ul className="list-group list-group-flush">
-                                        <li className="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
-                                            <strong>Quantity</strong>
-                                            <span className='fs-4'>{cartItems?.length}</span>
-                                        </li>
+                                    <div className='row'>
+                                        <div className='col mb-4 p-3'>
 
-                                        <li className="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
-                                            <strong>Total Price</strong><span className='fs-4'>${getTotalPrice()}</span>
-                                        </li>
-                                    </ul>
+                                            <div className='row border p-3 rounded-3'>
+                                                <div className='col-6  text-start'><label className="text-muted fs-4 font-weight-normal m-0">Subtotal price</label></div>
+                                                <div className='col-6 text-end'><div className="text-center text-danger fs-4" style={{ fontWeight: '500' }}>{cartItems?.length}</div></div>
+                                            </div>
+                                            <div className='row border p-3 border-top-0 rounded-3'>
+                                                <div className='col-6 text-start'><label className="text-muted fs-4 font-weight-normal m-0" >Total price</label></div>
+                                                <div className='col-6 text-end'><div className="text-center text-danger fs-4" style={{ fontWeight: '500' }}>${getTotalPrice()}</div></div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
                                     {/* <button type="button" className="btn btn-primary btn-lg btn-block" onClick={showRegistrationForm}>
                                         Go to checkout
                                     </button> */}
@@ -420,41 +441,48 @@ function Checkout() {
                                                 <div className='row'>
                                                     <div className='col'>
                                                         <label htmlFor="firstName" class="form-label">First Name</label>
-                                                        <input type="text" className="form-control" id="firstName" name="firstName" value={formData.firstName} onChange={handleInputChange} />
+                                                        <input type="text" className="form-control form-control-lg" id="firstName" name="firstName" value={formData.firstName} onChange={handleInputChange} />
                                                         {formErrors.firstName && <span className="error">{formErrors.firstName}</span>}
                                                     </div>
                                                     <div className='col'>
                                                         <label htmlFor="lastname" class="form-label"> last Name</label>
-                                                        <input type="text" className="form-control" id="lastName" name='lastName' value={formData.lastName} onChange={handleInputChange} />
+                                                        <input type="text" className="form-control form-control-lg" id="lastName" name='lastName' value={formData.lastName} onChange={handleInputChange} />
                                                         {formErrors.lastName && <span className="error">{formErrors.lastName}</span>}
                                                     </div>
+
 
                                                 </div><br />
                                                 <div className='row'>
                                                     <div className='col'>
                                                         <label htmlFor="Companyname" class="form-label">Company Name</label>
-                                                        <input type="text" class="form-control" id="companyName" name='companyName' value={formData.companyName} onChange={handleInputChange} />
+                                                        <input type="text" class="form-control form-control-lg" id="companyName" name='companyName' value={formData.companyName} onChange={handleInputChange} />
                                                         {formErrors.companyName && <span className="error">{formErrors.companyName}</span>}
+                                                    </div>
+                                                    <div className='col'>
+                                                        <label htmlFor="email" class="form-label">Email</label>
+                                                        <input type="email" class="form-control form-control-lg" id="email" name='email' value={formData.email} onChange={handleInputChange} />
+                                                        {emailExists && <span className="text-danger">Email has already been used.</span>}
+                                                        {formErrors.email && <span className="error">{formErrors.email}</span>}
                                                     </div>
                                                 </div><br />
                                                 <div className='row'>
                                                     <div className='col'>
                                                         <label htmlFor="jobTitle" class="form-label"> JOB TITLE*</label>
-                                                        <input type="text" class="form-control" id="jobTitle" name='jobTitle' value={formData.jobTitle} onChange={handleInputChange} />
+                                                        <input type="text" class="form-control form-control-lg" id="jobTitle" name='jobTitle' value={formData.jobTitle} onChange={handleInputChange} />
                                                         {formErrors.jobTitle && <span className="error">{formErrors.jobTitle}</span>}
                                                     </div>
                                                 </div><br />
                                                 <div className='row'>
                                                     <div className='col'>
                                                         <label htmlFor="Country" class="form-label"> Country/REGION</label>
-                                                        <input type="text" class="form-control" id="country" name='country' value={formData.country} onChange={handleInputChange} />
+                                                        <input type="text" class="form-control form-control-lg" id="country" name='country' value={formData.country} onChange={handleInputChange} />
                                                         {formErrors.country && <span className="error">{formErrors.country}</span>}
                                                     </div>
                                                 </div><br />
                                                 <div className='row'>
                                                     <div className='col'>
                                                         <label htmlFor="streetAddress" class="form-label">STREET ADDRESS *</label>
-                                                        <input type="text" class="form-control" id="streetAddress" name='streetAddress' value={formData.streetAddress} onChange={handleInputChange} />
+                                                        <input type="text" class="form-control form-control-lg" id="streetAddress" name='streetAddress' value={formData.streetAddress} onChange={handleInputChange} />
                                                         {formErrors.streetAddress && <span className="error">{formErrors.streetAddress}</span>}
                                                     </div>
 
@@ -462,44 +490,43 @@ function Checkout() {
                                                 <div className='row'>
                                                     <div className='col'>
                                                         <label htmlFor="city" class="form-label">City</label>
-                                                        <input type="text" class="form-control" id="city" name='city' value={formData.city} onChange={handleInputChange} />
+                                                        <input type="text" class="form-control form-control-lg" id="city" name='city' value={formData.city} onChange={handleInputChange} />
                                                         {formErrors.city && <span className="error">{formErrors.city}</span>}
                                                     </div>
                                                     <div className='col'>
                                                         <label htmlFor="state" class="form-label">State/Country</label>
-                                                        <input type="text" class="form-control" id="state" name='state' value={formData.state} onChange={handleInputChange} />
+                                                        <input type="text" class="form-control form-control-lg" id="state" name='state' value={formData.state} onChange={handleInputChange} />
                                                         {formErrors.state && <span className="error">{formErrors.state}</span>}
                                                     </div>
+
+                                                </div><br />
+                                                <div className='row'>
                                                     <div className='col'>
                                                         <label htmlFor="zip" class="form-label">Zip</label>
-                                                        <input type="text" class="form-control" id="zip" name='zip' value={formData.zip} onChange={handleInputChange} />
+                                                        <input type="text" class="form-control form-control-lg" id="zip" name='zip' value={formData.zip} onChange={handleInputChange} />
                                                         {formErrors.zip && <span className="error">{formErrors.zip}</span>}
                                                     </div>
-                                                </div><br />
-                                                <div className='row'>
                                                     <div className='col'>
+
                                                         <label htmlFor="phone" class="form-label">Phone</label>
-                                                        <input type="Phone" class="form-control" id="phone" name='phone' value={formData.phone} onChange={handleInputChange} />
+                                                        <input type="Phone" class="form-control form-control-lg" id="phone" name='phone' value={formData.phone} onChange={handleInputChange} />
                                                         {formErrors.phone && <span className="error">{formErrors.phone}</span>}
                                                     </div>
-                                                    <div className='col'>
-                                                        <label htmlFor="email" class="form-label">Email</label>
-                                                        <input type="email" class="form-control" id="email" name='email' value={formData.email} onChange={handleInputChange} />
-                                                        {formErrors.email && <span className="error">{formErrors.email}</span>}
-                                                    </div>
+
                                                 </div><br />
 
                                                 <div className='row'>
                                                     <div className='col'>
-                                                        <button type='button' className='button2addtocark' onClick={handleCheckout} disabled={isLoading}>checkout</button>
-
+                                                        {emailExists ? (
+                                                            <button className='btn btn-outline-success btn-lg' onClick={() => navigate('/login')}>Login</button>
+                                                        ) : (
+                                                            <button className='btn btn-outline-success btn-lg' onClick={handleCheckout}>Checkout</button>
+                                                        )}
                                                     </div>
                                                 </div>
 
                                             </div>
                                         </from>
-
-
                                     </div>
 
                                 </div>
