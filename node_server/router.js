@@ -12,6 +12,7 @@ const dotenv = require('dotenv');
 const jwt = require('jsonwebtoken');
 const { json } = require("body-parser");
 const { sendEmail } = require("./lib/mail");
+const { sendInvoiceEmail } = require("./lib/invoiceEmail");
 const util = require('util');
 // const { Route } = require("react-browser-router");
 dotenv.config();
@@ -1137,7 +1138,8 @@ Router.post('/api/NewRegistration', (req, res) => {
                     user_name: username,
                     receiver: email,
                     subject: 'Account Created successfully.',
-                    content: ''
+                    content: '',
+                    login: process.env.LOGIN_URL
                 };
                 sendEmail(emailObject);
                 // Respond with success
@@ -1607,10 +1609,8 @@ Router.post('/api/updateprofile', (req, res) => {
         return res.json([]);
     }
     //const jwt = require('jsonwebtoken');
-
-    const imagePath = req.file.path;
     const id = decoded.userId;
-    const { fname, lname, uname, email, phone, gender, pincode, address1, address2, country, state, city, password, image } = req.body;
+    const { fname, lname, uname, email, phone, gender, pincode, address1, address2, country, state, city, password } = req.body;
     console.log(req.body, '-----');
     sqlDbconnect.query('UPDATE registration  SET fname = ?, lname = ?, uname = ?, email = ?, phone = ?, gender = ?, pincode = ?, address1 = ?, address2 = ?, country = ?,state =?, city = ?, password = ? WHERE id = ? ', [fname, lname, uname, email, phone, gender, pincode, address1, address2, country, state, city, password, id], (err, result) => {
         if (err) {
@@ -1638,7 +1638,15 @@ Router.get("/api/testing", async (req, res) => {
         subject: 'Account Created successfully.',
         content: ''
     };
-    let response = await sendEmail(emailObject);
+    let userDetail = {
+        user_name: 'nAVJOT',
+        receiver: 'navjotsingh@yopmail.com',
+        subject: 'Account Created successfully.',
+        content: ''
+    };
+    let fileName = 'myname.pdf';
+        let response = await sendInvoiceEmail(emailObject, userDetail, fileName);
+        console.log(response,'response');
     const err = null;
     const result = { message: 'Data fetched successfully' };
 
@@ -1730,7 +1738,7 @@ Router.get('/api/get_total_lengths', async (req, res) => {
 
 Router.post('/api/check-email', async (req, res) => {
     const queryAsync = util.promisify(sqlDbconnect.query).bind(sqlDbconnect);
-    const { email }= req.body
+    const { email }= req.body;
     console.log(email);
     try {
         const result = await queryAsync('SELECT Count(*) AS count from  registration WHERE email =? ',[email] );
@@ -1747,7 +1755,23 @@ Router.post('/api/check-email', async (req, res) => {
     }
 });
 
+// Router.post('/api/register/WithCheckout', async (req, res) => {
+//     const { firstName, lastName, email, password } = req.body;
+// console.log(res.body);
+//     // Insert user data into the registration table
+//     const queryAsync = util.promisify(sqlDbconnect.query).bind(sqlDbconnect);
+//     const insertQuery = `INSERT INTO registration (first_name, last_name, email, password) VALUES (?, ?, ?, ?)`;
+//     const values = [firstName, lastName, email, password];
 
+//     try {
+//         const result = await queryAsync(insertQuery, values);
+//         console.log('User registered successfully:', result);
+//         res.status(200).json({ message: 'User registered successfully' });
+//     } catch (error) {
+//         console.error('Error registering user:', error);
+//         res.status(500).json({ error: 'Internal server error' });
+//     }
+// });
 
 
 

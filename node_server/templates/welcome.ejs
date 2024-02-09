@@ -4,6 +4,11 @@
   <h3>Hello, <%= user_name %></h3>
   <p>Your account has been created successfully.</p>
   <p><%- content %></p>
+  <% if (password) { %>
+  <p>please login with this auto generated password <b> <%= password %> </b></p>
+<% } else { %>
+<% } %>
+  <a href=<%= login %> >please login </a>
 </div>
 
 <%- include('./includes/footer.ejs') %>

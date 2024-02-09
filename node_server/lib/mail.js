@@ -4,8 +4,8 @@ const config = require(__dirname + '/../config/mail.js')[env];
 const ejs = require('ejs');
 
 
-const sendEmail = async ({ user_name, receiver, subject, content }) => {
-    const html = await getEmailContent(user_name, receiver, content);
+const sendEmail = async ({ user_name, receiver, subject, content, password, login }) => {
+    const html = await getEmailContent(user_name, receiver, content, password, login);
     let from = process.env.MAIL_FROM_ADDRESS;
     let mailOptions = {
       from,
@@ -18,9 +18,9 @@ const sendEmail = async ({ user_name, receiver, subject, content }) => {
     return await transporter.sendMail(mailOptions);
 };
 
-const getEmailContent = async (user_name, receiver, content) => {
+const getEmailContent = async (user_name, receiver, content, password, login) => {
     return new Promise((resolve, reject) => {
-        ejs.renderFile(__dirname + '/../templates/welcome.ejs', { user_name, receiver, content }, {}, (err, data) => {
+        ejs.renderFile(__dirname + '/../templates/welcome.ejs', { user_name, receiver, content, password, login }, {}, (err, data) => {
             if (err) {
                 return reject(err);
             }

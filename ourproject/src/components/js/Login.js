@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import '../css/Login.modules.css';
-// import axios from 'axios';
+import { toast } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import authService from "../../services/auth.service";
 import { Link } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { login } from '../../redux/authSlice';
 import { useDispatch } from 'react-redux';
@@ -18,7 +17,7 @@ function Login() {
 
 
 
-    
+
     const navigate = useNavigate()
 
     const handleClickShowPassword = () => {
@@ -32,19 +31,19 @@ function Login() {
     async function handleSubmit(event) {
         event.preventDefault();
 
-        await authService.login({ email, password })
-            .then(res => {
-                if (res.data.success) {
-                    dispatch(login()); 
-                    navigate('/Dashboard');
-                } else {
-                    alert("Login failed. " + res.data.message);
-                }
-                console.log(res.data.status)
-            })
-            .catch(err => console.log(err));
+        try {
+            const res = await authService.login({ email, password });
+            if (res.data.success) {
+                dispatch(login());
+                navigate('/Dashboard');
+            } else {
+                toast.error("Login failed. " + res.data.message);
+            }
+        } catch (error) {
+            toast.error("An error occurred while logging in.");
+            console.error(error);
+        }
     }
-
 
 
     return (
@@ -65,15 +64,15 @@ function Login() {
             <section>
                 <div className="container" style={{ paddingTop: '10px' }}>
                     <div className='d-flex justify-content-center align-items-center'>
-                        <div className='row Form-Container shadow align-item-center p-5'>
+                        <div className='row form Form-Container shadow align-item-center p-5'>
                             <div className='col'>
                                 <p className='fs-3 fw-bold' >Sign in to your account</p>
-                                <form onSubmit={handleSubmit}>
+                                <form  onSubmit={handleSubmit}>
                                     <div className=' mb-3 log-form'>
                                         <label htmlFor='exampleInputEmail1' className='form-label'>Your Email</label>
                                         <input
                                             type='email'
-                                            className='form-control'
+                                            className='form-control form-control-lg'
                                             placeholder='Email'
                                             value={email}
                                             onChange={e => setEmail(e.target.value)}
@@ -82,31 +81,32 @@ function Login() {
 
                                     <div className='mb-3 log-form'>
                                         <label htmlFor='exampleInputEmail1' className='form-label'> Password</label>
-                                        <div className='password-input d-flex p-1 rounded-4'style={{background:'#b8eded'}}>
+                                        <div className='input-icon-container'>
                                             <input
                                                 type={showPassword ? 'text' : 'password'}
-                                                className='form-control '
+                                                className='form-control form-control-lg '
                                                 placeholder='Password'
                                                 value={password}
                                                 onChange={e => setPassword(e.target.value)}
                                             />
-                                            <div>
                                             {showPassword ? (
                                                 <>
-                                                
-                                                <i className='fa-solid fa-eye  p-2' icon={faEyeSlash} onClick={handleClickShowPassword} onMouseDown={handleMouseDownPassword} />
+
+                                                    <i className='fa-solid fa-eye  p-2' icon={faEyeSlash} onClick={handleClickShowPassword} onMouseDown={handleMouseDownPassword} />
                                                 </>
                                             ) : (
                                                 <>
-                                                
-                                                <i  className='fa-solid fa-eye-slash p-2' icon={faEye} onClick={handleClickShowPassword} onMouseDown={handleMouseDownPassword} ></i>
+
+                                                    <i className='fa-solid fa-eye-slash p-2' icon={faEye} onClick={handleClickShowPassword} onMouseDown={handleMouseDownPassword} ></i>
                                                 </>
                                             )}
+                                            <div>
+
                                             </div>
                                         </div>
                                     </div>
 
-                                    <button className='btn log-buttons'>Login</button><br />
+                                    <button className='log-buttons'>Login</button><br />
                                     <Link to='/register ' className='text-secondary text-center'>Not a member?<span className='text-primary'>Create your new Account</span></Link>
                                 </form>
 

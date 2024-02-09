@@ -21,9 +21,7 @@ export default function CourseDetail() {
     const course = courses.find((c) => c.id.toString() === id);
     const [selectedItems, setSelectedItems] = useState([]);
     const [selectedCourseId, setSelectedCourseId] = useState(null);
-    console.log(cartItems)
-    // ...
-
+    console.log(cartItems);
 
     const getTime = () => {
         const time = Date.parse(deadline) - Date.now();
@@ -59,10 +57,6 @@ export default function CourseDetail() {
             </tbody>
         </table>
     );
-    // ...
-
-
-    // ...
 
     const addData = (id, price) => {
         const isSelected = selectedItems.includes(id);
