@@ -159,7 +159,7 @@ const AddToCart = () => {
                         <div className="media-body">
                           <Link to={`/Course_Detail/${item.course_id}`} onClick={() => {
                             setSelectedCourseId(item.course_id); navigate(`/Course_Detail/${item.course_id}`);
-                          }} className="d-block fs-5 fw-4 ">{item?.course_title}</Link>
+                          }} className="d-block fs-5 fw-4 "><p className='link-dark'>{item?.course_title}</p></Link>
                         </div>
                       </div>
                     </td>
