@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const util = require('util');
 const jwt = require('jsonwebtoken');
+const { sendEmail } = require("./lib/mail");
 
 app.use(express.json({ limit: '50mb' }));
 
@@ -39,14 +40,9 @@ app.post('/api/create-checkout-session', async (req, res) => {
     const userDetail = req.body.detail;
     let userId = 'null';
     let token = req.headers.authorization;
+    
+   
 
-    let userRegister = [
-        userDetail.firstName,
-        userDetail.lastName,
-        userDetail.email,
-        userDetail.phone,
-        userDetail.email,
-    ];
     if (token && token.startsWith('Bearer ')) {
 
         token = token.slice(7, token.length);
@@ -56,6 +52,43 @@ app.post('/api/create-checkout-session', async (req, res) => {
 
         }
         userId = decoded.userId;
+    }
+    else{
+        const alphanumeric = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        let password = '';
+        for (let i = 0; i < 7; i++) {
+            password += alphanumeric.charAt(Math.floor(Math.random() * alphanumeric.length));
+        }
+        let userRegister = [
+            userDetail.firstName,
+            userDetail.lastName,
+            userDetail.email,
+            userDetail.email,
+            userDetail.phone,
+            null,
+            userDetail.zip,
+            userDetail.streetAddress,
+            userDetail.country,
+            userDetail.state,
+            userDetail.city,
+            password
+        ];
+        const sqlr = `INSERT INTO registration (fname, lname, uname, email,phone,gender,pincode,address1,country,state,city, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+        const result = await queryAsync(sqlr, userRegister);
+        console.log(result, 'result');
+        if (result && result.affectedRows) {
+            userId = result.insertId;
+
+            let emailObject = {
+                user_name: userDetail.email,
+                receiver: userDetail.email,
+                subject: 'Account Created successfully.',
+                password: password,
+                content: '',
+                login: process.env.LOGIN_URL
+            };
+           sendEmail(emailObject);
+        }
     }
 
     const values = [

@@ -35,7 +35,7 @@
     color: white;
 }
 
-.log-buttons:hover {
+.sign-buttons:hover {
     background-color: #0eada3;
    
     color: white;
@@ -57,3 +57,4 @@
 .sign-lnk:hover {
     color: #ff9b24;
 }
+

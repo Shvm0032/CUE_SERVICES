@@ -1,221 +1,188 @@
-
 <!DOCTYPE html>
-<html>
-    <head>
-     <style>
-      html {
-          zoom: 0.85;
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Invoice #6</title>
+
+    <style>
+        html,
+        body {
+            margin: 10px;
+            padding: 10px;
+            font-family: sans-serif;
+        }
+        h1,h2,h3,h4,h5,h6,p,span,label {
+            font-family: sans-serif;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 0px !important;
+        }
+        table thead th {
+            height: 28px;
+            text-align: left;
+            font-size: 16px;
+            font-family: sans-serif;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            font-size: 14px;
+        }
+
+        .heading {
+            font-size: 24px;
+            margin-top: 12px;
+            margin-bottom: 12px;
+            font-family: sans-serif;
+        }
+        .small-heading {
+            font-size: 18px;
+            font-family: sans-serif;
+        }
+        .total-heading {
+            font-size: 18px;
+            font-weight: 700;
+            font-family: sans-serif;
+        }
+        .order-details tbody tr td:nth-child(1) {
+            width: 20%;
+        }
+        .order-details tbody tr td:nth-child(3) {
+            width: 20%;
+        }
+
+        .text-start {
+            text-align: left;
+        }
+        .text-end {
+            text-align: right;
+        }
+        .text-center {
+            text-align: center;
+        }
+        .company-data span {
+            margin-bottom: 4px;
+            display: inline-block;
+            font-family: sans-serif;
+            font-size: 14px;
+            font-weight: 400;
+        }
+        .no-border {
+            border: 1px solid #fff !important;
+        }
+        .bg-blue {
+            background-color: #414ab1;
+            color: #fff;
         }
     </style>
-        
-    </head>
-    <body >
-        <table style="width:700px; margin:0 auto; font-family:arial;border-collapse: collapse; font-family: Roboto,RobotoDraft,Helvetica,Arial,sans-serif;">
-        <th scope=''></th>
-            <tr>
-                <td colspan="2" style="font-size:13px;margin-bottom:50px;text-align: left; vertical-align: middle;">
-                <img src="<%= logo %>" style="width: 100px; height:80px"></td>
-                <td colspan="2" style="font-size:24px;margin-bottom:50px;text-align: right; vertical-align: middle;">Invoice</td>
-            </tr>
-            <tr>
-            <td colspan="2" ></td>
-            <td colspan="2" style="font-size:13px;margin-bottom:50px;text-align: right; vertical-align: middle;"> Invoice Date: <%= detail?.user_subscription?.invoice_date %> </td>
-            </tr>
-            <tr>
-            <td colspan="2" ></td>
-            <td colspan="2" style="font-size:13px;margin-bottom:50px;text-align: right; vertical-align: middle;" > 
-            Invoice# : <%= detail?.user_subscription?.invoice_id %> </td>
-            </tr>
-            <tr>
-                <td colspan="4" style="font-size:13px;"><hr></td>
-            </tr>
-            <tr style="width:700px;">
-                <td colspan="4" style="margin-top:10px; margin-bottom:20px;">
-                            <tr style="font-family:arial;border-collapse: collapse; font-family: Roboto,RobotoDraft,Helvetica,Arial,sans-serif;"> 
-                                <td colspan="2">
-                                    <table  style="font-family:arial;border-collapse: collapse; font-family: Roboto,RobotoDraft,Helvetica,Arial,sans-serif;">
-                                    <th scope=''></th>
-                                        <tr>
-                                            <td style="width:350px; font-size:13px; font-weight:bold; text-align:left; padding:2px 0;">From: <%= detail?.companyInfo?.name %>
-                                            </td>
-                                        </tr>
-                                        
-                                            <tr>
-                                            <td style="width:350px; font-size:13px; padding:2px 0; padding-left: 15px">
-                                            <%= detail?.companyInfo?.address %>
-                                            </td>
-                                            </tr>
-                                            <tr >
-                                            <td style="width:350px; font-size:13px; padding:2px 0; padding-left: 15px"><%= detail?.companyInfo?.address_2 %>
-                                            </td>
-                                            </tr>
-                                        
-                                            <tr>
-                                            <td style="width:350px; font-size:13px;padding:2px 0; padding-left: 15px">
-                                            <%= detail?.companyInfo?.email %>
-                                            </td>
-                                            </tr>
-                                            <tr>
-                                            <td style="width:350px; font-size:13px; padding:2px 0; padding-left: 15px">
-                                              <%= detail?.companyInfo?.phone_ext %> <%= detail?.companyInfo?.phone %>
-                                            </td>
-                                            </tr>
-                                    </table>
-                                </td>
-                                <td colspan="2">
-                                    <table  style="font-family:arial;border-collapse: collapse; font-family: Roboto,RobotoDraft,Helvetica,Arial,sans-serif; text-align:right">
-                                    <th scope=''></th>  
-                                                
-                                        <tr style="text-align:right">
-                                            <td style="width:350px; font-size:13px; font-weight:bold;padding:2px 0;">To : <%= detail.fullName %>
-                                             </td>
-                                        </tr>
-                                        <tr>
-                                            <td style="width:350px; font-size:13px; padding:2px 0;"> <%= detail?.user_billing?.billing_address %> </td>
-                                        </tr>
-                                        <tr>
-                                            <td style="width:350px; font-size:13px; padding:2px 0;"> <%= detail?.stateName %> </td>
-                                        </tr>
-                                        <tr>
-                                            <td style="width:350px; font-size:13px;padding:2px 0;"><%= detail?.user_billing?.zip_code %> <%= detail?.countryName %>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td style="width:350px; font-size:13px;padding:2px 0;"><%= detail?.user_billing?.billing_email %>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td style="width:350px; font-size:13px;padding:2px 0;"><%= detail?.user_billing?.phone_number %>
-                                            </td>
-                                        </tr>
-                                        
-                                        <!-- <tr>
-                                        <td style="width:350px; font-size:13px;padding:2px 0;">
-                                            <%= detail?.user_subscription?.type %>
-                                        </td>
-                                        </tr> -->
+</head>
+<body>
 
-                                    
-                                    </table>
-                                </td>
-                            </tr>
-                            <tr> </tr>
-                            <tr> </tr>
-                            <tr style="font-family:arial;border-collapse: collapse; font-family: Roboto,RobotoDraft,Helvetica,Arial,sans-serif;"> 
-                                <td colspan="2">
-                                    <table  style="font-family:arial;border-collapse: collapse; font-family: Roboto,RobotoDraft,Helvetica,Arial,sans-serif;">
-                                    <th scope=''></th>
-         
-                                            
-                                            <tr >
-                                            <td style="width:350px; font-size:13px; padding:2px 0;">
-                                               <b> Account Type </b>: <%= detail?.user_type %>
-                                            </td>
-                                            </tr>
-                                            <tr>
-                                            <td style="width:350px; font-size:13px;padding:2px 0; ">
-                                           <b> Paymeny Status </b>: <%= detail?.user_subscription?.payment_status %> 
-                                            </td>
-                                            </tr>
-                                            <tr>
-                                            <td style="width:350px; font-size:13px; padding:2px 0;">
-                                            <b>Account Type </b>: <%= detail?.user_subscription?.start_date %> - <%= detail?.user_subscription?.end_date %>
-                                            </td>
-                                            </tr>
-                                    </table>
-                                </td>
-                            </tr>
+    <table class="order-details">
+        <thead>
+            <tr>
+                <th width="50%" colspan="2">
+                    <img width='300px' height='100px'  src=<%= logo %> alt='logo'>
+                </th>
+                <th width="50%" colspan="2" class="text-end company-data">
+                    <span>Invoice Id: #6</span> <br>
+                    <span>Date: 24 / 09 / 2022</span> <br>
+                    <span>Zip code : 560077</span> <br>
+                    <span>Address: #555, Main road, shivaji nagar, Bangalore, India</span> <br>
+                </th>
+            </tr>
+            <tr class="bg-blue">
+                <th width="50%" colspan="2">Order Details</th>
+                <th width="50%" colspan="2">User Details</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Order Id:</td>
+                <td>6</td>
+
+                <td>Full Name:</td>
+                <td>Ved Prakash</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+
+                <td>Email Id:</td>
+                <td>ved@gmail.com</td>
+            </tr>
+            <tr>
+                <td>Ordered Date:</td>
+                <td>22-09-2022 10:54 AM</td>
+
+                <td>Phone:</td>
+                <td>8889997775</td>
+            </tr>
+            <tr>
+                <td>Payment Mode:</td>
+                <td>Cash on Delivery</td>
+
+                <td>Address:</td>
+                <td>asda asdad asdad adsasd</td>
+            </tr>
+            <tr>
+                <td>Order Status:</td>
+                <td>completed</td>
+
+                <td>Pin code:</td>
+                <td>566999</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table>
+        <thead>
+            <tr>
+                <th class="no-border text-start heading" colspan="5">
+                    Order Items
+                </th>
+            </tr>
+            <tr class="bg-blue">
+                <th>ID</th>
+                <th>Product</th>
+                <th>Price</th>
+                <th>Selling Options</th>
+                <th>Quantity</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td width="10%">16</td>
+                <td>
+                    Mi Note 7
                 </td>
+                <td width="10%">$14000</td>
+                <td width="10%">1</td>
+                <td width="15%" class="fw-bold">$14000</td>
             </tr>
-            
-        </table> 
-        <table style="width:700px; margin:0 auto;font-family:arial;border-collapse: collapse; font-family: Roboto,RobotoDraft,Helvetica,Arial,sans-serif;">
-            <tr style="width:700px;"  style="margin-top:20px;">
-            <td colspan="4" style="padding-top:20px; margin-top:20px;margin-bottom:20px;">
-                <b>Terms </b>: Payment is subject to the following Terms and Conditions
-            </td>
-            </tr>
-        </table>
-
-        <!---- body--->
-
-        <table style="width:700px; margin:0 auto;font-family:arial;border-collapse: collapse; font-family: Roboto,RobotoDraft,Helvetica,Arial,sans-serif;">
-          <thead>
-          <tr>
-            <th colspan="4" scope='col' style=" text-align: left;padding-top:20px;font-family: Roboto,RobotoDraft,Helvetica,Arial,sans-serif; font-size:14px;">Specification</th>
-          </tr>
-          <tr>
-            <td colspan="4"><hr></td>
-          </tr>
-          <tr style="border:1px solid #f1f1f1; font-family:arial;border-collapse: collapse; font-family: Roboto,RobotoDraft,Helvetica,Arial,sans-serif;">
-            <th scope='col' style="width:300px; font-size:13px; font-weight:bold; text-align:center; padding:10px 0;">Item Description</th>
-            <th scope='col' style="width:120px; font-size:13px; font-weight:bold; text-align:center; padding:10px 0;">Quantity</th>
-            <th scope='col' style="width:140px; font-size:13px; font-weight:bold; text-align:center; padding:10px 0;">Price In(<%= detail?.user_subscription?.currency || '-' %>) </th>
-            <th scope='col' style="width:140px; font-size:13px; font-weight:bold; text-align:center; padding:10px 0;">Amount In(<%= detail?.user_subscription?.currency || '-' %>)</th>
-          </tr>
-          </thead>
-
-
-                    
-                    <tr>
-                      <td style="border-top:1px solid #f1f1f1; font-size:13px; color:#545454;font-family: Roboto,RobotoDraft,Helvetica,Arial,sans-serif; padding:8px;"> <%= process.env.APP_NAME || 'PeopleView' %> Monthly Subscription - <%= detail?.user_subscription?.user_sub?.package_name %> Package</td>
-                      <td style="border-top:1px solid #f1f1f1; font-size:13px; color:#333; font-weight:bold; font-family: Roboto,RobotoDraft,Helvetica,Arial,sans-serif; padding:8px 5px; text-align:center">1</td>
-                      <td style="border-top:1px solid #f1f1f1; font-size:13px; color:#333; font-weight:bold; font-family: Roboto,RobotoDraft,Helvetica,Arial,sans-serif; padding:8px 5px; text-align:center"><%= detail?.user_subscription?.price %> </td>
-                      <td style="border-top:1px solid #f1f1f1; font-size:13px; color:#333; font-weight:bold; font-family: Roboto,RobotoDraft,Helvetica,Arial,sans-serif; padding:8px 5px; text-align:center"><%= detail?.user_subscription?.price %> </td>
-                    </tr>
-                    
-                    <tr style="background:#f1f1f1; color:#000000; font-size:13px; font-weight:bold;padding:10px 0;">
-                      <td style="border-top:1px solid #f1f1f1; font-size:13px; color:#545454;font-family: Roboto,RobotoDraft,Helvetica,Arial,sans-serif; padding:8px;"></td>
-                      <td style="border-top:1px solid #f1f1f1; font-size:13px; color:#333; font-weight:bold; font-family: Roboto,RobotoDraft,Helvetica,Arial,sans-serif; padding:8px 5px; text-align:center"></td>
-                      <td style="border-top:1px solid #f1f1f1; font-size:13px; color:#333; font-weight:bold; font-family: Roboto,RobotoDraft,Helvetica,Arial,sans-serif; padding:8px 5px; text-align:center"><%= detail?.user_subscription?.price %> </td>
-                      <td style="border-top:1px solid #f1f1f1; font-size:13px; color:#333; font-weight:bold; font-family: Roboto,RobotoDraft,Helvetica,Arial,sans-serif; padding:8px 5px; text-align:center">
-                      <%= detail?.user_subscription?.price %> 
-                      </td>
-                    </tr>           
-                
-                      
-                      
-                      <tr style="background:#f1f1f1; color:#000000; font-size:13px; font-weight:bold;padding:10px 0;">
-                        <td style="border-top:1px solid #f1f1f1; font-size:13px; color:#545454;font-family: Roboto,RobotoDraft,Helvetica,Arial,sans-serif; padding:8px;"></td>
-                        <td style="border-top:1px solid #f1f1f1; font-size:13px; color:#333; font-weight:bold; font-family: Roboto,RobotoDraft,Helvetica,Arial,sans-serif; padding:8px 5px; text-align:center"></td>
-                        <td style="border-top:1px solid #f1f1f1; font-size:13px; color:#333; font-weight:bold; font-family: Roboto,RobotoDraft,Helvetica,Arial,sans-serif; padding:8px 5px; text-align:center">
-                        
-                        </td>
-                        <td style="border-top:1px solid #f1f1f1; font-size:13px; color:#333; font-weight:bold; font-family: Roboto,RobotoDraft,Helvetica,Arial,sans-serif; padding:8px 5px; text-align:center">
-                        
-                        </td>
-                      </tr>
-                  <tr style="width:300px; border:1px solid #f1f1f1; font-family:arial;border-collapse: collapse; font-family: Roboto,RobotoDraft,Helvetica,Arial,sans-serif;">
-                  <td></td>
-                  <td> </td>
-                  <td style=" width:150px; border-top:1px solid #f1f1f1; font-size:13px; color:#545454;font-family: Roboto,RobotoDraft,Helvetica,Arial,sans-serif; padding:8px; text-align:center;"><!--total_amount_paid_receipt <br> 
-                  <i>(vat_receipt) </i>
-                  </br>--></td> 
-                  <td style="width:150px; border-top:1px solid #f1f1f1; font-size:13px; color:#333; font-weight:bold; font-family: Roboto,RobotoDraft,Helvetica,Arial,sans-serif; padding:8px 5px;text-align:right;"><%= detail?.user_subscription?.price %>  <%= detail?.user_subscription?.currency %>
-                  </td>
-                </tr>
-                      
-        </table>
-
-
-
-        <!--- footer start-->
-
-        <table style="width:700px; margin:0 auto; font-family:arial;border-collapse: collapse; font-family: Roboto,RobotoDraft,Helvetica,Arial,sans-serif; padding-top:400px;">
-            <th scope=''></th>
             <tr>
-                <td colspan="4"><hr></td>
-            </tr> 
-            <tr>
-                <td  style="font-size:13px; color:#545454;font-family: Roboto,RobotoDraft,Helvetica,Arial,sans-serif; padding:8px;">
-                   <%= detail?.companyInfo?.name %>
+                <td width="10%">17</td>
+                <td>
+                    Vivo V19
                 </td>
-                <td style="font-size:13px; color:#545454;font-family: Roboto,RobotoDraft,Helvetica,Arial,sans-serif; padding-left:30px;">VAT: <%= detail?.companyInfo?.phone %></td> 
-                <td></td> 
-                <td style="font-size:13px; color:#545454;font-family: Roboto,RobotoDraft,Helvetica,Arial,sans-serif; padding:8px; text-align: right; ">Web: <u><%= detail?.companyInfo?.website_url %></u>
-                </td> 
+                <td width="10%">$699</td>
+                <td width="10%">1</td>
+                <td width="15%" class="fw-bold">$699</td>
             </tr>
-        </table>
+            <tr>
+                <td colspan="4" class="total-heading">Total Amount - <small>Inc. all vat/tax</small> :</td>
+                <td colspan="1" class="total-heading">$14699</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <br>
+    <p class="text-center">
+        Thank your for shopping with Funda of Web IT
+    </p>
 
 </body>
 </html>

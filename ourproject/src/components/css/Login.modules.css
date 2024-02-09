@@ -1,21 +1,23 @@
 .Form-Container {
     border: #ff9b24 1px solid !important;
     border-radius: 8px;
-    box-shadow: #ffe5d0 2px;
+    box-shadow: #ffffff 2px;
 }
 
 .log-form input {
-    background-color: #b8eded;
+    background-color: #ffffff;
     border: #ff9b24 !important;
 }
 
 .log-buttons {
+    padding: 10px;
     min-width: 300px;
     background-color: #ff9b24;
     margin-top: 35px;
     margin-bottom: 20px;
     border-radius: 5px;
     color: #fff;
+    border: 0px;
 }
 
 .log-buttons:hover {
@@ -23,20 +25,35 @@
     color: white;
 }
 
-.input-group {
-    position: relative;
+.input-icon-container {
+    display: flex;
+    flex-direction: row;
+    border: 1px solid #374669;
+    border-radius: 5px;
+    background: #fff;
+    align-items: center;
+    overflow: hidden;
 }
 
-.eye_icon {
-    position: absolute;
-    right: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    cursor: pointer;
-    color: #555;
-    transition: color 0.3s ease;
+.input-icon-container input {
+
+    outline: none;
+    border: none;
+    background: none;
+    font-size: 1em;
+    padding: 0.5em;
+    color: inherit;
+    flex: auto 1 1;
+    width: 100%;
+    background-color: transparent;
 }
 
-.eye_icon:hover {
-    color: #ff9b24;
+.input-icon-container .fa-solid {
+    padding: 10px;
+  
+}
+
+.fa-solid.fa-eye {
+    background: transparent;
+    color: #080808;
 }
