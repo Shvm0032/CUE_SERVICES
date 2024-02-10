@@ -109,6 +109,7 @@ const AddCoupon = () => {
                         name="couponName"
                         value={formData.couponName}
                         onChange={handleChange}
+                        required
                       />
                       {errors.couponName && (
                         <div className="invalid-feedback">{errors.couponName}</div>
@@ -125,7 +126,8 @@ const AddCoupon = () => {
                         name="discountType"
                         value={formData.discountType}
                         onChange={handleChange}
-                        placeholder="Enter discount type"
+                        placeholder="Enter discount type" 
+                        required
                       />
                       {errors.discountType && (
                         <div className="invalid-feedback">{errors.discountType}</div>
@@ -142,7 +144,8 @@ const AddCoupon = () => {
                         className={`form-control ${errors.startDate ? 'is-invalid' : ''}`}
                         name="startDate"
                         value={formData.startDate}
-                        onChange={handleChange}
+                        onChange={handleChange} 
+                        required
                       />
                       {errors.startDate && (
                         <div className="invalid-feedback">{errors.startDate}</div>
@@ -158,7 +161,8 @@ const AddCoupon = () => {
                         className={`form-control ${errors.expiryDate ? 'is-invalid' : ''}`}
                         name="expiryDate"
                         value={formData.expiryDate}
-                        onChange={handleChange}
+                        onChange={handleChange} 
+                        required
                       />
                       {errors.expiryDate && (
                         <div className="invalid-feedback">{errors.expiryDate}</div>
@@ -174,7 +178,8 @@ const AddCoupon = () => {
                         className={`form-control ${errors.coupanlimit ? 'is-invalid' : ''}`}
                         name="coupanlimit"
                         value={formData.coupanlimit}
-                        onChange={handleChange}
+                        onChange={handleChange} 
+                        required
                       />
                       {errors.coupanlimit && (
                         <div className="invalid-feedback">{errors.coupanlimit}</div>

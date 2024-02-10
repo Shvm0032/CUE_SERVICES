@@ -353,7 +353,7 @@ export default function Register() {
                                     )}
                                 </div>
                                 <div className='col flex-column text-center'>
-                                    <button type='submit' className='  btn sign-buttons '> Register </button><br />
+                                    <button type='submit' className=' btn sign-buttons '> Register </button><br />
                                     <Link className='text-secondary text-center' to='/login'>
                                         Already have account?<span className='text-primary'>LogIn</span>
                                     </Link>

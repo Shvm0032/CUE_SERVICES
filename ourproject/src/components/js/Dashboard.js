@@ -215,6 +215,7 @@ function Dashboard() {
                                 <td>Course Title</td>
                                 <td>total Price</td>
                                 <td>Selling Option</td>
+                                <td>Invoice</td>
                               </tr>
                             </thead>
                             <tbody>
@@ -237,6 +238,9 @@ function Dashboard() {
                                     </tbody>
                                   </table>
                                 </td>
+                                {/* <td><a href={`Invoice/${Order.order_id}`}>Invoice</a></td> */}
+                                <td><Link to={`/Invoice/${Order.order_id}`}>Invoice</Link></td>
+
                               </tr>
                               ))}
                             </tbody>

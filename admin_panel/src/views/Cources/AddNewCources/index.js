@@ -23,6 +23,7 @@ const modules = {
 
 export default function AddCourse() {
     const [slug, setSlug] = useState('');
+    
 
     // Function to generate URL slug from the title
     const generateSlug = (input) => {
@@ -217,16 +218,17 @@ export default function AddCourse() {
                     <div className="row">
                         <div className="col-12 p-4">
                             <h4 className="text-center mt-2">Add New Course</h4>
-                            <form className='shadow p-5 bg-light '>
+                            <form className='shadow p-5 bg-light ' onSubmit={submitForm}>
                                 <div className='row'>
                                     <div className='col-2'>
                                         <label>Industry</label>
                                     </div>
                                     <div className='col'>
-                                        <select onChange={(e) => {
+                                        <select required={true} onChange={(e) => {
                                             setCourse((previous) => ({
                                                 ...previous,
-                                                Industry: e.target.value
+                                                Industry: e.target.value,
+                                            
                                             }))
                                         }} className="form-select" name='Industry' aria-label="Industry Select">
                                             <option defaultValue>Select an Industry</option>
@@ -241,7 +243,7 @@ export default function AddCourse() {
                                         <label>Speaker</label>
                                     </div>
                                     <div className='col'>
-                                        <select onChange={(e) => {
+                                        <select required={true} onChange={(e) => {
                                             setCourse((previous) => ({
                                                 ...previous,
                                                 Speaker: e.target.value
@@ -271,6 +273,7 @@ export default function AddCourse() {
                                             name='courseName'
                                             className="form-control"
                                             placeholder="Course Name"
+                                            required
                                         />
                                     </div>
                                 </div><br />
@@ -291,6 +294,7 @@ export default function AddCourse() {
                                                 value={slug}
                                                 readOnly
                                                 placeholder="Course Name"
+                                                required
                                             />
                                         </div>
                                     </div>
@@ -326,7 +330,8 @@ export default function AddCourse() {
                                             type="file"
                                             name='thumbnail'
                                             className="dropify"
-                                            id="customFile"
+                                            id="customFile" 
+                                            required
                                         />
 
                                         {/* <Dropify
@@ -367,7 +372,8 @@ export default function AddCourse() {
                                             type="text"
                                             name='duration'
                                             className="form-control"
-                                            placeholder="Duration"
+                                            placeholder="Duration" 
+                                            required
                                         />
                                     </div>
                                 </div><br />
@@ -386,6 +392,7 @@ export default function AddCourse() {
                                             type="date"
                                             name='date'
                                             className="form-control"
+                                            required
                                         />
                                     </div>
                                 </div><br />
@@ -404,6 +411,7 @@ export default function AddCourse() {
                                             type="time"
                                             name='time'
                                             className="form-control"
+                                            required
                                         />
                                     </div>
                                 </div><br />
@@ -437,7 +445,7 @@ export default function AddCourse() {
                                     </div>
                                 </div>
                                 <center>
-                                    <button onClick={submitForm} type='submit' className="btn btn-primary ">Submit</button>
+                                    <button type='submit' className="btn btn-primary ">Submit</button>
                                 </center>
                             </form>
                             <div className="modal" tabIndex="-1" role="dialog" style={{ display: showSuccessModal ? 'block' : 'none' }}>
