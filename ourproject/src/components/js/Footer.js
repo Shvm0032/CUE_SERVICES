@@ -1,10 +1,12 @@
 import React from 'react'
 import Subscribe from './Subscribe';
-
+import { useLocation } from 'react-router-dom';
 export default function Footer() {
-
-
-
+  const location = useLocation();
+  const hideHeaderForPathsRegex = /^\/Invoice\/.*$/;
+  if (hideHeaderForPathsRegex.test(location.pathname)) {
+      return <></>;
+  }
   return (
     <>
       {/* Remove the container if you want to extend the Footer to full width. */}

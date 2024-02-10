@@ -8,13 +8,16 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 async function paymentUpdate() {
     
-    const itemSql = `Select id, hash_id from order_details  where order_status = 'pending'`;
+    const itemSql = `Select id, hash_id from order_details where order_status = 'pending'`;
     const queryAsync = util.promisify(sqlDbconnect.query).bind(sqlDbconnect);
     let response =  await queryAsync(itemSql);
 
     const orderItemsPromises = response.map(async (orderItem) => {
        // console.log(orderItem.hash_id,'orderItem');
         const hashId = orderItem.hash_id;
+        if(!hashId){
+            return Promise.resolve();
+        }
         const session = await stripe.checkout.sessions.retrieve(hashId);
        // console.log(session,'session');
         if (session) {

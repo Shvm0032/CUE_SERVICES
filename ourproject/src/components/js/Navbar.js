@@ -12,12 +12,12 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Navbar, Container, Nav, NavDropdown, Offcanvas } from 'react-bootstrap';
 import { useMediaQuery } from 'react-responsive';
 import logo from '../../assets/Logo.png';
+import { useLocation } from 'react-router-dom';
 
 
 export default function NavbarP() {
     const cartItems = useSelector(selectCartItems);
-    console.log(cartItems.length)
-    console.log(cartItems);
+    const location = useLocation();
     const unique_id = uuid();
     if (localStorage.getItem('unique_id')) {
 
@@ -76,6 +76,10 @@ export default function NavbarP() {
         onMouseEnter: () => setOpen(index),
         onMouseLeave: () => setOpen(null),
     });
+    const hideHeaderForPathsRegex = /^\/Invoice\/.*$/;
+    if (hideHeaderForPathsRegex.test(location.pathname)) {
+        return <></>;
+    }
 
 
     return (

@@ -1675,7 +1675,7 @@ Router.get("/api/Order/get", (req, res) => {
         
         const id = decoded.userId ? decoded.userId : 0;
 
-        const checkEmailQuery = 'SELECT * FROM order_details WHERE user_id = ?';
+        const checkEmailQuery = "SELECT * FROM order_details WHERE order_status in ('Paid','Failed') and user_id = ?";
         sqlDbconnect.query(checkEmailQuery, [id], (err, result) => {
             if (!err) {
                 res.status(200).json(result);
@@ -1755,23 +1755,28 @@ Router.post('/api/check-email', async (req, res) => {
     }
 });
 
-// Router.post('/api/register/WithCheckout', async (req, res) => {
-//     const { firstName, lastName, email, password } = req.body;
-// console.log(res.body);
-//     // Insert user data into the registration table
-//     const queryAsync = util.promisify(sqlDbconnect.query).bind(sqlDbconnect);
-//     const insertQuery = `INSERT INTO registration (first_name, last_name, email, password) VALUES (?, ?, ?, ?)`;
-//     const values = [firstName, lastName, email, password];
+//
+Router.get('/api/user/invoice', async (req, res) => {
+    try {
+        let token = req.headers.authorization;
+        let order_id = req.body.order_id;
+        if (token && token.startsWith('Bearer ')) {
+            token = token.slice(7, token.length);
+        }
+        let jwtSecretKey = process.env.JWT_SECRET_KEY;
+        const decoded = jwt.verify(token, jwtSecretKey);
+        const id = decoded.userId ? decoded.userId : 0;
+        const checkEmailQuery = 'SELECT * FROM registration WHERE id = ?';
+        const queryAsync = util.promisify(sqlDbconnect.query).bind(sqlDbconnect);
+        const result = await queryAsync(checkEmailQuery,[id] );
 
-//     try {
-//         const result = await queryAsync(insertQuery, values);
-//         console.log('User registered successfully:', result);
-//         res.status(200).json({ message: 'User registered successfully' });
-//     } catch (error) {
-//         console.error('Error registering user:', error);
-//         res.status(500).json({ error: 'Internal server error' });
-//     }
-// });
+        res.status(200).send(result);
+    } catch {
+        console.error('Error processing image:', error);
+        res.status(502).send('Internal Server Error');
+    }
+})
+
 
 
 
