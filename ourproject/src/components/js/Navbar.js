@@ -159,14 +159,7 @@ export default function NavbarP() {
                                     {isLoggedIn ? (
                                         <>
                                             <Nav.Link eventKey={2} href="/Dashboard" style={{ marginLeft: '15px' }}>
-                                                <div className="button">
-                                                    <div className="button-wrapper">
-                                                        <div className="text"> Profile</div>
-                                                        <span className="icon">
-                                                            Profile
-                                                        </span>
-                                                    </div>
-                                                </div>
+                                                <i class="far fa-user fa-lg"></i>
                                             </Nav.Link>
                                             <Nav.Link href="/login" eventKey={2} style={{ marginLeft: '15px' }} onClick={handleLogout}>
                                                 <div className="button">
@@ -235,20 +228,13 @@ export default function NavbarP() {
                             </Nav>
                             <Nav className='me-auto mx-auto ' style={{ fontSize: '1.2rem' }}>
                                 <Nav.Link href="/Add_cart" className="cart-icon">
-                                    <i className="fas fa-shopping-cart fa-xl" style={{ color: '#00bbae' }}></i>
+                                    <i className="fas fa-shopping-cart fa-lg" style={{ color: '#00bbae' }}></i>
                                     <span class="badge badge-primary cart-badge">{cartItems.length}</span>
                                 </Nav.Link>
                                 {isLoggedIn ? (
                                     <>
                                         <Nav.Link eventKey={2} href="/Dashboard" style={{ marginLeft: '15px' }}>
-                                            <div className="button">
-                                                <div className="button-wrapper">
-                                                    <div className="text"> Profile</div>
-                                                    <span className="icon">
-                                                        Profile
-                                                    </span>
-                                                </div>
-                                            </div>
+                                                <i class="far fa-user fa-lg"></i>
                                         </Nav.Link>
                                         <Nav.Link href="/login" eventKey={2} style={{ marginLeft: '15px' }} onClick={handleLogout}>
                                             <div className="button">
