@@ -7,10 +7,10 @@ const path = require('path');
 const DIR = './public/';
 
 
-const sendInvoiceEmail = async ({ user_name, receiver, subject, content }, userdetail, fileName) => {
+const sendInvoiceEmail = async ({ user_name, receiver, subject, content }, userdetail, fileName, information) => {
     let logo = process.env.APP_URL +'/logo/logo.png';
-    const filepath = await getEmailAttachment(fileName, logo, userdetail);
-    const html = await getEmailContent(user_name, receiver, content, userdetail);
+    const filepath = await getEmailAttachment(fileName, logo, userdetail, information);
+    const html = await getEmailContent(user_name, receiver, content, userdetail, information);
     console.log(html);
     let from = process.env.MAIL_FROM_ADDRESS;
     let mailOptions = {
@@ -34,9 +34,9 @@ const sendInvoiceEmail = async ({ user_name, receiver, subject, content }, userd
     return await transporter.sendMail(mailOptions);
 };
 
-const getEmailContent = async (user_name, receiver, content, detail) => {
+const getEmailContent = async (user_name, receiver, content, detail, information) => {
     return new Promise((resolve, reject) => {
-        ejs.renderFile(__dirname + '/../templates/invoice.ejs', { user_name, receiver, content, detail } , (err, data) => {
+        ejs.renderFile(__dirname + '/../templates/invoice.ejs', { user_name, receiver, content, detail, information } , (err, data) => {
             if (err) {
                // console.log(err)
                 return reject(err);
@@ -45,7 +45,8 @@ const getEmailContent = async (user_name, receiver, content, detail) => {
         });
     });
 }
-const getEmailAttachment = async (fileName, logo, detail) => {
+
+const getEmailAttachment = async (fileName, logo, detail, information) => {
 
     return new Promise((resolve, reject) => {
 
@@ -53,7 +54,7 @@ const getEmailAttachment = async (fileName, logo, detail) => {
        // let filePAth = __dirname + '/../templates/forgetEmail.pdf';
         let filePAth = DIR+'invoice/'+fileName;
 
-        ejs.renderFile(__dirname + '/../templates/pdf.ejs', { logo, detail}, (err, data) => {
+        ejs.renderFile(__dirname + '/../templates/pdf.ejs', { logo, detail, information }, (err, data) => {
             if (err) {
                 console.log(err,'__dirname');
                   return 0;

@@ -102,10 +102,10 @@ export default function ViewIndustary() {
                       className="btn btn-success"
                       onClick={() => handleEditClick(industry)}
                     >
-                      <i className="fa fa-edit"></i>&nbsp;Edit
+                      <i className="fa fa-edit"></i>
                     </button>
-
-                    <button type='button' className='btn btn-danger'>Delete</button>
+&emsp;
+                    <button type='button' className='btn btn-danger'><i className="fas fa-trash-alt"></i></button>
                   </td>
                 </tr>
               ))}

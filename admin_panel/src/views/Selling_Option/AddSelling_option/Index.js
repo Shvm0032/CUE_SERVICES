@@ -88,7 +88,7 @@ export default function Index() {
                 <div className='container-fluid'>
                     <h1 className='text-center mb-5'>Selling Options</h1>
                     <div className='row'>
-                        <div className="col-md-3">
+                        <div className="col-lg-3 col-12 mb-5">
                             <div className='row p-3 shadow border border-success rounded-4'>
                                 <h5 className='mb-3'>Add Selling options</h5>
                                 <form onSubmit={handleSubmit}>
@@ -107,7 +107,7 @@ export default function Index() {
                                 </form>
                             </div>
                         </div>
-                        <div className="col-md-8 offset-1">
+                        <div className="col-lg-8 offset-lg-1 col-12">
                             <div className='row'>
                                 <table className='table table-active table-hover'>
                                     <thead>
@@ -125,10 +125,10 @@ export default function Index() {
                                                 <td>{option.id}</td>
                                                 <td>{option.selling_category}</td>
                                                 <td>{option.name}</td>
-                                                <td>{option.price}</td>
+                                                <td>${option.price}</td>
                                                 <td>
-                                                    <Link to={`/Selling_Option/EditSelling_Option/${option.id}`} className="btn btn-success"><i className="fas fa-edit"></i>Edit</Link>&nbsp;
-                                                    <button type="submit" className="btn btn-danger"><i className="fas fa-trash-alt"></i>delete</button>&nbsp;
+                                                    <Link to={`/Selling_Option/EditSelling_Option/${option.id}`} className="btn btn-success"><i className="fas fa-edit"></i></Link>&nbsp;
+                                                    <button type="submit" className="btn btn-danger"><i className="fas fa-trash-alt"></i></button>&nbsp;
                                                 </td>
                                             </tr>
                                         ))}
