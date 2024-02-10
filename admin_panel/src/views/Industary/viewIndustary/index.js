@@ -76,6 +76,22 @@ export default function ViewIndustary() {
     }
   };
 
+//   async function delete_Industary(selectedIndustry){
+
+//   try{
+//     var res = await http.Delete(`/delete_Industary?id=${selectedIndustry.id}`);
+//     if (res.status === 200) {
+     
+//     }
+//   }catch(error){
+//     console.error("Error fetching data:", error);
+
+//   }
+// }
+
+  
+
+
   return (
     <div>
       <h3 className='text-center'>View all Industry</h3>
@@ -104,7 +120,7 @@ export default function ViewIndustary() {
                     >
                       <i className="fa fa-edit"></i>
                     </button>
-&emsp;
+                    &emsp;
                     <button type='button' className='btn btn-danger'><i className="fas fa-trash-alt"></i></button>
                   </td>
                 </tr>

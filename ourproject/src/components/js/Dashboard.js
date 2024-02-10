@@ -197,60 +197,45 @@ function Dashboard() {
                   <h5>ALL ORDERS</h5>
                   <Link to="/" class="btn btn-success ">Invoice</Link>
                 </div>
-                <table class="table table-responsive  border  table-hover  table-light mt-3">
-                  <thead className='border-bottom'>
-                    <tr>
-                      <th scope="col">PRODUCT</th>
+                <table className='table table-bordered table-responsive'>
+                  <thead class="table-light">
+                    <tr className='col'>
+                      <td>Order Id</td>
+                      <td>Course Title</td>
+                      <td>total Price</td>
+                      <td>Selling Option</td>
+                      <td>Invoice</td>
                     </tr>
                   </thead>
-                  <tbody >
-                    <tr>
-                      {/* <th scope="row">{Order.order_id}</th> */}
-                      {/* <td>{Order.card_detail}</td> */}
-                      <td>
-                        <table className='table'>
-                          <thead className='t'>
-                            <tr>
-                              <td>Course Title</td>
-                              <td>total Price</td>
-                              <td>Selling Option</td>
-                              <td>Invoice</td>
-                            </tr>
-                          </thead>
-                          {Orders?.map((Order, index) => (
-                            <tbody key={index}>
-                              {JSON.parse(Order.card_detail).map((item, itemIndex) => (
-                                <tr key={itemIndex}>
-                                  <td>
-                                    {item.course_title}
-                                  </td>
-                                  <td>{item.totalPrice}</td>
-                                  <td>
-                                    <table className='table'>
-                                      <tbody>
-                                        {item.courseItems && (item.courseItems).map((spitem, spid) => (
-                                          <tr key={spid}>
-                                            <td>{spitem.itemName}</td>
-                                            <td>{spitem.itemPrice}</td>
-                                          </tr>
-                                        ))}
+                  {Orders?.map((Order, index) => (
+                    <tbody className='border' key={index}>
+                      {JSON.parse(Order.card_detail).map((item, itemIndex) => (
+                        <tr key={itemIndex}>
+                          <td>{Order.order_id}</td>
+                          <td>
 
-                                      </tbody>
-                                    </table>
-                                  </td>
-                                  <td><Link to={`/Invoice/${Order.order_id}`}>Invoice</Link></td>
-                                </tr>
-                              ))}
-                            </tbody>
-                          ))}
-                        </table>
+                            {item.course_title}
 
+                          </td>
+                          <td>{item.totalPrice}</td>
+                          <td>
+                            <table class="table table-bordered ">
+                              <tbody>
+                                {item.courseItems && (item.courseItems).map((spitem, spid) => (
+                                  <tr key={spid}>
+                                    <td>{spitem.itemName}</td>
+                                    <td>{spitem.itemPrice}</td>
+                                  </tr>
+                                ))}
 
-                      </td>
-
-                    </tr>
-
-                  </tbody>
+                              </tbody>
+                            </table>
+                          </td>
+                          <td><Link to={`/Invoice/${Order.order_id}`}>Invoice</Link></td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  ))}
                 </table>
               </div>
 
