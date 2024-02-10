@@ -5,7 +5,7 @@ dotenv.config();
 const util = require('util');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const moment = require('moment');
-
+const { sendInvoiceEmail } = require("../lib/invoiceEmail");
 async function paymentUpdate() {
     
     const itemSql = `Select id, hash_id from order_details where order_status = 'pending' and email_sent = 0`;
@@ -99,14 +99,18 @@ async function paymentUpdate() {
                 user_name: 'test'
             };
             let fileName = UserOrder[0]?.order_id+'_Invoice.pdf';
-            let responses = await sendInvoiceEmail(emailObject, userDetail, fileName, FinnalInvoiceData);
-            console.log(responses, 'response');
             const itemValuesUEmail = [
-                "1",
+                1,
                 hashId
             ];
-            const updateCourseQueryEmail = ` UPDATE order_course SET email_sent = ? WHERE hash_id = ?`;
+           // console.log(itemValuesUEmail,'itemValuesUEmail');
+            const updateCourseQueryEmail = `UPDATE order_details SET email_sent = ? WHERE hash_id = ?`;
             await queryAsync(updateCourseQueryEmail, itemValuesUEmail);
+            if(paymentUpdateStatus == 'paid'){
+                let responses = await sendInvoiceEmail(emailObject, userDetail, fileName, FinnalInvoiceData);
+            }
+            
+  
             return Promise.resolve();
         }
         

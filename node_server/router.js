@@ -162,7 +162,7 @@ Router.get("/", (req, res) => {
 
 Router.get("/api/Course", (req, res) => {
     try {
-        sqlDbconnect.query("select * from  course_detail", (err, rows) => {
+        sqlDbconnect.query("select * from  course_detail where status = 1", (err, rows) => {
             console.log(rows)
             if (!err) {
                 res.send(rows);
@@ -177,27 +177,26 @@ Router.get("/api/Course", (req, res) => {
     }
 });
 
-Router.delete("/api/delete_course", (req, res) => {
+Router.delete("/api/delete_course", async (req, res) => {
     try {
-        console.log(req.query.id, "<<>>")
-        sqlDbconnect.query(`DELETE FROM course_detail WHERE id = "${req.query.id}"`, (err, rows) => {
-            if (!err) {
+        const queryAsync = util.promisify(sqlDbconnect.query).bind(sqlDbconnect);
+        console.log(req.query.id, "<<>>");
 
-                sqlDbconnect.query(`DELETE FROM selling_options WHERE cid = "${req.query.id}"`, (err, row) => {
-                    if (!err) {
-                        res.send({ rows, row });
-                    } else {
-                        console.log(err);
-                    }
-                });
-            } else {
-                console.log(err);
-            }
-        });
+        const itemValuesU = [
+            0,
+            req.query.id
+        ];
+        const updateCourseQueryc = ` UPDATE course_detail SET status = ? WHERE id = ?`;
+        let response = await queryAsync(updateCourseQueryc, itemValuesU);
+        if (!response) {
+            return res.send({ rows, row });
+        } else {
+            return res.send({ error: "course not deleted" });
+        }
     }
     catch (err) {
         console.log(err);
-        res.status(502).json({ error: 'Internal Server Error' });
+        return res.status(502).json({ error: 'Internal Server Error' });
     }
 });
 
