@@ -1,12 +1,37 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react'
 import logo from '../../assets/Logo.png';
-import Invoic from '../css/Invoice.modules.css';
+import '../css/Invoice.modules.css';
+import LoadingOverlay from 'react-loading-overlay-ts';
+import http from "../../utils/http-client";
+import { useParams } from 'react-router-dom';
+import FadeLoader from "react-spinners/FadeLoader";
+import toast from 'react-hot-toast';
 
+function Invoice() {
+  const [loading, setLoading] = useState(false);
+  const [invoiceDetail, setInvoice] = useState([]);
+  const { id } = useParams();
+  const fetchProfile = async () => {
+    try {
+      setLoading(true)
+      let url = "/user/invoice/?order_id="+id;
+      console.log(url,'url');
+      var res = await http.get(url);
+      setInvoice(res);
+      setLoading(false)
+    } catch (error) {
+      setLoading(false)
+      toast.error(error.data.message);
+    }
+  }
 
-class Invoice extends React.Component {
-  render() {
+  useEffect(() => {
+    fetchProfile();
+  }, []);
+  console.log(loading)
+  
+  const invoiceInfo = () => {
     return (
-      <div className="tm_container">
         <div className="tm_invoice_wrap">
           <div className="tm_invoice tm_style1" id="tm_download_section">
             <div className="tm_invoice_in">
@@ -238,9 +263,26 @@ class Invoice extends React.Component {
             </button>
           </div>
         </div>
+      )
+  }
+    return (
+      <div className="tm_container">
+        <LoadingOverlay
+            active={loading}
+            spinner={<FadeLoader color="#36d7b7" />}
+            text="Loading..."
+        >
+          {
+            loading ? null : 
+            (
+              invoiceInfo()
+            )
+          }
+        
+        </LoadingOverlay>
       </div>
     );
-  }
+  
 }
 
 export default Invoice;

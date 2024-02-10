@@ -1759,7 +1759,7 @@ Router.post('/api/check-email', async (req, res) => {
 Router.get('/api/user/invoice', async (req, res) => {
     try {
         let token = req.headers.authorization;
-        let order_id = req.body.order_id;
+        let order_id = req.query.order_id;
         if (token && token.startsWith('Bearer ')) {
             token = token.slice(7, token.length);
         }
