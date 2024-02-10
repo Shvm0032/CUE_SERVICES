@@ -83,14 +83,19 @@
     <table class="order-details">
         <thead>
             <tr>
-                <th width="50%" colspan="2">
+                <th class="no-border" width="100%" colspan="4">
                     <img width='300px' height='100px'  src=<%= logo %> alt='logo'>
                 </th>
-                <th width="50%" colspan="2" class="text-end company-data">
-                    <span>Invoice Id: #6</span> <br>
-                    <span>Date: 24 / 09 / 2022</span> <br>
+            </tr>
+            <tr>
+                 <th class="no-border"  width="50%" colspan="2">
+                    <h1>Invoice</h1>
+                </th>
+                <th width="50%" colspan="2" class="no-border text-end company-data">
+                    <span>Invoice Id: <%= information?.InvoiceNumber %></span> <br>
+                    <span>Date: <%= information?.OrderDate %></span> <br>
                     <span>Zip code : 560077</span> <br>
-                    <span>Address: #555, Main road, shivaji nagar, Bangalore, India</span> <br>
+                    <span><%= information?.CompanyAddress %></span> <br>
                 </th>
             </tr>
             <tr class="bg-blue">
@@ -101,38 +106,43 @@
         <tbody>
             <tr>
                 <td>Order Id:</td>
-                <td>6</td>
+                <td><%= information?.OrderId %></td>
 
                 <td>Full Name:</td>
-                <td>Ved Prakash</td>
+                <td><%= information?.User_Fname %> <%= information?.User_lname %></td>
             </tr>
             <tr>
-                <td></td>
-                <td></td>
+                <td>Invoice Number</td>
+                <td><%= information?.InvoiceNumber %></td>
 
                 <td>Email Id:</td>
-                <td>ved@gmail.com</td>
+                <td><%= information?.Email %></td>
             </tr>
             <tr>
                 <td>Ordered Date:</td>
-                <td>22-09-2022 10:54 AM</td>
+                <td><%= information?.OrderDate %></td>
 
                 <td>Phone:</td>
-                <td>8889997775</td>
+                <td><%= information?.Phone %></td>
             </tr>
             <tr>
                 <td>Payment Mode:</td>
-                <td>Cash on Delivery</td>
+                <td>Stripe</td>
 
                 <td>Address:</td>
-                <td>asda asdad asdad adsasd</td>
+                <td>
+                   <%= information?.Country %> 
+                    <%= information?.State %>
+                    <%= information?.City %>
+                    <%= information?.Zip %>
+                </td>
             </tr>
             <tr>
                 <td>Order Status:</td>
                 <td>completed</td>
 
                 <td>Pin code:</td>
-                <td>566999</td>
+                <td><%= information?.Zip %></td>
             </tr>
         </tbody>
     </table>
@@ -145,43 +155,77 @@
                 </th>
             </tr>
             <tr class="bg-blue">
-                <th>ID</th>
-                <th>Product</th>
-                <th>Price</th>
-                <th>Selling Options</th>
-                <th>Quantity</th>
-                <th>Total</th>
+                <th width='10%%'>ID</th>
+                <th width='40%%'>Product</th>
+                <th width='30%%'>Selling Options</th>
+                <th width='10%%'>Quantity</th>
+                <th width='10%%'>Total</th>
             </tr>
         </thead>
         <tbody>
+        <% const courseDetails = JSON.parse(information.CourseDetail); %>
+        <% courseDetails.forEach(course => { %>
             <tr>
-                <td width="10%">16</td>
-                <td>
-                    Mi Note 7
+                <td><%= course.course_id %></td>
+                <td><%= course.course_title %></td>
+                 <td>
+                    <ul>
+                        <% course.courseItems.forEach(item => { %>
+                            <li><%= item.itemName %>: &emsp; $<%= item.itemPrice %></li>
+                        <% }); %>
+                    </ul>
                 </td>
-                <td width="10%">$14000</td>
-                <td width="10%">1</td>
-                <td width="15%" class="fw-bold">$14000</td>
+                 <td><%= course.qty %></td>
+                <td>$<%= course.totalPrice %></td>
+               
             </tr>
+        <% }); %>
+        <tr>
+            <td colspan=4 align="right"><strong>Sub Total:</strong></td>
+            <td>$<%= information.TotalAmount%></td>
+        </tr>
+        <tr>
+            <td colspan=4 align="right"><strong>Discount:</strong></td>
+            <td>$<%= information.Discount%></td>
+        </tr>
+        <tr class="font-bold bg-gray">
+            <td colspan=4 align="right"><strong>Total:</strong></td>
+            <td>$<%= information.TotalAmount%></td>
+        </tr>
+
+
+    </tbody>
+    </table>
+    <table>
+        <thead> 
+            
             <tr>
-                <td width="10%">17</td>
+                <th class="no-border text-start heading" colspan="5">
+                   Terms & Conditions:
+                </th>
+            </tr>
+            <thead>
+        
+        <tbody>
+            <tr>
                 <td>
-                    Vivo V19
-                </td>
-                <td width="10%">$699</td>
-                <td width="10%">1</td>
-                <td width="15%" class="fw-bold">$699</td>
-            </tr>
-            <tr>
-                <td colspan="4" class="total-heading">Total Amount - <small>Inc. all vat/tax</small> :</td>
-                <td colspan="1" class="total-heading">$14699</td>
-            </tr>
+                  <ul>
+                    <li>Payment<span color="red" >($<%= information?.TotalAmount %>)</span> Processed by Stripe, InvoiceNumber(<%= information?.InvoiceNumber %>) This is an electronically generated invoice/receipt and does not require any signature or official stamp.</li>
+                    <li>Billing & Payments: <%= information?.CompanyName %> manages the payments done on our website, which are secured through Stripe payment processor. All your bank/credit/debit card/Stripe, and/or any other billing statements will disclose "ceuTrainers Webinar" for your payments done to <%= information?.Companywebsite %> For any inquiries regarding yearly subscription, billing info, corrections to your invoice, etc., please contact us at <%= information?.CompanyEmail %> Our service hours are: Mon - Fri, 10 am - 5 pm EST. All the delivery are done on email In case your firewall blocked our email. Please contact us / Write to us/ Go to live Chat. We will Respond to you Soon</li>
+                    <li>For terms and use :-<a herf='<%= information?.CompanywebsitePolice %>'>   ceu-trainers.com/privacy-policy</a></li>
+                  </ul>
+            </td>
+        </tr>
         </tbody>
     </table>
 
+   
+
+
+
     <br>
     <p class="text-center">
-        Thank your for shopping with Funda of Web IT
+        Thank your for shopping with ceuTrainers
     </p>
 
 </body>
