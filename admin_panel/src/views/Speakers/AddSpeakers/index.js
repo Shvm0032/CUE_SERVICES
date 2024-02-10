@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import ReactQuill from 'react-quill';
-import axios from 'axios';
 import 'react-quill/dist/quill.snow.css';
 import { useNavigate } from 'react-router';
 import http from "../../../utils/http-client";
@@ -32,10 +31,52 @@ export default function AddSpeakers() {
   });
   const [returnMessage, setReturnMessage] = useState('');
   const [filedata, setFiledata] = useState([]);
+  const [validationMessages, setValidationMessages] = useState({
+    name: '',
+    phone: '',
+    email: '',
+    bio: '',
+    image: '',
+    designation: '',
+    experience: ''
+  });
   const navigate = useNavigate(); // Correct useNavigate call
 
   function submitForm(e) {
     e.preventDefault();
+
+    // Check if all required fields are filled
+    const messages = {};
+    Object.keys(formValue).forEach(key => {
+      if (formValue[key].trim() === '') {
+        messages[key] = 'This field is required';
+      } else {
+        messages[key] = '';
+      }
+    });
+   
+    // Check if filedata is not null
+    if (!filedata) {
+      messages.image = 'Please select an image';
+    } else {
+      messages.image = '';
+    }
+
+    
+    // Adding validation for the bio field
+    if (formValue.bio.trim() === '') {
+      messages.bio = 'Please fill Bio field ';
+    } else {
+      messages.bio = '';
+    }
+
+    setValidationMessages(messages);
+
+    if (Object.values(messages).some(message => message !== '')) {
+      setReturnMessage('Please fill out all required fields.');
+      return;
+    }
+
     const data = new FormData();
     data.append('name', formValue.name);
     data.append('email', formValue.email);
@@ -54,8 +95,8 @@ export default function AddSpeakers() {
       .catch(error => {
         console.error('Error:', error);
         setReturnMessage('Failed to add speaker. Please try again.');
-      });
-  }
+      });
+  }
 
   return (
     <>
@@ -64,38 +105,48 @@ export default function AddSpeakers() {
           <div className="row">
             <div className="col-12 bg-light p-4 border shadow">
               <h3 className="text-start my-3 mb-5">Add New Speaker</h3>
-              {returnMessage && <p className="text-success">{returnMessage}</p>}
+              {/* {returnMessage && <p className="text-success">{returnMessage}</p>} */}
               <form>
                 <div className='row'>
                   <div className='col'>
                     <div className='row'>
                       <div className='col-2'><label className="form-label"> Name :</label></div>
-                      <div className='col'><input type='text' className='form-control' name='username' onChange={(e) => { setFormValue((pre) => ({ ...pre, name: e.target.value })) }} placeholder='Enter Name...' /> </div>
+                      <div className='col'><input type='text' className='form-control' name='name' value={formValue.name} onChange={(e) => { setFormValue((pre) => ({ ...pre, name: e.target.value })) }} placeholder='Enter Name...' required /> </div>
+                      <div className='col'><p className="text-danger">{validationMessages.name}</p></div>
                     </div>
                   </div>
                   <div className='col'>
                     <div className='row'>
                       <div className='col-2 text-end'><label>Email :</label></div>
-                      <div className='col'><input type='text' className='form-control' name='email' onChange={(e) => { setFormValue((pre) => ({ ...pre, email: e.target.value })) }} placeholder='Email id...' /> </div>
+                      <div className='col'><input type='text' className='form-control' name='email' value={formValue.email} onChange={(e) => { setFormValue((pre) => ({ ...pre, email: e.target.value })) }} placeholder='Email id...' required /> </div>
+                      <div className='col'><p className="text-danger">{validationMessages.email}</p></div>
                     </div>
                   </div>
                 </div><br />
                 <div className='row'>
                   <div className='col-2'><label>Phone Number:</label></div>
-                  <div className='col'> <input type="text" className="form-control" name='phone' onChange={(e) => { setFormValue((pre) => ({ ...pre, phone: e.target.value })) }} placeholder="Phone Number" /></div>
+                  <div className='col'> <input type="text" className="form-control" name='phone' value={formValue.phone} onChange={(e) => { setFormValue((pre) => ({ ...pre, phone: e.target.value })) }} placeholder="Phone Number" required /></div>
+                  <div className='col'><p className="text-danger">{validationMessages.phone}</p></div>
                 </div><br />
                 <div className='row'>
                   <div className='col-2'><label>Designation:</label></div>
-                  <div className='col'> <input type="text" className="form-control" name='designation' onChange={(e) => { setFormValue((pre) => ({ ...pre, designation: e.target.value })) }} placeholder="Designation" /></div>
+                  <div className='col'> <input type="text" className="form-control" name='designation' value={formValue.designation} onChange={(e) => { setFormValue((pre) => ({ ...pre, designation: e.target.value })) }} placeholder="Designation" required /></div>
+                  <div className='col'><p className="text-danger">{validationMessages.designation}</p></div>
                 </div><br />
                 <div className='row'>
                   <div className='col-2'><label>Experience:</label></div>
-                  <div className='col'> <input type="text" className="form-control" name='experience' onChange={(e) => { setFormValue((pre) => ({ ...pre, experience: e.target.value })) }} placeholder="Working Experience" /></div>
+                  <div className='col'> <input type="text" className="form-control" name='experience' value={formValue.experience} onChange={(e) => { setFormValue((pre) => ({ ...pre, experience: e.target.value })) }} placeholder="Working Experience" required /></div>
+                  <div className='col'><p className="text-danger">{validationMessages.experience}</p></div>
                 </div><br />
                 <div className='row'>
                   <div className='col-2 mt-3'><label>Speaker Image :</label></div>
                   <div className='col'>
-                    <input type="file" className="form-control" name='image' onChange={(e) => { setFiledata(e.target.files[0]) }} id="customFile" /></div>
+                  <input type="file" className="form-control" name='image' onChange={(e) => { setFiledata(e.target.files[0]) }} id="customFile" required />
+                    <p className="text-danger">{validationMessages.image}</p> {/* Display image validation message */} </div>
+                   
+                
+
+
                 </div> <br />
 
                 <div className='row'>
@@ -106,7 +157,9 @@ export default function AddSpeakers() {
                       style={{
                         height: '40vh',
                       }}
+                      required
                     />
+                    <center> <p className="text-danger">{validationMessages.bio}</p></center> {/* Display bio validation message */}
                   </div>
                 </div><br /><br />
                 <div className='row'>

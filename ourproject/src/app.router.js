@@ -25,6 +25,7 @@ import Login from './components/js/Login';
 // import Navbar from './components/js/Navbar';
 import Register from './components/js/Register';
 import Dashboard from './components/js/Dashboard';
+import Invoice from './components/js/Invoice';
 
 import Error from './components/js/Error';
 import Subscribe from './components/js/Subscribe';
@@ -57,6 +58,7 @@ const AppRouter = () => {
 
             <Route element={<AuthGuard />}>
                 <Route path='/Dashboard' element={<Dashboard />} />
+                <Route path='/Invoice/:id' element={<Invoice />} />
             </Route>
 
             <Route path='/course' element={<Cources />} />

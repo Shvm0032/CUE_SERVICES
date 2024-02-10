@@ -15,6 +15,9 @@ async function paymentUpdate() {
     const orderItemsPromises = response.map(async (orderItem) => {
        // console.log(orderItem.hash_id,'orderItem');
         const hashId = orderItem.hash_id;
+        if(!hashId){
+            return Promise.resolve();
+        }
         const session = await stripe.checkout.sessions.retrieve(hashId);
        // console.log(session,'session');
         if (session) {

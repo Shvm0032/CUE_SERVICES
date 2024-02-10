@@ -4,11 +4,11 @@
     border-radius: 8px;
     box-shadow: #ffe5d0 2px;
 }
-
-.log-form {
-    /* margin-left: 20px;
-    margin-right: 20px; */
-}
+/* 
+ .log-form {
+     margin-left: 20px;
+    margin-right: 20px; 
+}  */
 
 .log-form input {
     background-color: rgb(184, 237, 237);
@@ -31,15 +31,11 @@
     color: #fff;
 }
 
-.log-buttons button {
-    color: white;
-}
 
 .sign-buttons:hover {
     background-color: #0eada3;
-   
     color: white;
-} */
+} 
 
 .log-cl {
     border-radius: 8px;

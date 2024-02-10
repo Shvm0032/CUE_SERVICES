@@ -214,6 +214,7 @@ function Dashboard() {
                               <td>Course Title</td>
                               <td>total Price</td>
                               <td>Selling Option</td>
+                              <td>Invoice</td>
                             </tr>
                           </thead>
                           {Orders?.map((Order, index) => (
@@ -237,6 +238,7 @@ function Dashboard() {
                                       </tbody>
                                     </table>
                                   </td>
+                                  <td><Link to={`/Invoice/${Order.order_id}`}>Invoice</Link></td>
                                 </tr>
                               ))}
                             </tbody>

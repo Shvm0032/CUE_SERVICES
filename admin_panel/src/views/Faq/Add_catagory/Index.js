@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import http from "../../../utils/http-client";
 
 function App() {
@@ -8,6 +7,7 @@ function App() {
     const [newCategory, setNewCategory] = useState('');
     const [editCategory, setEditCategory] = useState(null);
     const [successMessage, setSuccessMessage] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
 
     const getData = async () => {
         try {
@@ -20,6 +20,11 @@ function App() {
 
     const handleAddCategory = async () => {
         try {
+            if (newCategory.trim() === '') {
+                setErrorMessage('Category cannot be empty.');
+                return;
+            }
+
             let response;
 
             if (editCategory) {
@@ -43,6 +48,7 @@ function App() {
             setEditCategory(null);
             setShowModal(false);
             getData();
+            setErrorMessage(''); // Clear error message
         } catch (error) {
             console.error('Error inserting/updating data:', error.message);
             setSuccessMessage(''); // Clear success message if there was an error
@@ -120,11 +126,16 @@ function App() {
                             <div className="modal-body">
                                 <label>New Category</label>
                                 <input
-                                className='form-control'
+                                    className='form-control'
                                     type="text"
                                     value={newCategory}
-                                    onChange={(e) => setNewCategory(e.target.value)}
+                                    onChange={(e) => setNewCategory(e.target.value)} 
                                 />
+                                {errorMessage && (
+                                    <div className="alert alert-danger mt-3" role="alert">
+                                        {errorMessage}
+                                    </div>
+                                )}
                             </div>
                             <div className="modal-footer">
                                 <button
