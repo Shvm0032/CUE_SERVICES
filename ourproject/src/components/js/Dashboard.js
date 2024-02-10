@@ -40,7 +40,7 @@ function Dashboard() {
   const [avatarSrc, setAvatarSrc] = useState(deafaultImg); // Default avatar source
 
   const handleSave = async (newAvatarSrc) => {
-   
+
     // Handle the save logic, for example, updating the avatar source in the state t
     try {
       let data = {
@@ -197,58 +197,59 @@ function Dashboard() {
                   <h5>ALL ORDERS</h5>
                   <Link to="/" class="btn btn-success ">Invoice</Link>
                 </div>
-                  {Orders?.map((Order, index) => (
                 <table class="table table-responsive  border  table-hover  table-light mt-3">
                   <thead className='border-bottom'>
                     <tr>
                       <th scope="col">PRODUCT</th>
                     </tr>
                   </thead>
-                    <tbody key={index}>
-                      <tr>
-                        {/* <th scope="row">{Order.order_id}</th> */}
-                        {/* <td>{Order.card_detail}</td> */}
-                        <td>
-                          <table className='table'>
-                            <thead>
-                              <tr>
-                                <td>Course Title</td>
-                                <td>total Price</td>
-                                <td>Selling Option</td>
-                              </tr>
-                            </thead>
-                            <tbody>
-                            {JSON.parse(Order.card_detail).map((item, itemIndex) => (
-                              <tr key={itemIndex}>
-                                <td>
-                                  {item.course_title}
-                                </td>
-                                <td>{item.totalPrice}</td>
-                                <td>
-                                  <table className='table'>
-                                    <tbody>
-                                      {item.courseItems && (item.courseItems).map((spitem,spid)=>(
-                                        <tr key={spid}>
-                                          <td>{spitem.itemName}</td>
-                                          <td>{spitem.itemPrice}</td>
-                                        </tr>
-                                      ))}
-                                      
-                                    </tbody>
-                                  </table>
-                                </td>
-                              </tr>
+                  <tbody >
+                    <tr>
+                      {/* <th scope="row">{Order.order_id}</th> */}
+                      {/* <td>{Order.card_detail}</td> */}
+                      <td>
+                        <table className='table'>
+                          <thead className='t'>
+                            <tr>
+                              <td>Course Title</td>
+                              <td>total Price</td>
+                              <td>Selling Option</td>
+                            </tr>
+                          </thead>
+                          {Orders?.map((Order, index) => (
+                            <tbody key={index}>
+                              {JSON.parse(Order.card_detail).map((item, itemIndex) => (
+                                <tr key={itemIndex}>
+                                  <td>
+                                    {item.course_title}
+                                  </td>
+                                  <td>{item.totalPrice}</td>
+                                  <td>
+                                    <table className='table'>
+                                      <tbody>
+                                        {item.courseItems && (item.courseItems).map((spitem, spid) => (
+                                          <tr key={spid}>
+                                            <td>{spitem.itemName}</td>
+                                            <td>{spitem.itemPrice}</td>
+                                          </tr>
+                                        ))}
+
+                                      </tbody>
+                                    </table>
+                                  </td>
+                                </tr>
                               ))}
                             </tbody>
-                          </table>
+                          ))}
+                        </table>
 
-                        </td>
 
-                      </tr>
+                      </td>
 
-                    </tbody>
+                    </tr>
+
+                  </tbody>
                 </table>
-                  ))}
               </div>
 
               {/* //Profile form // */}

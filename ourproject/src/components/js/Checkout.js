@@ -1,16 +1,16 @@
 import LoadingOverlay from 'react-loading-overlay-ts';
 import React, { useState, useEffect } from 'react'
 import { loadStripe } from '@stripe/stripe-js';
-import { Link, } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectCartItems, removeFromCart, removeAllItemsFromCart, } from '../../redux/cartSlice';
 import http from "../../utils/http-client";
 import FadeLoader from "react-spinners/FadeLoader";
-
+import { selectIsLoggedIn } from '../../redux/authSlice';
 const stripePromise = loadStripe('pk_test_51OGHZSSA3p9Dwv0NaccoiuEfDXTNtWgvxuPleUcdSBFVbnBTwoa1KZcXPVzBxmNRXW1GNwpPZcX5YGY8FfiBSdpH00ZkIQDWaC'); // Replace with your Stripe public key
-function Checkout() {
 
+function Checkout() {
+    const isLoggedIn = useSelector(selectIsLoggedIn);
     const [isLoading, setIsLoading] = useState(false);
     const [selectedCourseId, setSelectedCourseId] = useState(null);
     const navigate = useNavigate();
@@ -36,7 +36,7 @@ function Checkout() {
         const response = await http.post('/check-coupon', { couponCode });
 
         console.log(response, 'response----')
-        if (response?.status == 200) {
+        if (response?.status === 200) {
             const data = response.data;
             console.log(data);
             if (data.valid) {
@@ -133,13 +133,24 @@ function Checkout() {
         console.log(errors);
         return Object.keys(errors).length === 0;
     };
+    
+  // useEffect to perform email existence check
+    useEffect(() => {
+        // Perform the check only if the user is not logged in
+        if (!isLoggedIn) {
+         //   checkEmailExists(formData.email);
+        }
+    }, [formData.email, isLoggedIn]); 
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormData(prevState => ({
             ...prevState, [name]: value
         }));
-        checkEmailExists(value);
+        console.log(isLoggedIn,'isLoggedIn');
+        if (name == 'email') {
+            checkEmailExists(value);
+        }
     };
 
 
@@ -264,7 +275,7 @@ function Checkout() {
     //     }).catch(e => {
     //         console.log(e.errors)
     //     })
-
+  
 
     return (
         <div><LoadingOverlay
@@ -517,7 +528,7 @@ function Checkout() {
 
                                                 <div className='row'>
                                                     <div className='col'>
-                                                        {emailExists ? (
+                                                        {emailExists && !isLoggedIn ? (
                                                             <button className='btn btn-outline-success btn-lg' onClick={() => navigate('/login')}>Login</button>
                                                         ) : (
                                                             <button className='btn btn-outline-success btn-lg' onClick={handleCheckout}>Checkout</button>
