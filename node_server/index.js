@@ -218,7 +218,7 @@ app.get('/api/check_session_info', async (req, res) => {
 
 
 cron.schedule('* * * * *', () => {
-   schedular.paymentUpdate();
+   //schedular.paymentUpdate();
 });
 app.listen(port, () => {
     console.log(`Example app listening on port at http://${hostname}:${port}/`);
