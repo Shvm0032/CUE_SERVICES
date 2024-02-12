@@ -2,9 +2,7 @@ import React from 'react'
 import CIcon from '@coreui/icons-react'
 import {
   cilCursor,
-  cilDrop,
   cilNotes,
-  cilPencil,
   cilPuzzle,
   cilSpeedometer,
   cilStar,

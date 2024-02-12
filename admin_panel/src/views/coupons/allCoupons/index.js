@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import { jsPDF } from "jspdf";
 import 'jspdf-autotable'
 import { Link } from 'react-router-dom';
 import http from "../../../utils/http-client";
 
 export default function AllCopons() {
-  var [Coupan, setCoupan] = useState([]);
+ // var [Coupan, setCoupan] = useState([]);
   var [Coupans, setCoupans] = useState([]);
   var getData = async () => {
     try {
-      var res = await http.get("/Coupan");
+      const res = await http.get("/Coupan");
       console.log(res);
       setCoupans(res.data);
     } catch (error) {
@@ -22,19 +21,7 @@ export default function AllCopons() {
     getData();
   }, []);
 
-  async function deleteFunc(r) {
-    console.log("hii")
-    console.log(r)
-    try {
-      var res = await http.delete(`/delete_Coupans?id=${r.id}`);
-      console.log(res);
-      if (res.status === 200) {
-        setCoupan(Coupan.filter((ele) => { if (ele.id !== r.id) { return true } else { return false } }))
-      }
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  }
+  
 
   const exportPdf = async () => {
     const doc = new jsPDF({
@@ -45,7 +32,21 @@ export default function AllCopons() {
     })
     doc.save("data.pdf");
   }
-
+  async function deleteFunc(r) {
+    console.log("hii")
+    console.log(r)
+    try {
+      const res = await http.Delete(`/delete_Coupans?id=${r.id}`);
+      console.log(res);
+      if (res.data.success) {
+        setCoupans(Coupans.filter((ele) => (ele.id !== r.id)))
+      } else {
+        console.error('Coupan not found or not deleted:', res.data.error);
+      }
+    } catch (error) {
+      console.error("Error deleting data:", error);
+    }
+  }
   return (
     <div>
       <div className='container'>
@@ -71,8 +72,9 @@ export default function AllCopons() {
               </thead>
               <tbody>
                 {Coupans.map((row, index) => (
+                  
                   <tr key={index}>
-                    <th >{row.id}</th>
+                    <th>{index + 1}</th>
                     <td>{row.coupon_code}</td>
                     <td>{row.discount}</td>
                     <td>{row.start_date}</td>
@@ -81,15 +83,12 @@ export default function AllCopons() {
                     <td>{row.coupons_limit}</td>
                     {/* <td>{row.hashid}</td> */}
                     <td>
+                      <Link to={`/Copons/EditCopons/${row.id}`} className="btn btn-outline-success">
+                        <i className="fa fa-edit"></i>
+                      </Link>&nbsp;&nbsp;
                       <button type="submit" onClick={() => deleteFunc(row)} className="btn btn-outline-danger">
-                        <i className="fa-solid fa-trash-can"></i>&nbsp;Delete
+                        <i className="fa-solid fa-trash-can"></i>
                       </button>
-                      &nbsp;&nbsp;
-                      <Link to={`/Copons/EditCopons/${row.id}`} className="btn btn-success">
-                        <i className="fa fa-edit"></i>&nbsp;Edit
-                      </Link>
-
-
                     </td>
                   </tr>
 

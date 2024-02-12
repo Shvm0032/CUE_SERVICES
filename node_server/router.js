@@ -186,10 +186,12 @@ Router.delete("/api/delete_course", async (req, res) => {
             0,
             req.query.id
         ];
+
         const updateCourseQueryc = ` UPDATE course_detail SET status = ? WHERE id = ?`;
         let response = await queryAsync(updateCourseQueryc, itemValuesU);
         if (!response) {
             return res.send({ rows, row });
+
         } else {
             return res.send({ error: "course not deleted" });
         }
@@ -354,9 +356,9 @@ Router.put('/api/update/:course_id', upload.single('file'), async (req, res) => 
 
 Router.get("/api/Speaker", (req, res) => {
     try {
-        sqlDbconnect.query("SELECT * FROM speaker_info WHERE status IN (1,2)", (err, rows) => {
+        sqlDbconnect.query("SELECT * FROM speaker_info WHERE status = 1", (err, rows) => {
             if (!err) {
-                return res.json({ success: true, data: rows, message: "you are logged in." });
+                return res.json({ success: true, data: rows, message: "getting all speaker" });
                 // res.send(rows);
             } else {
                 return res.json({ success: false });
@@ -405,16 +407,22 @@ Router.post("/api/Speaker_add", upload.single("file"), (req, res) => {
 });
 
 
-Router.delete("/api/delete_speaker", (req, res) => {
+Router.delete("/api/delete_speaker", async (req, res) => {
     try {
-        console.log(req.query.id, "<<>>")
-        sqlDbconnect.query(`DELETE FROM speaker_info WHERE speaker_id = "${req.query.id}"`, (err, rows) => {
-            if (!err) {
-                res.send(rows);
-            } else {
-                console.log(err);
-            }
-        });
+        const queryAsync = util.promisify(sqlDbconnect.query).bind(sqlDbconnect);
+        console.log(req.query.id, "<<>>");
+
+        const itemValuesU = [
+            0,
+            req.query.id
+        ];
+        const updateCourseQueryc = `UPDATE speaker_info SET status = ? WHERE speaker_id = ?`;
+        let response = await queryAsync(updateCourseQueryc, itemValuesU);
+        if (response.affectedRows > 0) {
+            return res.status(200).send({ success: true, message: "Speaker deleted successfully" });
+        } else {
+            return res.status(404).send({ success: false, error: "Speaker not found or not deleted" });
+        }
     }
     catch (error) {
         console.error('Error updating course:', error);
@@ -559,7 +567,7 @@ Router.post('/api/check-coupon', (req, res) => {
 
 Router.get("/api/Coupan", (req, res) => {
     try {
-        sqlDbconnect.query("SELECT * FROM sales_promotion_coupon", (err, rows) => {
+        sqlDbconnect.query("SELECT * FROM sales_promotion_coupon where status = 1", (err, rows) => {
             if (!err) {
                 res.send(rows);
             } else {
@@ -626,16 +634,23 @@ Router.put('/api/update_Coupon/:id', (req, res) => {
 });
 
 // delet coopan
-Router.delete("/api/delete_Coupans", (req, res) => {
+Router.delete("/api/delete_Coupans", async (req, res) => {
     try {
-        console.log(req.query.id, "<<>>")
-        sqlDbconnect.query(`DELETE FROM sales_promotion_coupon WHERE id = "${req.query.id}"`, (err, rows) => {
-            if (!err) {
-                res.send(rows);
-            } else {
-                console.log(err);
-            }
-        });
+        const queryAsync = util.promisify(sqlDbconnect.query).bind(sqlDbconnect);
+        console.log(req.query.id, "<<>>");
+
+        const itemValuesU = [
+            0,
+            req.query.id
+        ];
+        const updateIndustryQuery = `UPDATE sales_promotion_coupon SET status = ? WHERE id = ?`;
+        let response = await queryAsync(updateIndustryQuery, itemValuesU);
+        if (response.affectedRows > 0) {
+            return res.status(200).send({ success: true, message: " Coupan deleted successfully" });
+        } else {
+            return res.status(404).send({ success: false, error: "Coupan not found or not deleted" });
+        }
+
     }
     catch (error) {
         console.error('Error updating course:', error);
@@ -672,7 +687,7 @@ Router.post('/api/InsertCoupons', (req, res) => {
 Router.get("/api/Industary", (req, res) => {
     try {
 
-        sqlDbconnect.query("SELECT * FROM industry", (err, rows) => {
+        sqlDbconnect.query("SELECT * FROM industry where status = 1", (err, rows) => {
             if (!err) {
                 res.send(rows);
             } else {
@@ -683,6 +698,29 @@ Router.get("/api/Industary", (req, res) => {
     catch (error) {
         console.error('Error updating course:', error);
         res.status(502).send('Internal Server Error');
+    }
+});
+
+
+Router.delete("/api/delete_industry", async (req, res) => {
+    try {
+        const queryAsync = util.promisify(sqlDbconnect.query).bind(sqlDbconnect);
+        console.log(req.query.id, "<<>>");
+
+        const itemValuesU = [
+            0,
+            req.query.id
+        ];
+        const updateIndustryQuery = `UPDATE industry SET status = ? WHERE id = ?`;
+        let response = await queryAsync(updateIndustryQuery, itemValuesU);
+        if (response.affectedRows > 0) {
+            return res.status(200).send({ success: true, message: "Industry deleted successfully" });
+        } else {
+            return res.status(404).send({ success: false, error: "Industry not found or not deleted" });
+        }
+    } catch (err) {
+        console.error(err);
+        return res.status(502).json({ error: 'Internal Server Error' });
     }
 });
 
@@ -715,7 +753,7 @@ Router.post("/api/Industary_add", upload.single("file"), (req, res) => {
 
 
 
-Router.put('/api/update_industry/:id', upload.single('image'), (req, res) => {
+Router.put('/api/edite_industry/:id', upload.single('image'), (req, res) => {
     try {
         const industryId = req.params.id;
         const { industry_name } = req.body;
@@ -751,7 +789,7 @@ Router.put('/api/update_industry/:id', upload.single('image'), (req, res) => {
 
 Router.get("/api/Faq_Category", (req, res) => {
     try {
-        sqlDbconnect.query("SELECT * FROM faq_category", (err, rows) => {
+        sqlDbconnect.query("SELECT * FROM faq_category where status=1", (err, rows) => {
             if (!err) {
                 res.send(rows);
             } else {
@@ -764,9 +802,6 @@ Router.get("/api/Faq_Category", (req, res) => {
         res.status(502).json({ error: 'Internal Server Error' });
     }
 });
-
-
-
 
 // edit faq category
 
@@ -835,7 +870,7 @@ Router.put('/api/Update_Category/:id', (req, res) => {
 
 Router.get("/api/Faq_Question", (req, res) => {
     try {
-        sqlDbconnect.query("SELECT * FROM faq", (err, rows) => {
+        sqlDbconnect.query("SELECT * FROM faq where status = 1 ", (err, rows) => {
             if (!err) {
                 res.send(rows);
             } else {
@@ -847,6 +882,58 @@ Router.get("/api/Faq_Question", (req, res) => {
         res.status(502).json({ error: 'Internal Server Error' });
     }
 });
+
+// Delete FAQ Category
+Router.delete("/api/delete_FaqCategory", async (req, res) => {
+    try {
+        const queryAsync = util.promisify(sqlDbconnect.query).bind(sqlDbconnect);
+        console.log(req.query.id, "<<>>");
+
+        const itemValuesU = [
+            0,
+            req.query.id
+        ];
+        const updateIndustryQuery = `UPDATE faq_category SET status = ? WHERE id = ?`;
+        let response = await queryAsync(updateIndustryQuery, itemValuesU);
+        if (response.affectedRows > 0) {
+            return res.status(200).send({ success: true, message: "Faq Catagory deleted successfully" });
+        } else {
+            return res.status(404).send({ success: false, error: "Faq Catagory not found or not deleted" });
+        }
+
+    }
+    catch (error) {
+        console.error('Error updating course:', error);
+        res.status(502).send('Internal Server Error');
+    }
+})
+
+
+// Delete FAQ question
+Router.delete("/api/delete_FaqQuestion", async (req, res) => {
+    try {
+        const queryAsync = util.promisify(sqlDbconnect.query).bind(sqlDbconnect);
+        console.log(req.query.id, "<<>>");
+
+        const itemValuesU = [
+            0,
+            req.query.id
+        ];
+        const updateIndustryQuery = `UPDATE faq SET status = ? WHERE id = ?`;
+        let response = await queryAsync(updateIndustryQuery, itemValuesU);
+        if (response.affectedRows > 0) {
+            return res.status(200).send({ success: true, message: " Question deleted successfully" });
+        } else {
+            return res.status(404).send({ success: false, error: "Question not found or not deleted" });
+        }
+
+    }
+    catch (error) {
+        console.error('Error updating course:', error);
+        res.status(502).send('Internal Server Error');
+    }
+})
+
 
 
 Router.post('/api/Add_question', (req, res) => {
@@ -1001,7 +1088,7 @@ Router.post('/api/AddSellingOption', (req, res) => {
 // Endpoint to get all selling options
 Router.get('/api/GetsellingOptions', (req, res) => {
     try {
-        const sql = 'SELECT * FROM selling_options';
+        const sql = 'SELECT * FROM selling_options where status = 1';
         sqlDbconnect.query(sql, (err, result) => {
             if (err) {
                 console.error('Error fetching data from MySQL:', err);
@@ -1017,9 +1104,33 @@ Router.get('/api/GetsellingOptions', (req, res) => {
     }
 });
 
+// Delete FAQ question
+Router.delete("/api/DeleteSellingOption", async (req, res) => {
+    try {
+        const queryAsync = util.promisify(sqlDbconnect.query).bind(sqlDbconnect);
+        console.log(req.query.id, "<<>>");
+
+        const itemValuesU = [
+            0,
+            req.query.id
+        ];
+        const updateIndustryQuery = `UPDATE selling_options SET status = ? WHERE id = ?`;
+        let response = await queryAsync(updateIndustryQuery, itemValuesU);
+        if (response.affectedRows > 0) {
+            return res.status(200).send({ success: true, message: "Selling Option deleted successfully" });
+        } else {
+            return res.status(404).send({ success: false, error: "Selling Option not found or not deleted" });
+        }
+
+    }
+    catch (error) {
+        console.error('Error updating Selling Option:', error);
+        res.status(502).send('Internal Server Error');
+    }
+})
+
 
 // edit selling coopan
-
 Router.get("/api/selling_edit/:id", (req, res) => {
     try {
         const id = req.params.id;
@@ -1154,21 +1265,6 @@ Router.post('/api/NewRegistration', (req, res) => {
 });
 
 
-Router.get("/api/User_message", (req, res) => {
-    try {
-        sqlDbconnect.query("SELECT * FROM user_message", (err, rows) => {
-            if (!err) {
-                res.send(rows);
-            } else {
-                console.log(err);
-            }
-        });
-    }
-    catch (error) {
-        console.error('Error updating category:', error);
-        res.status(502).json({ error: 'Internal Server Error' });
-    }
-});
 
 Router.get("/api/User_message", (req, res) => {
     try {
@@ -1232,148 +1328,9 @@ Router.post("/api/add_user", (req, res) => {
 
 })
 
-Router.post("/api/course_added", (req, res) => {
-    try {
-        console.log(req.body, "<<>>Body")
-
-        let sql = `INSERT INTO courses_orders (course_id, customer_id, payment_status) VALUES ("${req.body.courseId}", "${req.body.userId}", "1")`
-        sqlDbconnect.query(sql, (err, result) => {
-            if (!err) {
-                console.log("success")
-                sqlDbconnect.query(`SELECT * FROM user_info WHERE id = ${req.body.userId}`, (er, res) => {
-                    if (!er) {
-                        console.log("success")
-                        let mailTransporter = nodemailer.createTransport({
-                            service: 'gmail',
-                            auth: {
-                                user: '',
-                                pass: 'eppb dskn plzj ggqs'
-                            }
-                        });
-                        let random = generator.generateMultiple(1, {
-                            length: 6,
-                            uppercase: false,
-                            numbers: true,
-                            symbols: true
-                        })[0];
-
-                        console.log(random)
-                        let mailDetails = {
-                            from: 'itsyourabhay@gmail.com',
-                            to: `${res[0].email}`,
-                            subject: 'Test mail',
-                            html: `<!DOCTYPE html>
-                        <html lang="en">
-                        <head>
-                            <meta charset="UTF-8">
-                            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                            <title>Document</title>
-                        </head>
-                        <body>
-                            <h1>hello</h1>
-                            <h2>username - </h2>
-                            <h2>password - </h2>
-                             <a href="http://localhost:3000/login">login Link</a>
-                            
-                        </body>
-                        </html>`
-                        };
-
-                        mailTransporter.sendMail(mailDetails, function (err, data) {
-                            if (err) {
-                                console.log('Error Occurs');
-                                res.status(500).json({ message: "Error" })
-                            } else {
-                                console.log('Email sent successfully');
-                                res.status(200).json({ success: "ueser message send succesfully", result: result, id: result.insertId });
-                            }
-                        })
 
 
-                    } else {
-                        console.log(er);
-                        res.status(500).json({ success: "There is some error" });
-                    }
-                })
 
-            } else {
-                console.log(err);
-                res.status(500).json({ success: "There is some error" });
-            }
-        });
-    }
-    catch (error) {
-        console.error('Error updating category:', error);
-        res.status(502).json({ error: 'Internal Server Error' });
-    }
-
-})
-
-
-Router.post("/api/sending_email", (req, res) => {
-    console.log(req.body)
-
-
-    try {
-        let mailTransporter = nodemailer.createTransport({
-            service: 'gmail',
-            auth: {
-                user: 'itsyourabhay@gmail.com',
-                pass: 'eppb dskn plzj ggqs'
-            }
-        });
-        let random = generator.generateMultiple(1, {
-            length: 6,
-            uppercase: false,
-            numbers: true,
-            symbols: true
-        })[0];
-
-        console.log(random)
-        let mailDetails = {
-            from: 'itsyourabhay@gmail.com',
-            to: `${req.body.email}`,
-            subject: 'Test mail',
-            html: `<!DOCTYPE html>
-            <html lang="en">
-            <head>
-                <meta charset="UTF-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>Document</title>
-            </head>
-            <body>
-                <h1>hello</h1>
-                <h2>username - ${req.body.email}</h2>
-                <h2>password - ${random}</h2>
-                 <a href="http://localhost:3000/login">login Link</a>
-                
-            </body>
-            </html>`
-        };
-
-        mailTransporter.sendMail(mailDetails, function (err, data) {
-            if (err) {
-                console.log('Error Occurs');
-                res.status(500).json({ message: "Error" })
-            } else {
-                console.log('Email sent successfully');
-                var sql = `UPDATE user_info SET password = "${random}"`;
-                sqlDbconnect.query(sql, (err, result) => {
-                    if (!err) {
-                        console.log("Updated db successfully")
-                        res.status(200).json({ success: "ueser message send succesfully" });
-                    } else {
-                        console.log(err);
-                        res.status(500).json({ message: "Error" })
-                    }
-                });
-            }
-        })
-    } catch (err) {
-        res.status(502).json({ message: "Error" })
-    }
-
-});
 
 
 
@@ -1433,41 +1390,10 @@ Router.post('/api/save-image', async (req, res) => {
     }
 });
 
-
-//Payment Success//
-Router.get("/api/payment_success", (req, res) => {
-    try {
-        console.log(req.body, "<<<< Yaha")
-        res.send("hi")
-    }
-    catch (error) {
-        console.error('Error processing image:', error);
-        res.status(502).send('Internal Server Error');
-    }
-})
-
-
-//Industry//
-Router.get("/api/industry", (req, res) => {
-    try {
-        sqlDbconnect.query("SELECT * FROM industry", (err, result) => {
-            if (!err) {
-                res.status(200).json(result);
-            } else {
-                console.log(err);
-            }
-        });
-    } catch (error) {
-        console.error('Error processing image:', error);
-        res.status(502).send('Internal Server Error');
-    }
-})
-
-
 //Speakers//
 Router.get("/api/speaker", (req, res) => {
     try {
-        sqlDbconnect.query("SELECT * FROM speaker_info", (err, result) => {
+        sqlDbconnect.query("SELECT * FROM speaker_info ", (err, result) => {
             if (!err) {
                 res.status(200).json(result);
             } else {
@@ -1482,9 +1408,10 @@ Router.get("/api/speaker", (req, res) => {
 
 
 //Subscribe//
+
 Router.get("/api/Subscribe", (req, res) => {
     try {
-        sqlDbconnect.query("select * from  subscribe", (err, rows) => {
+        sqlDbconnect.query("select * from  subscribe where status=1", (err, rows) => {
             if (!err) {
                 res.send(rows);
             } else {
@@ -1497,6 +1424,30 @@ Router.get("/api/Subscribe", (req, res) => {
         res.status(502).send('Internal Server Error');
     }
 });
+
+//delete subscriber
+Router.delete("/api/delete_Subscribe", async (req, res) => {
+    try {
+        const queryAsync = util.promisify(sqlDbconnect.query).bind(sqlDbconnect);
+        console.log(req.query.id, "<<>>");
+
+        const itemValuesU = [
+            0,
+            req.query.id
+        ];
+        const updateIndustryQuery = `UPDATE subscribe SET status = ? WHERE id = ?`;
+        let response = await queryAsync(updateIndustryQuery, itemValuesU);
+        if (response.affectedRows > 0) {
+            return res.status(200).send({ success: true, message: "Industry deleted successfully" });
+        } else {
+            return res.status(404).send({ success: false, error: "Industry not found or not deleted" });
+        }
+    } catch (err) {
+        console.error(err);
+        return res.status(502).json({ error: 'Internal Server Error' });
+    }
+});
+
 
 
 //New Subscribe//
@@ -1746,9 +1697,8 @@ Router.get('/api/user/invoice', async (req, res) => {
         let jwtSecretKey = process.env.JWT_SECRET_KEY;
         const decoded = jwt.verify(token, jwtSecretKey);
         const id = decoded.userId ? decoded.userId : 0;
-        
         const UserOrder = await queryAsync('Select * from order_details where order_id = ? and user_id ', [order_id, id]);
-        console.log(UserOrder.length,'UserOrder');
+
         if (UserOrder.length > 0) {
             
         }
@@ -1800,7 +1750,7 @@ Router.get('/api/user/invoice', async (req, res) => {
     } catch(error) {
         console.error('Error processing image:', error);
         res.status(502).send('Internal Server Error');
-    }
+    }
 });
 
 

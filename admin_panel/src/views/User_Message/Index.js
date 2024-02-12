@@ -13,6 +13,7 @@ export default function Index() {
         }
         getUserdata();
     }, []);
+    
     const exportPdf =async()=>{
         const doc = new jsPDF({
           orientation:"landscape"
@@ -32,9 +33,9 @@ export default function Index() {
                 <button onClick={exportPdf} className='ms-auto btn btn-outline-primary'><i className="fa-solid fa-file-pdf"></i> Convert to pdf</button>
                 </div><br/>
                     <div className='row'>
-                        <table className="table table-striped table-hover shadow" id='my-table'>
+                        <table className="table table-border table-striped table-hover table-light shadow  table-scroll text-center" id='my-table'>
                             <thead>
-                                <tr>
+                                <tr className='table-dark'>
                                     <th scope="col">ID</th>
                                     <th scope="col">Name</th>
                                     <th scope="col">Phone Number</th>
@@ -46,7 +47,7 @@ export default function Index() {
                             <tbody>
                                 {userdata.map((userdata,index) => (
                                     <tr key={index}>
-                                        <td>{userdata.Id}</td>
+                                        <td>{index+1}</td>
                                         <td>{userdata.Name}</td>
                                         <td>{userdata.Email}</td>
                                         <td>{userdata.Phone}</td>
