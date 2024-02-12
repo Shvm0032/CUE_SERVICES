@@ -270,17 +270,17 @@ function Dashboard() {
                       <div className='col p-5'>
 
                         <label className='mb-2'>First name</label><br />
-                        <input type='text' placeholder='First name' className='form-control' name='fname' value={formData.fname} onChange={handleInputChange} /><br />
+                        <input type='text' placeholder='First name' className='form-control' required name='fname' value={formData.fname} onChange={handleInputChange} /><br />
 
                         <label className='mb-2'>Email</label>
                         <input type='text' placeholder='Email' className='form-control' disabled name='email' value={formData.email} onChange={handleInputChange} /><br />
                         <label className='mb-2'> Username</label>
                         <input type='text' placeholder='Username' className='form-control' disabled name='uname' value={formData.uname} onChange={handleInputChange} /><br />
                         <label className='mb-2'> Address1</label>
-                        <input type='text' placeholder='Address1' className='form-control' name='address1' value={formData.address1} onChange={handleInputChange} /><br />
+                        <input type='text' placeholder='Address1' className='form-control' required name='address1' value={formData.address1} onChange={handleInputChange} /><br />
 
                         <label className='mb-2'>Country</label>
-                        <select placeholder='Country' className='form-control' name='country' value={formData.country} onChange={handleInputChange}>
+                        <select placeholder='Country' className='form-control' required name='country' value={formData.country} onChange={handleInputChange}>
                           {countries.map((country, index) => (
                             <option key={index} value={country}>
                               {country}
@@ -289,31 +289,31 @@ function Dashboard() {
                         </select><br />
 
                         <label className='mb-2'> City</label>
-                        <input type='text' placeholder='City' className='form-control' name='city' value={formData.city} onChange={handleInputChange} /><br />
+                        <input type='text' placeholder='City' className='form-control' required name='city' value={formData.city} onChange={handleInputChange} /><br />
 
                         <label className='mb-2'> Password</label>
-                        <input type='password' placeholder='password' className='form-control' name='password' value={formData.password} onChange={handleInputChange} /><br /><br />
+                        <input type='password' placeholder='password' className='form-control' required name='password' value={formData.password} onChange={handleInputChange} /><br /><br />
 
 
                       </div>
                       <div className='col p-5'>
                         <label className='mb-2'> Last name</label>
-                        <input type='text' placeholder='Last name' className='form-control' name='lname' value={formData.lname} onChange={handleInputChange} /><br />
+                        <input type='text' placeholder='Last name' className='form-control' required name='lname' value={formData.lname} onChange={handleInputChange} /><br />
                         <label className='mb-2'>Phone Number</label>
-                        <input type='text' placeholder='Phone No.' className='form-control' name='phone' value={formData.phone} onChange={handleInputChange} /><br />
+                        <input type='Number' placeholder='Phone No.' className='form-control' required name='phone' value={formData.phone} onChange={handleInputChange} /><br />
                         <label className='mb-2'>Gender</label>
-                        <select className='form-select' name='gender' value={formData.gender} onChange={handleInputChange}>
+                        <select className='form-select' name='gender' required value={formData.gender} onChange={handleInputChange}>
                           <option value="">Select Gender</option>
                           <option value="male">Male</option>
                           <option value="female">Female</option>
                           <option value="other">Other</option>
                         </select>
                         <label className='mb-2'> Address2</label>
-                        <input type='text' placeholder='Address2' className='form-control' name='address2' value={formData.address2} onChange={handleInputChange} /><br />
+                        <input type='text' placeholder='Address2' className='form-control' required  name='address2' value={formData.address2} onChange={handleInputChange} /><br />
                         <label className='mb-2'> State</label>
-                        <input type='text' placeholder='State' className='form-control' name='state' value={formData.state} onChange={handleInputChange} /><br />
+                        <input type='text' placeholder='State' className='form-control' required name='state' value={formData.state} onChange={handleInputChange} /><br />
                         <label className='mb-2'> Pincode</label>
-                        <input type='text' placeholder='Pincode' className='form-control' name='pincode' value={formData.pincode} onChange={handleInputChange} /><br />
+                        <input type='Number' placeholder='Pincode' className='form-control' required name='pincode' value={formData.pincode} onChange={handleInputChange} /><br />
                       </div>
 
                       {/* //Submit buttons// */}
