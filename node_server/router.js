@@ -1737,20 +1737,67 @@ Router.post('/api/check-email', async (req, res) => {
 //
 Router.get('/api/user/invoice', async (req, res) => {
     try {
+        const queryAsync = util.promisify(sqlDbconnect.query).bind(sqlDbconnect);
         let token = req.headers.authorization;
-        let order_id = req.body.order_id;
+        let order_id = req.query.order_id;
         if (token && token.startsWith('Bearer ')) {
             token = token.slice(7, token.length);
         }
         let jwtSecretKey = process.env.JWT_SECRET_KEY;
         const decoded = jwt.verify(token, jwtSecretKey);
         const id = decoded.userId ? decoded.userId : 0;
-        const checkEmailQuery = 'SELECT * FROM registration WHERE id = ?';
-        const queryAsync = util.promisify(sqlDbconnect.query).bind(sqlDbconnect);
-        const result = await queryAsync(checkEmailQuery,[id] );
+        
+        const UserOrder = await queryAsync('Select * from order_details where order_id = ? and user_id ', [order_id, id]);
+        console.log(UserOrder.length,'UserOrder');
+        if (UserOrder.length > 0) {
+            
+        }
+        else{
+            return res.status(200).send({success:false, message:"Invoice not found"});
+        }
 
-        res.status(200).send(result);
-    } catch {
+        //getting data from  user info from user_id
+        const resultInfo = await queryAsync('SELECT * from registration WHERE id =? ', [id]);
+        console.log(resultInfo);
+        if (resultInfo) {
+            const datetime = new Date(UserOrder[0].trans_date);
+            const date = moment(datetime).format('YYYY-MM-DD');
+             //ALL data that will be fetch in invoice pdf
+             let FinnalInvoiceData = {
+                //company ditaile for company
+                CompanyName: 'CUE SERVICES',
+                Companywebsite: 'ceutrainers.com',
+                CompanywebsitePolice: 'ceu-trainers.com/privacy-policy',
+                CompanyAddress: 'Company Addess',
+                CompanyEmail: 'info@ceutrainers.com',
+                CompanyZip: 'info@ceutrainers.com',
+                //User detail for invoice
+                OrderId: UserOrder[0]?.id || null,
+                User_Fname: UserOrder[0]?.FName || null,
+                User_lname: UserOrder[0]?.lName || null,
+                InvoiceNumber: UserOrder[0]?.order_id || null,
+                hash_id:UserOrder[0]?.hash_id || null,
+                OrderDate: date,
+                Country: UserOrder[0]?.Country || null,
+                State: UserOrder[0]?.State || null,
+                Zip: UserOrder[0]?.Zip || null,
+                City: UserOrder[0]?.City || null,
+                Phone: UserOrder[0]?.Phone || null,
+                Email: UserOrder[0]?.Email || null,
+                Course_quantity: UserOrder[0]?.course_quantity || null,
+                TotalAmount: UserOrder[0]?.grand_total || null,
+                Discount: UserOrder[0]?.discount || 0,
+                CourseDetail: UserOrder[0]?.card_detail || null,
+            }
+            
+            res.status(200).send({success:true, data:FinnalInvoiceData});
+            console.log(resultInfo, 'resultInfo');
+        }
+        else{
+            return res.status(200).send({success:false, message:"Invoice not found"});
+        }
+
+    } catch(error) {
         console.error('Error processing image:', error);
         res.status(502).send('Internal Server Error');
     }

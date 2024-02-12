@@ -163,7 +163,7 @@ const Cropper = ({ showModal, onClose, onSave, avatarSrc }) => {
             <i
             className="edit-icon fa-regular position-absolute fa-pen-to-square " 
             onClick={handleInputClick}
-          style={{color:"white",  cursor: 'pointer' , bottom: 0, right: 0 }}
+          style={{color:"black",  cursor: 'pointer' , bottom: 0, right: 0 }}
           ></i>
         </div>
       </main>

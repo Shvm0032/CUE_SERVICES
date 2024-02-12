@@ -16,8 +16,8 @@ function Dashboard() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const authUser = authService.getAuthUser();
-  const userId = authUser ? authUser.userId : null;
-  const [orderDetails, setOderDetails] = useState({});
+  // const userId = authUser ? authUser.userId : null;
+  // const [orderDetails, setOderDetails] = useState({});
 
   const [user, setUser] = useState([]);
   const [formData, setFormData] = useState({
@@ -135,7 +135,7 @@ function Dashboard() {
       };
       await authService.updateProfile(data);
 
-      fetchProfile(' http://127.0.1:8000/api/save-image');
+      // fetchProfile(' http://127.0.1:8000/api/save-image');
       toast.success('Profile updated successfully');
     } catch (error) {
       toast.error('Failed to update profile');
@@ -157,7 +157,7 @@ function Dashboard() {
     getData();
   }, []);
 
-  const countries = ["india", "nepal"]
+  const countries = ["United Kindom(UK)", "United States(USA)", "Australia", "England", "New Zealand", "Switzerland"]
 
   // console.log(authUser)
   // console.log(newAvatarSrc, 'newAvatarSrc');
@@ -209,13 +209,12 @@ function Dashboard() {
                   </thead>
                   {Orders?.map((Order, index) => (
                     <tbody className='border' key={index}>
+                      <tr key={index}>
+                      <td>{Order.order_id}</td>
                       {JSON.parse(Order.card_detail).map((item, itemIndex) => (
-                        <tr key={itemIndex}>
-                          <td>{Order.order_id}</td>
+                          <>
                           <td>
-
                             {item.course_title}
-
                           </td>
                           <td>{item.totalPrice}</td>
                           <td>
@@ -231,9 +230,11 @@ function Dashboard() {
                               </tbody>
                             </table>
                           </td>
-                          <td><Link to={`/Invoice/${Order.order_id}`}>Invoice</Link></td>
-                        </tr>
+                          </>
+                       
                       ))}
+                      <td><Link to={`/Invoice/${Order.order_id}`}>Invoice</Link></td>
+                     </tr>
                     </tbody>
                   ))}
                 </table>
@@ -247,7 +248,7 @@ function Dashboard() {
                   <div className='container'>
 
                     <div className='d-flex gap-3'>
-                      <div className='mt-2 position-relative  d-flex justify-content-center ' style={{ width: '90px', height: '90px', borderRadius: '50%', marginLeft: '55px' }}>
+                      <div className='mt-2 position-relative  d-flex justify-content-center ' style={{ width: '90px', height: '90px', borderRadius: '50%', marginLeft: '55px',}}>
                         {
                           user[0] &&
                           <ProfileModal
@@ -300,8 +301,13 @@ function Dashboard() {
                         <input type='text' placeholder='Last name' className='form-control' name='lname' value={formData.lname} onChange={handleInputChange} /><br />
                         <label className='mb-2'>Phone Number</label>
                         <input type='text' placeholder='Phone No.' className='form-control' name='phone' value={formData.phone} onChange={handleInputChange} /><br />
-                        <label className='mb-2'> Gender</label>
-                        <input type='text' placeholder='Gender' className='form-control' name='gender' value={formData.gender} onChange={handleInputChange} /><br />
+                        <label className='mb-2'>Gender</label>
+                        <select className='form-select' name='gender' value={formData.gender} onChange={handleInputChange}>
+                          <option value="">Select Gender</option>
+                          <option value="male">Male</option>
+                          <option value="female">Female</option>
+                          <option value="other">Other</option>
+                        </select>
                         <label className='mb-2'> Address2</label>
                         <input type='text' placeholder='Address2' className='form-control' name='address2' value={formData.address2} onChange={handleInputChange} /><br />
                         <label className='mb-2'> State</label>
