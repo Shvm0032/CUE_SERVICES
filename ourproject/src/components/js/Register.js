@@ -201,6 +201,19 @@ export default function Register() {
                                                     Female
                                                 </label>
                                             </div>
+                                            <div className='form-check form-check-inline'>
+                                                <input
+                                                    className='form-check-input'
+                                                    type='radio'
+                                                    id='others'
+                                                    value='others'
+                                                    {...register("gender")}
+                                                />
+                                                <label className='form-check-label' htmlFor='others'>
+                                                    Others
+                                                </label>
+                                            </div>
+                                            
                                         </div>
                                         {errors.gender && (
                                             <div className='invalid-feedback'>{errors.gender.message}</div>
@@ -261,13 +274,20 @@ export default function Register() {
                                         <label htmlFor='exampleInputCountry' className='form-label'>
                                             Country
                                         </label>
-                                        <input
-                                            type='text'
-                                            className={`form-control ${errors.country ? 'is-invalid' : ''}`}
-                                            placeholder='Country'
+                                        <select
+                                            className={`form-select ${errors.country ? 'is-invalid' : ''}`}
                                             id='exampleInputCountry'
                                             {...register("country")}
-                                        />
+                                        >
+                                            <option value="">Select Country</option>
+                                            <option value="United Kindom(UK)">United Kindom(UK)</option>
+                                            <option value="Australia">Australia</option>
+                                            <option value="England">England</option>
+                                            <option value="New Zealand">New Zealand</option>
+                                            <option value="Switzerland"> Switzerland</option>
+                                            <option value="United States">United States</option>
+                                           
+                                        </select>
                                         {errors.country && (
                                             <div className='invalid-feedback'>{errors.country.message}</div>
                                         )}
@@ -353,7 +373,7 @@ export default function Register() {
                                     )}
                                 </div>
                                 <div className='col flex-column text-center'>
-                                    <button type='submit' className=' btn sign-buttons '> Register </button><br />
+                                    <button type='submit' className='p-2 btn sign-buttons '> Register </button><br />
                                     <Link className='text-secondary text-center' to='/login'>
                                         Already have account?<span className='text-primary'>LogIn</span>
                                     </Link>

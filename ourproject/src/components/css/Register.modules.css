@@ -24,17 +24,17 @@
 
 .sign-buttons {
     min-width:400px;
-    background-color: #ff9b24;  
-    margin-top: 35px;
-    margin-bottom: 20px;
-    border-radius: 5px;
-    color: #fff;
+    background-color: #ff9b24 !important; 
+    margin-top: 35px !important;
+    margin-bottom: 20px !important;
+    border-radius: 5px !important;
+    color: #fff !important;
 }
 
 
 .sign-buttons:hover {
-    background-color: #0eada3;
-    color: white;
+    background-color: #0eada3 !important;
+    color: white !important;
 } 
 
 .log-cl {
