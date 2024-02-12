@@ -195,7 +195,7 @@ function Dashboard() {
               <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab ">
                 <div className='d-flex justify-content-between align-items-center p-4'>
                   <h5>ALL ORDERS</h5>
-                  <Link to="/" class="btn btn-success ">Invoice</Link>
+                
                 </div>
                 <table className='table table-bordered table-responsive'>
                   <thead class="table-light">
