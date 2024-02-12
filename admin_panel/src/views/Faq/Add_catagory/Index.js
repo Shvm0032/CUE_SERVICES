@@ -20,11 +20,11 @@ function App() {
 
     const handleAddCategory = async () => {
         try {
+
             if (newCategory.trim() === '') {
                 setErrorMessage('Category cannot be empty.');
                 return;
             }
-
             let response;
 
             if (editCategory) {
@@ -65,6 +65,25 @@ function App() {
         setShowModal(true);
     };
 
+    async function deleteFunc(r) {
+        console.log("hii")
+        console.log(r)
+        try {
+            const res = await http.Delete(`/delete_FaqCategory?id=${r.id}`);
+            console.log(res);
+            if (res.data.success) {
+                setFaqCategories(faqCategories.filter((ele) => (ele.id !== r.id)))
+            } else {
+                console.error('Coupan not found or not deleted:', res.data.error);
+            }
+        } catch (error) {
+            console.error("Error deleting data:", error);
+        }
+    }
+
+   
+
+
     return (
         <div>
             <div className="container">
@@ -77,32 +96,32 @@ function App() {
             <br />
 
             <div className="container mt-4">
-                <table className="table table-striped">
+                <table className="table table-border table-striped table-hover table-light shadow  table-scroll text-center" id='my-table'>
+
                     <thead>
-                        <tr>
+                        <tr className='table-dark'>
                             <th scope="col">#</th>
                             <th scope="col">Category</th>
                             <th scope="col">Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {faqCategories.map((category) => (
+                        {faqCategories.map((category, index) => (
                             <tr key={category.id}>
-                                <th scope="row">{category.id}</th>
+                                <th>{index + 1}</th>
                                 <td>{category.category}</td>
                                 <td>
                                     <button
                                         type="button"
-                                        className="btn btn-success"
+                                        className="btn btn-outline-success"
                                         onClick={() => handleEditCategory(category)}
                                     >
-                                        <i className="fas fa-edit"></i>Edit
+                                        <i className="fas fa-edit"></i>
                                     </button>
-                                    &nbsp;
-                                    <button type="button" className="btn btn-danger">
-                                        <i className="fas fa-trash-alt"></i>delete
+                                    &emsp;
+                                    <button type='submit' onClick={() => deleteFunc(category)} className="btn btn-outline-danger">
+                                        <i className="fas fa-trash-alt"></i>
                                     </button>
-                                    &nbsp;
                                 </td>
                             </tr>
                         ))}
@@ -129,7 +148,7 @@ function App() {
                                     className='form-control'
                                     type="text"
                                     value={newCategory}
-                                    onChange={(e) => setNewCategory(e.target.value)} 
+                                    onChange={(e) => setNewCategory(e.target.value)}
                                 />
                                 {errorMessage && (
                                     <div className="alert alert-danger mt-3" role="alert">

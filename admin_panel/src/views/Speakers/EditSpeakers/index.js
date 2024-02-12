@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useHistory, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { useParams, useNavigate } from 'react-router-dom';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import Modal from 'react-bootstrap/Modal';
@@ -25,6 +24,7 @@ const modules = {
 };
 
 const EditSpeakersComponent = () => {
+ // const IMGurl = process.env.REACT_APP_IMG_URL;
   const { speaker_id } = useParams();
   const navigate = useNavigate();
 
@@ -35,7 +35,7 @@ const EditSpeakersComponent = () => {
   const [designation, setDesignation] = useState('');
   const [experience, setExperience] = useState('');
   const [file, setFile] = useState(null);
-
+  console.log(file);
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
@@ -50,11 +50,10 @@ const EditSpeakersComponent = () => {
       })
       .catch((err) => console.log(err));
   }, [speaker_id]);
-
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
   };
-
+ 
   const handleShowModal = () => {
     setShowModal(true);
   };
@@ -134,6 +133,7 @@ const EditSpeakersComponent = () => {
             <label>Image</label>
           </div>
           <div className="col">
+            {/* <img src={`${IMGurl}/${images}`} width={100} height={50} alt='speaker' /> */}
             <img src={file ? URL.createObjectURL(file) : ''} alt="Speaker" style={{ height: "200px", width: "100%" }} className="img-fluid" />
             <input type="file" name="image" className="form-control" onChange={handleFileChange} />
           </div>

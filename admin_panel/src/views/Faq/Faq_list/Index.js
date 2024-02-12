@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import http from "../../../utils/http-client";
 
 function Index() {
@@ -8,7 +7,7 @@ function Index() {
   const [showModal, setShowModal] = useState(false);
   const [editQuestion, setEditQuestion] = useState(null);
   const [successMessage, setSuccessMessage] = useState('');
-
+  const [errorMessage, setErrorMessage] = useState('');
   const [newCategory, setNewCategory] = useState('');
   const [newQuestion, setNewQuestion] = useState('');
   const [newAnswer, setNewAnswer] = useState('');
@@ -30,6 +29,13 @@ function Index() {
 
   const handleAddQuestion = async () => {
     try {
+
+      if (newCategory.trim() === '' || newQuestion.trim() === '' || newAnswer.trim() === '') {
+        setErrorMessage('Please fill all fields');
+        console.error('Please fill all fields');
+        return;
+      }
+
       const response = await http.post('/Add_Question', {
         category_id: newCategory,
         question: newQuestion,
@@ -49,6 +55,7 @@ function Index() {
         console.error('Error inserting data:', response.statusText);
         setSuccessMessage('');
       }
+       setErrorMessage('');
     } catch (error) {
       console.error('Error inserting data:', error.message);
       setSuccessMessage('');
@@ -65,6 +72,12 @@ function Index() {
 
   const handleUpdateQuestion = async () => {
     try {
+
+      if (newCategory.trim() === '' || newQuestion.trim() === '' || newAnswer.trim() === '') {
+        console.error('Please fill all fields');
+        return;
+      }
+
       const response = await http.put(`/Update_Question/${editQuestion.id}`, {
         category_id: newCategory,
         question: newQuestion,
@@ -91,24 +104,21 @@ function Index() {
     }
   };
 
-  const handleDeleteQuestion = async (questionId) => {
+  async function deleteFunc(r) {
+    console.log("hii")
+    console.log(r)
     try {
-      const response = await http.delete(`/Delete_Question/${questionId}`);
-
-      if (response.status === 200) {
-        console.log('Data deleted successfully');
-        setSuccessMessage('Question deleted successfully');
-        getData();
+      const res = await http.Delete(`/delete_FaqQuestion?id=${r.id}`);
+      console.log(res);
+      if (res.data.success) {
+        setQuestions(questions.filter((ele) => (ele.id !== r.id)))
       } else {
-        console.error('Error deleting data:', response.statusText);
-        setSuccessMessage('');
+        console.error('Question not found or not deleted:', res.data.error);
       }
     } catch (error) {
-      console.error('Error deleting data:', error.message);
-      setSuccessMessage('');
+      console.error("Error deleting data:", error);
     }
-  };
-
+  }
   useEffect(() => {
     getData();
   }, []);
@@ -134,46 +144,47 @@ function Index() {
       <div className="container mt-4">
         <div className="row">
           <div className="col-md-12">
-          <div style={{ height: '60vh', overflowY: 'auto' }}>
-            <table className="table table-border  table-striped table-hover table-light table-shadow table-scroll">
-              <thead>
-                <tr>
-                  {/* <th scope="col">#</th> */}
-                  <th scope="col">Category_id</th>
-                  <th scope="col">Question</th>
-                  <th scope="col">Answer</th>
-                  <th scope="col">Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {questions.map((question) => (
-                  <tr key={question.id}>
-                    {/* <td scope="row">{question.id}</td> */}
-                    <td>{question.category_id}</td>
-                    <td>{question.question}</td>
-                    <td>{question.answer}</td>
-                    <td>
-                      <button
-                        type="button"
-                        className="btn btn-success"
-                        onClick={() => handleEditQuestion(question)}
-                      >
-                        <i className="fas fa-edit"></i>Edit
-                      </button>
-                      &nbsp;
-                      <button
-                        type="button"
-                        className="btn btn-danger"
-                        onClick={() => handleDeleteQuestion(question.id)}
-                      >
-                        <i className="fas fa-trash-alt"></i>Delete
-                      </button>
-                      &nbsp;
-                    </td>
+            <div style={{ height: '60vh', overflowY: 'auto' }}>
+              <table className="table table-striped table-hover table-responsive shadow  table-scroll text-center" id='my-table'>
+                <thead>
+                  <tr className='table-dark'>
+                    {/* <th scope="col">#</th> */}
+                    <th scope="col">#</th>
+                    <th scope="col">Category_id</th>
+                    <th scope="col">Question</th>
+                    <th scope="col">Answer</th>
+                    <th scope="col">Action</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {questions.map((question, index) => (
+                    <tr key={question.id}>
+                      <th>{index + 1}</th>
+                      <td>{question.category_id}</td>
+                      <td>{question.question}</td>
+                      <td>{question.answer}</td>
+                      <td>
+                        <button
+                          type="button"
+                          className="btn btn-outline-success"
+                          onClick={() => handleEditQuestion(question)}
+                        >
+                          <i className="fas fa-edit"></i>
+                        </button>
+                        &emsp;
+                        <button
+                          type="button"
+                          className="btn btn-outline-danger"
+                          onClick={() => deleteFunc(question)}
+                        >
+                          <i className="fas fa-trash-alt"></i>
+                        </button>
+                        &nbsp;
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
@@ -209,22 +220,30 @@ function Index() {
                 <div className="col">
                   <label>Title/Question</label>
                   <input
+                    required
                     type="text"
                     className="form-control"
                     value={newQuestion}
                     onChange={(e) => setNewQuestion(e.target.value)}
                   />
+                  
                 </div>
                 <br />
                 <div className="col">
                   <label>Answer</label>
                   <input
+                    required
                     type="text"
                     className="form-control"
                     value={newAnswer}
                     onChange={(e) => setNewAnswer(e.target.value)}
                   />
                 </div>
+                {errorMessage && (
+                  <div className="alert alert-danger mt-3" role="alert">
+                    {errorMessage}
+                  </div>
+                )}
               </div>
               <div className="modal-footer">
                 {editQuestion ? (

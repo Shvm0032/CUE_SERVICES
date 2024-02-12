@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import http from "../../../utils/http-client";
 
 export default function ViewIndustary() {
+  const IMGurl = process.env.REACT_APP_IMG_URL;
   const [industries, setIndustries] = useState([]);
   const [selectedIndustry, setSelectedIndustry] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -22,7 +22,6 @@ export default function ViewIndustary() {
       console.error("Error fetching data:", error);
     }
   };
-
   useEffect(() => {
     getData();
   }, []);
@@ -61,7 +60,7 @@ export default function ViewIndustary() {
       formData.append('industry_name', editForm.industry_name);
       formData.append('image', editForm.image);
 
-      const response = await http.post(`/update_industry/${selectedIndustry.id}`, formData, {
+      const response = await http.post(`/edite_industry/${selectedIndustry.id}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -76,23 +75,28 @@ export default function ViewIndustary() {
     }
   };
 
-//   async function delete_Industary(selectedIndustry){
 
-//   try{
-//     var res = await http.Delete(`/delete_Industary?id=${selectedIndustry.id}`);
-//     if (res.status === 200) {
-     
-//     }
-//   }catch(error){
-//     console.error("Error fetching data:", error);
+  async function handleDeleteIndustry(r) {
+    console.log("hii")
+    console.log(r)
 
-//   }
-// }
-
-  
+    try {
+      const res = await http.Delete(`/delete_industry?id=${r.id}`);
+      console.log("hellow");
+      if (res.data.success) {
+        setIndustries(industries.filter((ele) => ele.id !== r.id));
+        console.log(res.data.message);
+      } else {
+        console.error('Industry not found or not deleted:', res.data.error);
+      }
+    } catch (error) {
+      console.error('Error deleting industry:', error);
+    }
+  };
 
 
   return (
+
     <div>
       <h3 className='text-center'>View all Industry</h3>
       <div className='container mt-5'>
@@ -109,9 +113,11 @@ export default function ViewIndustary() {
             <tbody>
               {industries.map((industry, index) => (
                 <tr key={index}>
-                  <th>{industry.id}</th>
+                  <th>{index + 1}</th>
+
                   <td>{industry.industry_name}</td>
-                  <td>{industry.image}</td>
+                  <td><img src={`${IMGurl}/${industry.image}`} width={50} height={50} alt='speaker' /></td>
+                  {/* <td>{industry.image}</td> */}
                   <td>
                     <button
                       type="button"
@@ -121,7 +127,9 @@ export default function ViewIndustary() {
                       <i className="fa fa-edit"></i>
                     </button>
                     &emsp;
-                    <button type='button' className='btn btn-danger'><i className="fas fa-trash-alt"></i></button>
+                    <button type='submit'
+                      className='btn btn-danger'
+                      onClick={() => handleDeleteIndustry(industry)}><i className="fas fa-trash-alt"></i></button>
                   </td>
                 </tr>
               ))}

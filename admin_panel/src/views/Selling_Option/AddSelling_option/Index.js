@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import http from "../../../utils/http-client";
 
 export default function Index() {
     const [showModal, setShowModal] = useState(false);
@@ -82,6 +83,22 @@ export default function Index() {
         }
     };
 
+    async function deleteFunc(r) {
+        console.log("hii")
+        console.log(r)
+        try {
+            const res = await http.Delete(`/DeleteSellingOption?id=${r.id}`);
+            console.log(res);
+            if (res.data.success) {
+                setSellingOptions(sellingOptions.filter((ele) => (ele.id !== r.id)))
+            } else {
+                console.error('Coupan not found or not deleted:', res.data.error);
+            }
+        } catch (error) {
+            console.error("Error deleting data:", error);
+        }
+    }
+
     return (
         <div>
             <section>
@@ -109,9 +126,9 @@ export default function Index() {
                         </div>
                         <div className="col-lg-8 offset-lg-1 col-12">
                             <div className='row'>
-                                <table className='table table-active table-hover'>
+                                <table className="table table-border table-striped table-hover table-light shadow  table-scroll text-center" id='my-table'>
                                     <thead>
-                                        <tr className='fw-bold'>
+                                        <tr className='table-dark'>
                                             <td >Id</td>
                                             <td>Category</td>
                                             <td>Name</td>
@@ -120,15 +137,15 @@ export default function Index() {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {sellingOptions.map((option) => (
+                                        {sellingOptions.map((option,index) => (
                                             <tr key={option.id}>
-                                                <td>{option.id}</td>
+                                                <th>{index+1}</th>
                                                 <td>{option.selling_category}</td>
                                                 <td>{option.name}</td>
                                                 <td>${option.price}</td>
                                                 <td>
-                                                    <Link to={`/Selling_Option/EditSelling_Option/${option.id}`} className="btn btn-success"><i className="fas fa-edit"></i></Link>&nbsp;
-                                                    <button type="submit" className="btn btn-danger"><i className="fas fa-trash-alt"></i></button>&nbsp;
+                                                    <Link to={`/Selling_Option/EditSelling_Option/${option.id}`} className="btn btn-outline-success"><i className="fas fa-edit"></i></Link>&emsp;
+                                                    <button type='submit' onClick={() => deleteFunc(option)} className="btn btn-outline-danger"><i className="fas fa-trash-alt"></i></button>&emsp;
                                                 </td>
                                             </tr>
                                         ))}

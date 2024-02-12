@@ -92,7 +92,7 @@ export default function AddCourse() {
     const [speaker, setSpeaker] = useState([]);
 
     useEffect(() => {
-        fetch('http://127.0.1:8000/api/industry')
+        fetch('http://127.0.1:8000/api/industry/Industary')
             .then(response => response.json())
             .then(data => {
                 setIndustry(data);

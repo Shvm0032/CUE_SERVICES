@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+
 import { jsPDF } from "jspdf";
 import 'jspdf-autotable'
 import { Link } from 'react-router-dom';
@@ -7,6 +7,7 @@ import http from "../../../utils/http-client";
 
 
 export default function AllSpeakers() {
+  const IMGurl = process.env.REACT_APP_IMG_URL;
   var [speakers, setSpeakers] = useState([]);
   var getData = async () => {
     try {
@@ -26,10 +27,10 @@ export default function AllSpeakers() {
     console.log("hii")
     console.log(r)
     try {
-      var res = await http.delete(`/delete_speaker?id=${r.speaker_id}`);
+      const res = await http.Delete(`/delete_speaker?id=${r.speaker_id}`);
       console.log(res);
-      if (res.status === 200) {
-        setSpeakers(speakers.filter((ele) => { if (ele.speaker_id !== r.speaker_id) { return true } else { return false } }))
+      if (res.data.success) {
+        setSpeakers(speakers.filter((ele) => ele.speaker_id !== r.speaker_id))
       }
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -45,7 +46,7 @@ export default function AllSpeakers() {
     })
     doc.save("data.pdf");
   }
-
+  console.log(speakers,'speakers');
   return (
     <div>
       <section>
@@ -59,29 +60,32 @@ export default function AllSpeakers() {
               <table className="table table-striped table-hover table-responsive shadow  table-scroll text-center" id='my-table'>
                 <thead>
                   <tr className='table-dark'>
-                    {/* <th scope="col">#</th> */}
+                    <th scope="col">#</th>
                     <th scope="col">Name</th>
+                    <th scope="col">Image</th>
                     <th scope="col">Email</th>
                     <th scope="col">phone_no</th>
-
+                    <th scope="col">Designation</th>
+                    <th scope="col">Action</th>
                     {/*  <th scope="col">Bio</th>*/}
                     {/* <th scope="col">Designation</th>*/}
 
                     {/* <th scope="col">Bio</th> */}
-                    <th scope="col">Designation</th>
+
 
                     {/* <th scope="col">Experience</th> */}
-                    {/* <th scope="col">Image</th> */}
+
                     {/* <th scope="col">Resume</th> */}
                     {/* <th scope="col">Status</th> */}
-                    <th scope="col">Action</th>
+
                   </tr>
                 </thead>
                 <tbody>
                   {speakers.map((row, index) => (
                     <tr key={index}>
-                      {/* <th >{row.id}</th> */}
+                      <th >{index + 1}</th>
                       <td>{row.name}</td>
+                      <td><img src={`${IMGurl}/${row.images}`} width={50} height={50} alt='speaker' /></td>
                       <td>{row.email}</td>
                       <td>{row.phone_no}</td>
 
@@ -92,7 +96,6 @@ export default function AllSpeakers() {
                       <td>{row.designation}</td>
 
                       {/* <td>{row.experience}</td> */}
-                      {/* <td>{row.images}</td> */}
                       {/* <td>{row.resume}</td> */}
                       {/* <td>{row.status}</td> */}
                       <td>
@@ -104,13 +107,14 @@ export default function AllSpeakers() {
                         <i className="fa fa-edit"></i>&nbsp;Edit
                       </Link> */}
 
-                        <button type="submit"  onClick={() => deleteFunc(row)} className="btn btn-outline-danger">
-                          <i className="fa-solid fa-trash-can"></i>&emsp;Delete
-                        </button>
-                        &nbsp;&nbsp;
+
                         <Link to={`/Speakers/EditSpeakers/${row.speaker_id}`} className="btn btn-outline-success">
-                          <i className="fa fa-edit"></i>&nbsp;Edit
+                          <i className="fa fa-edit"></i>
                         </Link>
+                        &nbsp;&nbsp;
+                        <button type="submit" onClick={() => deleteFunc(row)} className="btn btn-outline-danger">
+                          <i className="fa-solid fa-trash-can"></i>
+                        </button>
                       </td>
                     </tr>
 

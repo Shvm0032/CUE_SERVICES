@@ -42,7 +42,7 @@ export default function AllOrders() {
           <table className="table table-border table-striped table-hover table-light shadow  table-scroll text-center" id='my-table'>
             <thead>
               <tr className='table-dark'>
-                {/* <th scope="col">id</th> */}
+                <th scope="col">id</th>
                 <th scope="col">User_Id</th>
                 {/* <th scope="col">Course_name</th> */}
                 <th scope="col">Order_Id</th>
@@ -61,7 +61,7 @@ export default function AllOrders() {
             <tbody>
               {Orders.map((row, index) => (
                 <tr key={index}>
-                  {/* <td>{row.id}</td> */}
+                  <th>{index + 1}</th>
                   <td>{row.user_id}</td>
                   {/* <td>{row.card_detail}</td> */}
                   <td>{row.order_id}</td>
@@ -70,18 +70,19 @@ export default function AllOrders() {
                   <td>{row.order_status}</td>
                   {/* <td>{row.card_detail}</td> */}
                   {/* <td>{row.status_message}</td> */}
-                  <td>{row.subtotal}</td>
+                  <td>${row.subtotal}</td>
                   {/* <td>{row.card_detail}</td> */}
                   <td>{row.trans_date}</td>
                   {/* <td>{row.hash_id}</td> */}
                   <td>
+                   
+                    <button type="submit" className="btn btn-outline-primary">
+                      <i className="fa fa-eye"></i>
+                    </button> &nbsp;&nbsp;
                     <button type="submit" className="btn btn-outline-danger">
-                    <i className="fa-solid fa-trash-can"></i>&emsp;Delete
+                      <i className="fa-solid fa-trash-can"></i>
                     </button>
-                    &nbsp;&nbsp;
-                    <button type="submit" className="btn btn-outline-success">
-                      <i className="fa fa-edit"></i>&nbsp;Edit
-                    </button>
+                   
                   </td>
                 </tr>
               ))}
