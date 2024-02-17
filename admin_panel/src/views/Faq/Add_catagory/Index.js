@@ -29,7 +29,7 @@ function App() {
 
             if (editCategory) {
                 // Update existing category
-                response = await http.put(`/Update_Category/${editCategory.id}`, {
+                response = await http.post(`/Update_Category/${editCategory.id}`, {
                     category: newCategory,
                 });
             } else {

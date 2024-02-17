@@ -1,12 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useHistory, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { useParams, useNavigate } from 'react-router-dom';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import http from "../../../utils/http-client";
-
-
-
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 
@@ -67,7 +63,7 @@ const EditCopons = () => {
     e.preventDefault();
 
     try {
-      const response = await http.put(`/update_Coupon/${id}`, coupon);
+      const response = await http.post(`/update_Coupon/${id}`, coupon);
       console.log(response.data);
 
       setSuccessMessage('Coupon updated successfully');
@@ -83,73 +79,73 @@ const EditCopons = () => {
       <div className="container my-4">
         <div className='row'>
           <div className='col-md-3'></div>
-          <div className='col-md-6 shadow p-2 bg-light z-index ' style={{height:"auto"}}>
-        <form onSubmit={handleSubmit}>
-          <div className="mb-3">
-            <label className="form-label">Coupon Code</label>
-            <input
-              type="text"
-              className="form-control"
-              name="coupon_code"
-              value={coupon.coupon_code}
-              onChange={handleChange}
-            />
+          <div className='col-md-6 shadow p-2 bg-light z-index ' style={{ height: "auto" }}>
+            <form onSubmit={handleSubmit}>
+              <div className="mb-3">
+                <label className="form-label">Coupon Code</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  name="coupon_code"
+                  value={coupon.coupon_code}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="mb-3">
+                <label className="form-label">Discount</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  name="discount"
+                  value={coupon.discount}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="mb-3">
+                <label className="form-label">Start Date</label>
+                <input
+                  type="date"
+                  className="form-control"
+                  name="start_date"
+                  value={coupon.start_date}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="mb-3">
+                <label className="form-label">Expire Date</label>
+                <input
+                  type="date"
+                  className="form-control"
+                  name="expire_date"
+                  value={coupon.expire_date}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="mb-3">
+                <label className="form-label">Coupon Status</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  name="coupons_status"
+                  value={coupon.coupons_status}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="mb-3">
+                <label className="form-label">Coupon Limit</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  name="coupons_limit"
+                  value={coupon.coupons_limit}
+                  onChange={handleChange}
+                />
+              </div>
+              <button type="submit" className="btn btn-primary">
+                Update
+              </button>
+            </form>
           </div>
-          <div className="mb-3">
-            <label className="form-label">Discount</label>
-            <input
-              type="text"
-              className="form-control"
-              name="discount"
-              value={coupon.discount}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="mb-3">
-            <label className="form-label">Start Date</label>
-            <input
-              type="date"
-              className="form-control"
-              name="start_date"
-              value={coupon.start_date}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="mb-3">
-            <label className="form-label">Expire Date</label>
-            <input
-              type="date"
-              className="form-control"
-              name="expire_date"
-              value={coupon.expire_date}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="mb-3">
-            <label className="form-label">Coupon Status</label>
-            <input
-              type="text"
-              className="form-control"
-              name="coupons_status"
-              value={coupon.coupons_status}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="mb-3">
-            <label className="form-label">Coupon Limit</label>
-            <input
-              type="text"
-              className="form-control"
-              name="coupons_limit"
-              value={coupon.coupons_limit}
-              onChange={handleChange}
-            />
-          </div>
-          <button type="submit" className="btn btn-primary">
-            Update
-          </button>
-        </form>
-        </div>
         </div>
       </div>
 

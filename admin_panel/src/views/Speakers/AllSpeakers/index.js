@@ -84,7 +84,12 @@ export default function AllSpeakers() {
                   {speakers.map((row, index) => (
                     <tr key={index}>
                       <th >{index + 1}</th>
-                      <td>{row.name}</td>
+                      <td>
+                        <Link to={`/Speakers/SpeakerDetails/${row.speaker_id}`}>
+                          {row.name}
+                        </Link>
+                        
+                      </td>
                       <td><img src={`${IMGurl}/${row.images}`} width={50} height={50} alt='speaker' /></td>
                       <td>{row.email}</td>
                       <td>{row.phone_no}</td>

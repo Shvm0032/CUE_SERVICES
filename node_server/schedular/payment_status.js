@@ -7,22 +7,22 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const moment = require('moment');
 const { sendInvoiceEmail } = require("../lib/invoiceEmail");
 async function paymentUpdate() {
-    
+
     const itemSql = `Select id, hash_id from order_details where order_status = 'pending' and email_sent = 0`;
     const queryAsync = util.promisify(sqlDbconnect.query).bind(sqlDbconnect);
-    let response =  await queryAsync(itemSql);
+    let response = await queryAsync(itemSql);
 
     const orderItemsPromises = response.map(async (orderItem) => {
-       // console.log(orderItem.hash_id,'orderItem');
+        // console.log(orderItem.hash_id,'orderItem');
         const hashId = orderItem.hash_id;
-        if(!hashId){
+        if (!hashId) {
             return Promise.resolve();
         }
         const session = await stripe.checkout.sessions.retrieve(hashId);
-       // console.log(session,'session');
+        console.log(session, 'session');
         if (session) {
             const sessionStatus = session.payment_status;
-           // console.log(session, 'sessionStatus');
+            console.log(session, 'sessionStatus');
             let paymentUpdateStatus = '';
             if (sessionStatus == 'paid') {
                 paymentUpdateStatus = 'Paid';
@@ -98,22 +98,26 @@ async function paymentUpdate() {
             let userDetail = {
                 user_name: 'test'
             };
-            let fileName = UserOrder[0]?.order_id+'_Invoice.pdf';
+            let fileName = UserOrder[0]?.order_id + '_Invoice.pdf';
             const itemValuesUEmail = [
                 1,
                 hashId
             ];
-           // console.log(itemValuesUEmail,'itemValuesUEmail');
+            // console.log(itemValuesUEmail,'itemValuesUEmail');
             const updateCourseQueryEmail = `UPDATE order_details SET email_sent = ? WHERE hash_id = ?`;
-            await queryAsync(updateCourseQueryEmail, itemValuesUEmail);
-            if(paymentUpdateStatus == 'paid'){
+
+            if (paymentUpdateStatus == 'Paid') {
                 let responses = await sendInvoiceEmail(emailObject, userDetail, fileName, FinnalInvoiceData);
+                await queryAsync(updateCourseQueryEmail, itemValuesUEmail);
             }
-            
-  
+            if (paymentUpdateStatus == 'Failed') {
+                await queryAsync(updateCourseQueryEmail, itemValuesUEmail);
+            }
+
+
             return Promise.resolve();
         }
-        
+
         //return queryAsync(itemSql, itemValues);
     });
 

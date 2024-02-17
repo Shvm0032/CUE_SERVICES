@@ -71,9 +71,8 @@ function AllCourses() {
             <tbody>
               {courses.map((row, index) => (
                 <tr key={index}>
-
                   <th>{index + 1}</th>
-                  <td>{row.title}</td>
+                  <td><Link to={`/Cources/CourseDetails/${row.id}`} className=''> {row.title} </Link></td>
                   {/* <td>{row.description}</td> */}
                   {/* <td>{row.date}</td>
                   <td>{row.time}</td> */}
@@ -85,7 +84,7 @@ function AllCourses() {
                     </Link>&emsp;
                     <button onClick={() => deleteFunc(row)} type="submit" className="btn btn-outline-danger">
                       <i className="fa fa-trash-alt"></i>
-                    </button> 
+                    </button>
                   </td>
 
                 </tr>

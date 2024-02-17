@@ -6,6 +6,7 @@ const Widgets = React.lazy(() => import('./views/widgets/Widgets'))
 const AllCources = React.lazy(() => import('./views/Cources/AllCources/index'))
 const AddCourse = React.lazy(() => import('./views/Cources/AddNewCources/index'))
 const EditCources = React.lazy(() => import('./views/Cources/EditCources/index'))
+const CourseDetail = React.lazy(() => import('./views/Cources/CourseDetail/index'))
 
 //Industary
 const viewIndustary = React.lazy(() => import('./views/Industary/viewIndustary/index'))
@@ -15,10 +16,15 @@ const NewIndustary = React.lazy(() => import('./views/Industary/NewIndustary/ind
 const AllSpeakers = React.lazy(() => import('./views/Speakers/AllSpeakers/index'))
 const AddSpeakers = React.lazy(() => import('./views/Speakers/AddSpeakers/index'))
 const EditSpeakers = React.lazy(() => import('./views/Speakers/EditSpeakers/index'))
+const SpeakerDetail = React.lazy(() => import('./views/Speakers/SpeakerDetail/index'))
 
 //orders
 const AllOrders = React.lazy(() => import('./views/Orders/All Orders/index'))
 const FailedOrders = React.lazy(() => import('./views/Orders/Failed Orders/index'))
+const OrderDetail = React.lazy(() => import('./views/Orders/OrderDetail/index'))
+//User
+const AllUser = React.lazy(() => import('./views/User/AllUser/index'))
+const UserDetail = React.lazy(() => import('./views/User/UserDetail/index'))
 // Copons
 const AllCopons = React.lazy(() => import('./views/coupons/allCoupons/index'))
 const AddCopon = React.lazy(() => import('./views/coupons/addNewCoupons/index'))
@@ -49,23 +55,32 @@ const routes = [
   { path: '/Cources/AllCources', name: 'AllCources', element: AllCources },
   { path: '/Cources/AddCourse', name: 'AddCourse', element: AddCourse },
   { path: '/Cources/EditCources/:course_id', name: 'EditCources', element: EditCources },
+  { path: '/Cources/CourseDetails/:course_id', name: 'CourseDetails', element: CourseDetail },
   
   // Industary
   { path: '/Industary', name: 'Industary', element: NewIndustary, exact: true },
   { path: '/Industary/NewIndustary', name: ' NewIndustary', element: NewIndustary },
   { path: '/Industary/viewIndustary', name: 'ViewIndustary', element: viewIndustary },
   { path: '/Industary/CatagoryIndustary', name: 'Industary Catagory ', element: CatagoryIndustary },
+
   //Speakers
   { path: '/Speakers', name: 'Speakers', element: AllSpeakers, exact: true },
   { path: '/Speakers/AllSpeakers', name: 'All Speakers', element: AllSpeakers },
   { path: '/Speakers/AddSpeakers', name: 'Add Speakers', element: AddSpeakers },
   { path: '/Speakers/EditSpeakers/:speaker_id', name: 'EditSpeakers', element: EditSpeakers },
+  { path: '/Speakers/SpeakerDetails/:speaker_id', name: 'SpeakerDetails', element: SpeakerDetail },
 
+//User
+  { path: '/User', name: 'User', element: AllUser, exact: true },
+  { path: '/User/AllUser', name: ' AllUser', element: AllUser },
+  { path: '/User/UserDetail/:id', name: 'UserDetail', element: UserDetail },
 
   //Orders
   { path: '/Orders', name: 'Orders', element: AllOrders, exact: true },
   { path: '/Orders/All Orders', name: 'All Orders', element: AllOrders },
   { path: '/Orders/Failed Orders', name: 'Faileds Orders', element: FailedOrders },
+  { path: '/Orders/OrderDetails/:id', name: 'OrderDetails', element: OrderDetail },
+
 
   // Copons 
   { path: '/Copons', name: 'Copons', element: AllCopons, exact: true },

@@ -78,7 +78,7 @@ function Index() {
         return;
       }
 
-      const response = await http.put(`/Update_Question/${editQuestion.id}`, {
+      const response = await http.post(`/Update_Question/${editQuestion.id}`, {
         category_id: newCategory,
         question: newQuestion,
         answer: newAnswer,

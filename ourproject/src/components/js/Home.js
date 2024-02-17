@@ -337,7 +337,7 @@ const Home = () => {
               {/* first card */}
               {courses.map((course) => (
                 <div style={{ margin: '0 12px' }} key={course.id}>
-                  <div className='col-lg-4 col-md-6 col-12 mb-5' style={{ width: '23rem' }}>
+                  <div className='col-lg-4 col-md-6 col-12 mb-5' style={{ width: '27rem' }}>
                     <Link to={`/Course_Detail/${course?.id}`}>
                       <div className='newsCard news-Slide-up '>
                         <div className='img-div'>
@@ -345,22 +345,24 @@ const Home = () => {
                         </div>
                         <div className='newsCaption'>
                           <div className='d-flex'>
-                            <p className='newsCaption-content mb-2' >
+                            <p className='newsCaption-content mb-3' >
                               <i class="fas fa-chalkboard-teacher fa-lg" style={{ color: '#00bbae' }}></i>&emsp;{course.name}
                             </p>
-                            <p className='newsCaption-content mb-2 ms-5'>
-                              <i class="fas fa-chalkboard-teacher fa-lg" style={{ color: '#00bbae' }}></i>&emsp;
+                            <p className='newsCaption-content mb-3 ms-5'>
+                              <i class="fas fa-clock fa-lg" style={{ color: '#00bbae' }}></i>&emsp;{course.time}min
                             </p>
                           </div>
                           <div className='newsCaption-title'>
                             <h5>{course.title}</h5>
                           </div>
                           <div className="row  mt-0">
-                            <div className="p-3">
+                            <div className="p-4">
                               <div className="d-flex justify-content-center align-items-center p-3 text-center mstt">
-                                <div className="col border-end boder-4"><h6>Time<br />{course.time}</h6></div>
+                                <div className="col boder-4">
+                                  <h5 className=''><i class="fa-solid fa-calendar-days fa-lg"></i>&emsp;</h5>
+                                </div>
                                 {/* <div className="col border-end boder-4"><h6>Date<br /></h6></div> */}
-                                <div className="col"><h6>Duration <br />{course.duration}</h6>
+                                <div className="col border-start text-center"><h5><i className="fa-solid fa-stopwatch-20 fa-lg"></i>&emsp;{course.duration}min </h5>
                                 </div>
                               </div>
                             </div>
@@ -381,7 +383,6 @@ const Home = () => {
                               </svg>
                             </button>
                           </div>
-
                         </div>
                       </div>
                     </Link>

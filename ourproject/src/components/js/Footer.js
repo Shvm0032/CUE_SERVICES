@@ -17,9 +17,9 @@ export default function Footer() {
               <Subscribe />
             </div>
             
-            <div className="row text-center text-md-start" style={{ marginTop: '-120px' }}>
+            <div className="row  text-md-start" style={{ marginTop: '-120px' }}>
               
-              <div className="col-md-3 col-lg-4 col-xl-3 mx-auto mb-4">
+              <div className="col-md-3 text-start col-lg-4 col-xl-3 mx-auto mb-4">
                 {/* Content */}
                 <h6 className="text-uppercase fw-bold">CuService </h6>
                 <hr className="mb-4 mt-0 d-inline-block mx-auto" style={{ width: "60px", height: "2px" }} />
@@ -34,12 +34,12 @@ export default function Footer() {
                 </div>
               </div>
               
-              <div className="col-md-2 col-lg-2 col-xl-2 mx-auto mb-4">
+              <div className="col-md-2  text-center col-lg-2 col-xl-2 mx-auto mb-4">
                 
                 <h6 className="text-uppercase fw-bold">Products</h6>
                 <hr className="mb-4 mt-0 d-inline-block mx-auto" style={{ width: "60px", backgroundColor: '#7c4dff', height: "2px" }} />
                 <p>
-                  <a href="/course" className="text-dark">Industury</a>
+                  <a href="/course" className="footer-text text-dark">Industury</a>
                 </p>
                 <p>
                   <a href="/course" className="text-dark">Webinars</a>
@@ -52,25 +52,25 @@ export default function Footer() {
                 </p>
               </div>
              
-              <div className="col-md-3 col-lg-2 col-xl-2 mx-auto mb-4">
+              <div className="col-md-3 text-center col-lg-2 col-xl-2 mx-auto mb-4">
                 {/* Links */}
                 <h6 className="text-uppercase fw-bold">Useful links</h6>
                 <hr className="mb-4 mt-0 d-inline-block mx-auto" style={{ width: "60px", backgroundColor: '#7c4dff', height: "2px" }} />
                 <p>
-                  <a href="/login" className="text-dark">Login to your Account</a>
+                  <a href="/login" className="text-dark">Login </a>
                 </p>
                 <p>
-                  <a href="/register" className="text-dark">Register your Account</a>
+                  <a href="/register" className="text-dark">Register</a>
                 </p>
                 <p>
-                  <a href="/Faqrear" className="text-dark">Term and Conditions</a>
+                  <a href="/Faqrear" className="text-dark">FAQ</a>
                 </p>
                 <p>
-                  <a href="/Contactus" className="text-dark">Help and Support</a>
+                  <a href="/Contactus" className="text-dark">Help</a>
                 </p>
               </div>
               
-              <div className="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
+              <div className="col-md-4 text-center col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
                 {/* Links */}
                 <h6 className="text-uppercase fw-bold">Contact</h6>
                 <hr className="mb-4 mt-0 d-inline-block mx-auto" style={{ width: "60px", backgroundColor: '#7c4dff', height: "2px" }} />

@@ -16,10 +16,10 @@ export default function CourseDetail() {
     const [secs, setSeconds] = useState(0);
     const [pr, setPrice] = useState(0);
     const deadline = "October,21,2023";
-    const { id } = useParams();
+    const { slug } = useParams();
     const dispatch = useDispatch();
     const courses = useSelector((state) => state.course.courses);
-    const course = courses.find((c) => c.id.toString() === id);
+    const course = courses.find((c) => c.slug.toString() === slug);
     const [selectedItems, setSelectedItems] = useState([]);
     const [selectedCourseId, setSelectedCourseId] = useState(null);
     console.log(cartItems)
@@ -54,7 +54,7 @@ export default function CourseDetail() {
                         />
                     </td>
                     <td className='col border-0 text-start'>{name}</td>
-                    <td className='col border-0 text-primary text-end fs-4'>${price}</td>
+                    <td className='col border-0 text-danger text-end fs-4'>${price}</td>
                 </tr>
             </tbody>
         </table>
@@ -296,7 +296,7 @@ export default function CourseDetail() {
 
                             </div>
 
-                            <div className='col-lg-5  col-12 p-5 fs-5' style={{ marginTop: '-410px' }}>
+                            <div className='col-lg-5  col-12 p-5 fs-5' style={{ marginTop: '-370px' }}>
                                 <div className='row'>
                                     <img src={`${IMGurl}/${course.course_thumbail}`} className='course-img' style={{ borderRadius: "32px" }} height={330} width={100} alt="Course_thumnail" />
                                 </div>
@@ -320,23 +320,23 @@ export default function CourseDetail() {
                                             </div>
                                         ))}
 
-                                        <div className='col-12 p-2 mt-3'>
+                                        <div className='col-12 p-2 mt-1'>
 
                                             <div className='col-12 my-2'>
-                                                <h3 className=' p-3  rounded text-white text-center mt-2 ' style={{ background: '#ff9b24' }}>
+                                                <h3 className=' p-3  rounded text-dark text-center mt-2 ' >
                                                     Total Fee: <span className='fw-bold text-danger'> ${pr}</span>
                                                 </h3>
                                                 <center>
                                                     <Link to=''>
-                                                        <button onClick={handleAddToCart} className=' btn btn-primary btn-lg text-center mt-4 my-4'>
+                                                        <button onClick={handleAddToCart} className=" button2addtocark">
                                                             Add to Cart
                                                         </button>
                                                     </Link> &emsp;
                                                 </center>
-                                                <p className='lh-base fs-5 text-primary text-start'>
+                                                <p className='lh-base mt-5 p-2 fs-5 text-primary text-start'>
                                                     <span className='text-danger fs-4 mt-5'>*</span>
-                                                    Couldn't find the option you're looking for? Don't worry, let us know your requirements and we will get back to you SOON!<br />
-                                                    <span className='text-danger text-decoration-underline fs-4 p-2'>Contact Us Now</span>
+                                                    Couldn't find the option you're looking for? Don't worry, let us know your requirements and we will get back to you SOON!
+                                                    <Link to='/Contactus' className='text-danger text-decoration-underline fs-5 p-2'>Contact Us Now</Link>
                                                 </p>
                                             </div>
                                         </div>

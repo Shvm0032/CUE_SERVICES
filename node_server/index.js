@@ -134,7 +134,7 @@ app.post('/api/create-checkout-session', async (req, res) => {
                     orderItem.totalPrice,
                     JSON.stringify(orderItem.courseItems),
                     orderItem.course_title,
-                    'Pending'
+                    'pending'
                 ];
                 
                 const itemSql = `
@@ -172,7 +172,7 @@ app.post('/api/create-checkout-session', async (req, res) => {
                 session.id,
                 orderId
             ];
-            const updateCourseQueryC = ` UPDATE order_course SET hash_id = ? WHERE Order_id = ?`;
+            const updateCourseQueryC = `UPDATE order_course SET hash_id = ? WHERE Order_id = ?`;
             const itemValuesUC = [
                 session.id,
                 orderId
@@ -220,6 +220,8 @@ app.get('/api/check_session_info', async (req, res) => {
 
 cron.schedule('* * * * *', () => {
    schedular.paymentUpdate();
+
+
 });
 app.listen(port, () => {
     console.log(`Example app listening on port at http://${hostname}:${port}/`);

@@ -16,6 +16,7 @@ import { useLocation } from 'react-router-dom';
 
 
 export default function NavbarP() {
+    
     const cartItems = useSelector(selectCartItems);
     const location = useLocation();
     const unique_id = uuid();

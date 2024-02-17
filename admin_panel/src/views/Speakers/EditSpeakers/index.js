@@ -24,10 +24,9 @@ const modules = {
 };
 
 const EditSpeakersComponent = () => {
- // const IMGurl = process.env.REACT_APP_IMG_URL;
+  // const IMGurl = process.env.REACT_APP_IMG_URL;
   const { speaker_id } = useParams();
   const navigate = useNavigate();
-
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone_no, setPhone] = useState('');
@@ -35,7 +34,7 @@ const EditSpeakersComponent = () => {
   const [designation, setDesignation] = useState('');
   const [experience, setExperience] = useState('');
   const [file, setFile] = useState(null);
-  console.log(file);
+  
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
@@ -47,13 +46,18 @@ const EditSpeakersComponent = () => {
         setBio(res.data[0].bio);
         setDesignation(res.data[0].designation);
         setExperience(res.data[0].experience);
+
       })
       .catch((err) => console.log(err));
   }, [speaker_id]);
+  
+
   const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
+    setFile(e.target.files[0])
+    console.log("File changed:", e.target.files[0]);
   };
- 
+
+
   const handleShowModal = () => {
     setShowModal(true);
   };
@@ -62,6 +66,7 @@ const EditSpeakersComponent = () => {
     setShowModal(false);
     navigate('/Speakers/AllSpeakers');
   };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -74,9 +79,18 @@ const EditSpeakersComponent = () => {
     formData.append('designation', designation);
     formData.append('experience', experience);
     formData.append('image', file);
-
+    // Log the form data
+    console.log("Form Data:", {
+      name,
+      email,
+      phone_no,
+      bio,
+      designation,
+      experience,
+      file
+    });
     try {
-      const response = await http.put(`/update_speaker/${speaker_id}`, formData, {
+      const response = await http.post(`/update_speaker/${speaker_id}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -91,6 +105,7 @@ const EditSpeakersComponent = () => {
     }
   };
 
+  
   return (
     <div className="container mt-5">
       <form onSubmit={handleSubmit}>
@@ -134,7 +149,7 @@ const EditSpeakersComponent = () => {
           </div>
           <div className="col">
             {/* <img src={`${IMGurl}/${images}`} width={100} height={50} alt='speaker' /> */}
-            <img src={file ? URL.createObjectURL(file) : ''} alt="Speaker" style={{ height: "200px", width: "100%" }} className="img-fluid" />
+            <img src={file ? URL.createObjectURL(file) : 'images'} alt="Speaker" style={{ height: "200px", width: "100%" }} className="img-fluid" />
             <input type="file" name="image" className="form-control" onChange={handleFileChange} />
           </div>
         </div>

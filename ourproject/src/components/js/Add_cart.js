@@ -136,13 +136,13 @@ const AddToCart = () => {
           <div className="container-fluid px-5 my-5 clearfix ">
 
             <div className='row'>
-              <div className="table-responsive" style={{}}>
+              <div className="table-responsive">
                 <table className="table table-striped table-bordered m-0" >
                   <thead className='fs-6' style={{ background: '#FFAA33', borderRadius: '10px', borderBottom: '2px solid #ff9b24' }}>
                     <tr>
                       {/* Set columns width */}
                       <th className="text-center fs-4 " style={{ minWidth: 220 }}>Product Name </th>
-                      <th className="text-center fs-4" style={{ minWidth: 400 }}>Selling option</th>
+                      <th className="text-center fs-4" style={{ minWidth: 500 }}>Selling option</th>
                       <th className="text-right fs-4 " style={{ width: 120 }}>Price</th>
                       {/* <th className="text-center py-3 px-4" style={{ width: 120 }}>Quantity</th> */}
                       {/* <th className="text-right py-3 px-4" style={{ width: 120 }}>Total</th> */}
@@ -202,10 +202,10 @@ const AddToCart = () => {
               </div>
               <div className="d-flex flex-wrap justify-content-between">
                 <div className='row  p-3 text-center '>
-                  <Link to='/course' className="button2addtocark rounded-pill"> <i className="fas fa-arrow-left"></i>&emsp; Back to shopping</Link>
+                  <Link to='/course' className="button2addtocark"> <i className="fas fa-arrow-left"></i>&emsp; Back to shopping</Link>
                 </div>
                 <div className='row p-3 text-center'>
-                  <Link to='/Checkout' className="btn btn-outline-warning p-3 rounded-pill" ><i className="fas fa-money-check-alt"></i>&emsp; Proceed to Checkout</Link>
+                  <Link to='/Checkout' className=" button2addtocark" ><i className="fas fa-money-check-alt"></i>&emsp; Proceed to Checkout</Link>
                 </div>
               </div>
             </div>
@@ -224,7 +224,7 @@ const AddToCart = () => {
                       <img src="https://i.imgur.com/dCdflKN.png" width="130" alt='' height="130" class="img-fluid mb-4 mr-3" />
                       <h3><strong>Your Cart is Empty</strong></h3>
                       <h4>Add something to make me happy</h4>
-                      <Link to="/course" class="btn btn-primary cart-btn-transform m-3" data-abc="true">continue shopping</Link>
+                      <Link to="/course" className=" button2addtocark" data-abc="true">continue shopping</Link>
 
 
                     </div>
