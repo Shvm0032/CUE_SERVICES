@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import axios from 'axios';
+import ReactQuill from 'react-quill';
+
 // import Dropify from 'dropify';
 import { useNavigate } from 'react-router';
 import http from "../../../utils/http-client";
@@ -23,7 +23,8 @@ const modules = {
 
 export default function AddCourse() {
     const [slug, setSlug] = useState('');
-    
+    const [speaker, setSpeaker] = useState([]);
+    const [industry, setIndustry] = useState([]);
 
     // Function to generate URL slug from the title
     const generateSlug = (input) => {
@@ -88,26 +89,59 @@ export default function AddCourse() {
         setFormFields([...formFields, object]);
     }
 
-    const [industry, setIndustry] = useState([]);
-    const [speaker, setSpeaker] = useState([]);
+   
+ 
+    //console.log(industry);
 
     useEffect(() => {
-        fetch('http://127.0.1:8000/api/industry/Industary')
-            .then(response => response.json())
-            .then(data => {
-                setIndustry(data);
-            })
-            .catch(error => console.error('Error fetching industry information:', error));
+        const fetchData = async () => {
+            try {
+                const response = await http.get('/Industary');
+                console.log(response);
+                if (response?.status == '200') {
+                    // const responseData = await response.json();
+                    setIndustry(response.data); 
+                    //console.log(responseData);
+                } else {
+                    console.error('Error fetching data:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Error fetching data:', error.message);   
+            }
+        };
+
+        fetchData();
     }, []);
 
+
     useEffect(() => {
-        fetch('http://127.0.1:8000/api/speaker')
-            .then(response => response.json())
-            .then(data => {
-                setSpeaker(data.data);
-            })
-            .catch(error => console.error('Error fetching speaker information:', error));
+        const fetchData = async () => {
+            try {
+                const response = await http.get('/speaker');
+                console.log(response.data);
+                if (response?.status == '200') {
+                    // const responseData = await response.json();
+                    setSpeaker(response.data?.data);
+                    //console.log(responseData);
+                } else {
+                    console.error('Error fetching data:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Error fetching data:', error.message);
+            }
+        };
+
+        fetchData();
     }, []);
+
+    // useEffect(() => {
+    //     fetch('http://127.0.1:8000/api/speaker')
+    //         .then(response => response.json())
+    //         .then(data => {
+    //             setSpeaker(data.data);
+    //         })
+    //         .catch(error => console.error('Error fetching speaker information:', error));
+    // }, []);
 
     const [Course, setCourse] = useState({
         Industry: "",
@@ -131,9 +165,9 @@ export default function AddCourse() {
 
         console.log("Selling Options:", sellingOptions);
         const result = Object.groupBy(sellingOptions, ({ selling_category }) => selling_category);
-        var lp = result["Live Options"]
-        var ssp = result["Super Saver Options"]
-        var rc = result["Recording & Combos"]
+        const lp = result["Live Options"]
+        const ssp = result["Super Saver Options"]
+        const rc = result["Recording & Combos"]
 
         console.log("Live Option")
         console.log(lp)
@@ -143,38 +177,11 @@ export default function AddCourse() {
         console.log(rc)
 
 
-        // var l1 = []
-        // lp.forEach(row => {
-        //     var a = { "id": row.id, "scat": row.selling_category, "price": row.price }
-        //     l1.push(a)
-        // })
-        // var l2 = []
-        // ssp.forEach(row => {
-        //     var a = { "id": row.id, "scat": row.selling_category, "price": row.price }
-        //     l2.push(a)
-        // })
 
-        // var l3 = []
-        // rc.forEach(row => {
-        //     var a = { "id": row.id, "scat": row.selling_category, "price": row.price }
-        //     l3.push(a)
-        // })
-
-
-        // var newMap = new Map([
-        //     ['l1', lp],
-        //     ['l2', ssp],
-        //     ['l3', rc],
-        // ]);
-
-        //    console.log(newMap);
-        //     var res = arr.get('key2');
-        //     console.log(res);
+      
 
         console.log("Pussing data")
-        // console.log(l1)
-
-        //console.log(sellingOptions)
+        
 
         let selling = sellingOptions.map((ele) => ({
             id: ele.id,
@@ -262,12 +269,6 @@ export default function AddCourse() {
                                     </div>
                                     <div className='col'>
                                         <input
-                                            // onChange={(e) => {
-                                            //     setCourse((previous) => ({
-                                            //         ...previous,
-                                            //         Name: e.target.value
-                                            //     }))
-                                            // }}
                                             onChange={handleTitleChange}
                                             type="text"
                                             name='courseName'

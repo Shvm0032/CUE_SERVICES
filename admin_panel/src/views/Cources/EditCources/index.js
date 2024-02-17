@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { useParams } from 'react-router';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
@@ -149,7 +148,7 @@ const EditCourseDetail = () => {
                   ))}
                 </select>
               </div>
-            </div><br/>
+            </div><br />
             <div className="row">
               <div className="col-2">
                 <label>Speaker</label>
@@ -167,7 +166,7 @@ const EditCourseDetail = () => {
                   ))}
                 </select>
               </div>
-            </div><br/>
+            </div><br />
             <div className="row">
               <div className="col-2">
                 <label>Name</label>
@@ -203,7 +202,7 @@ const EditCourseDetail = () => {
                   value={course.Description}
                 />
               </div>
-            </div><br/>
+            </div><br />
 
             <div className='row'>
               <div className='col-2 mt-4'>
@@ -225,7 +224,7 @@ const EditCourseDetail = () => {
                 />
               </div>
             </div>
-            <br/>
+            <br />
             <div className="row">
               <div className="col-2">
                 <label> Duration</label>
@@ -241,7 +240,7 @@ const EditCourseDetail = () => {
               </div>
             </div>
 
-            <br/>
+            <br />
 
             <div className="row">
               <div className="col-2">
@@ -257,7 +256,7 @@ const EditCourseDetail = () => {
                 />
               </div>
             </div>
-            <br/>
+            <br />
             <div className="row">
               <div className="col-2">
                 <label>Date</label>
@@ -272,7 +271,7 @@ const EditCourseDetail = () => {
                 />
               </div>
             </div>
-            <br/>
+            <br />
             {/* ... rest of the form ... */}
             <div className='row'>
               <div className='col-2'>

@@ -13,7 +13,7 @@ export default function Cources() {
   const courses = useSelector((state) => state.course.courses);
   const status = useSelector((state) => state.course.status);
   const error = useSelector((state) => state.course.error);
-
+  console.log(courses);
 
   useEffect(() => {
     // Fetch courses data when the component mounts
@@ -48,32 +48,77 @@ export default function Cources() {
 
       <section style={{ paddingTop: '110px' }}>
         <div className='container '>
+          <div className='d-flex rounded-4 mb-5 justify-content-center gap-3 p-5' style={{ background: '#00bbae' }}>
+            <div className='col-5'>
+              <form>
+                <input className='p-3 form-control form-control-lg'></input>
+              </form>
+            </div>
+          
+              <div className="dropdown">
+                <button  className="p-3 btn btn-light btn-lg dropdown-toggle" style={{width:'200px'}} type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                  Event
+                </button>
+                <ul className="dropdown-menu bg-light rounded-0 " aria-labelledby="dropdownMenuButton1">
+                  <li><Link className="dropdown-item" href="#">Action</Link></li>
+                  <li><Link className="dropdown-item" href="#">Another action</Link></li>
+                  <li><Link className="dropdown-item" href="#">Something else here</Link></li>
+                </ul>
+              </div>
+        
+            
+              <div class="dropdown">
+              <button className="btn p-3 btn-light btn-lg dropdown-toggle" style={{ width: '200px' }} type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                  Cradite
+                </button>
+              <ul className="dropdown-menu bg-light rounded-0" aria-labelledby="dropdownMenuButton1">
+                  <li><Link className="dropdown-item" href="#">Action</Link></li>
+                  <li><Link className="dropdown-item" href="#">Another action</Link></li>
+                  <li><Link className="dropdown-item" href="#">Something else here</Link></li>
+                </ul>
+              </div>
+           
+      \
+              <div className="dropdown ">
+              <button class="btn p-3 btn-light btn-lg dropdown-toggle" style={{ width: '200px' }} type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                  Industry
+                </button>
+              <ul className="dropdown-menu bg-light rounded-0" aria-labelledby="dropdownMenuButton1">
+                  <li><Link className="dropdown-item" href="#">Action</Link></li>
+                  <li><Link className="dropdown-item" href="#">Another action</Link></li>
+                  <li><Link className="dropdown-item" href="#">Something else here</Link></li>
+                </ul>
+              </div>
+
+          </div>
           <div className='row mb-5 p-4'>
             {courses.map((course) => (
               <div className='col-lg-4 col-md-6 col-12 mb-5' key={course.id}>
-                <Link to={`/Course_Detail/${course?.id}`}>
+                <Link to={`/Course_Detail/${course?.slug}`}>
                   <div className='newsCard news-Slide-up '>
                     <div className='img-div'>
                       <img src={`${IMGurl}/${course.course_thumbail}`} className='course-img' alt="Course_thumnail" />
                     </div>
                     <div className='newsCaption'>
                       <div className='d-flex'>
-                        <p className='newsCaption-content mb-2' >
+                        <p className='newsCaption-content mb-3' >
                           <i class="fas fa-chalkboard-teacher fa-lg" style={{ color: '#00bbae' }}></i>&emsp;{course.name}
                         </p>
-                        <p className='newsCaption-content mb-2 ms-5'>
-                          <i class="fas fa-chalkboard-teacher fa-lg" style={{ color: '#00bbae' }}></i>&emsp;
+                        <p className='newsCaption-content mb-3 ms-5'>
+                          <i class="fas fa-clock fa-lg" style={{ color: '#00bbae' }}></i>&emsp;{course.time}min
                         </p>
                       </div>
                       <div className='newsCaption-title'>
                         <h5>{course.title}</h5>
                       </div>
                       <div className="row  mt-0">
-                        <div className="p-3">
+                        <div className="p-4">
                           <div className="d-flex justify-content-center align-items-center p-3 text-center mstt">
-                            <div className="col border-end boder-4"><h6 className=''> {course.time}<br />Time</h6></div>
+                            <div className="col boder-4">
+                              <h5 className=''><i class="fa-solid fa-calendar-days fa-lg"></i>&emsp;</h5>
+                            </div>
                             {/* <div className="col border-end boder-4"><h6>Date<br /></h6></div> */}
-                            <div className="col"><h6>   {course.duration} <br/>Duration </h6>
+                            <div className="col border-start text-center"><h5><i className="fa-solid fa-stopwatch-20 fa-lg"></i>&emsp;{course.duration}min </h5>
                             </div>
                           </div>
                         </div>

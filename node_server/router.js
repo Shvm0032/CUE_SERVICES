@@ -177,6 +177,8 @@ Router.get("/api/Course", (req, res) => {
     }
 });
 
+
+
 Router.delete("/api/delete_course", async (req, res) => {
     try {
         const queryAsync = util.promisify(sqlDbconnect.query).bind(sqlDbconnect);
@@ -201,6 +203,52 @@ Router.delete("/api/delete_course", async (req, res) => {
         return res.status(502).json({ error: 'Internal Server Error' });
     }
 });
+
+Router.get('/api/coursesData', (req, res) => {
+    try {
+        const query = `SELECT * FROM course_detail LEFT OUTER JOIN speaker_info ON course_detail.speaker = speaker_info.speaker_id;`;
+
+        sqlDbconnect.query(query, (error, results) => {
+            if (error) {
+                console.error(error);
+                res.status(500).send('Internal Server Error');
+            } else {
+                res.json(results);
+
+            }
+        });
+    }
+    catch (err) {
+        console.log(err);
+        res.status(502).json({ error: 'Internal Server Error' });
+    }
+});
+
+Router.get('/api/coursesData/:id', (req, res) => {
+    const courseId = req.params.id;
+    try {
+        const query = `SELECT * FROM course_detail 
+                       LEFT OUTER JOIN speaker_info ON course_detail.speaker = speaker_info.speaker_id
+                       WHERE course_detail.id = ?`;
+
+        sqlDbconnect.query(query, [courseId], (error, results) => {
+            if (error) {
+                console.error(error);
+                res.status(500).send('Internal Server Error');
+            } else {
+                if (results.length > 0) {
+                    res.json(results[0]); // Assuming you want to send the first row if found
+                } else {
+                    res.status(404).json({ error: 'Course not found' });
+                }
+            }
+        });
+    } catch (err) {
+        console.log(err);
+        res.status(502).json({ error: 'Internal Server Error' });
+    }
+});
+
 
 Router.get('/api/coursesData', (req, res) => {
     try {
@@ -287,18 +335,19 @@ Router.get("/api/edit/:course_id", (req, res) => {
 });
 
 
-Router.put('/api/update/:course_id', upload.single('file'), async (req, res) => {
+Router.post('/api/update/:course_id', upload.single('file'), async (req, res) => {
     try {
 
         const courseId = req.params.course_id;
         const { industry, speaker, title, description, duration, time, date, fields } = req.body;
         //const course_thumbnail = req.course_thumbnail ? req.course_thumbnail.buffer : null; // Assuming 'thumbnail' is the name of the file input in your form
-        const course_thumbnail = req?.file?.filename;
-        const updateCourseQuery = `
+        const course_thumbnail = req?.file?.filename || null;
+        let updateCourseQuery = `
       UPDATE course_detail
-      SET industries = ?, speaker = ?, title = ?, description = ?, duration = ?, time = ?, date = ?, course_thumbnail = ?, selling_option = ?
+      SET industries = ?, speaker = ?, title = ?, description = ?, duration = ?, time = ?, date = ?, selling_option = ?
       WHERE id = ?
     `;
+ 
         const fieldsData = JSON.parse(fields);
         console.log(req.body, 'fieldsData');
         console.log(req.file, 'thumbnail')
@@ -308,8 +357,7 @@ Router.put('/api/update/:course_id', upload.single('file'), async (req, res) => 
             name: option.name,
             price: option.price
         }));
-
-        await sqlDbconnect.query(updateCourseQuery, [
+        valueArray = [
             industry,
             speaker,
             title,
@@ -317,22 +365,29 @@ Router.put('/api/update/:course_id', upload.single('file'), async (req, res) => 
             duration,
             time,
             date,
-            course_thumbnail,
             JSON.stringify(sellingOptions),
             courseId
-        ]);
-
-        // Insert or update selling options as needed
-        //   const updateSellingOptionsQuery = `
-        //     REPLACE INTO selling_options ( category, name, price)
-        //     VALUES ( ?, ?, ?)
-        //   `;
-
-
-
-        //   req.body.sellingOptions.forEach(async (option) => {
-        //     await sqlDbconnect.query(updateSellingOptionsQuery, [courseId, option.category, option.name, option.price]);
-        //   });
+        ];
+        if (course_thumbnail) {
+            updateCourseQuery = `
+      UPDATE course_detail
+      SET industries = ?, speaker = ?, title = ?, description = ?, duration = ?, time = ?, date = ?,course_thumbail = ?, selling_option = ?
+      WHERE id = ?
+    `;
+            valueArray = [
+                industry,
+                speaker,
+                title,
+                description,
+                duration,
+                time,
+                date,
+                course_thumbnail,
+                JSON.stringify(sellingOptions),
+                courseId
+            ];
+        }
+        await sqlDbconnect.query(updateCourseQuery, valueArray);
 
         res.status(200).send('Course updated successfully!');
     } catch (error) {
@@ -437,7 +492,7 @@ Router.get("/api/speaker/edit/:speaker_id", (req, res) => {
     try {
         const id = req.params.speaker_id;
         console.log(id, 'id');
-        const query = "SELECT * FROM speaker_info WHERE speaker_id = ? AND status IN (?)";
+        const query = "SELECT * FROM speaker_info WHERE speaker_id = ? AND status =1";
         sqlDbconnect.query(query, [id, [1, 2]], (err, result) => {
             if (err) return res.json({ Error: err });
             return res.json(result);
@@ -485,24 +540,32 @@ Router.get("/api/profile", (req, res) => {
 });
 
 // update speaker
-Router.put('/api/update_speaker/:speaker_id', upload.single('image'), async (req, res) => {
+Router.post('/api/update_speaker/:speaker_id', upload.single('image'), async (req, res) => {
     try {
         const { speaker_id } = req.params;
         const { name, email, phone_no, bio, designation, experience } = req.body;
-
+        console.log(res.body)
         // Handle file upload
         const image = req.file ? req.file.filename : null;
-
-        // Update speaker data in the database
-        const updateQuery = `
+        let updateQuery = `
+        UPDATE speaker_info
+        SET name=?, email=?, phone_no=?, bio=?, designation=?, experience=?
+        WHERE speaker_id=?
+    `;
+        valueArray = [name, email, phone_no, bio, designation, experience, speaker_id];
+        if (image){
+            updateQuery = `
         UPDATE speaker_info
         SET name=?, email=?, phone_no=?, bio=?, designation=?, experience=?, images=?
         WHERE speaker_id=?
     `;
+            valueArray = [name, email, phone_no, bio, designation, experience, image, speaker_id];
+        }
 
+      //  console.log(valueArray,'valueArray');
         sqlDbconnect.query(
             updateQuery,
-            [name, email, phone_no, bio, designation, experience, image, speaker_id],
+            valueArray,
             (err, result) => {
                 if (err) {
                     console.error('Error updating speaker:', err);
@@ -599,7 +662,7 @@ Router.get("/api/cu_edit/:id", (req, res) => {
 });
 
 // update coppan
-Router.put('/api/update_Coupon/:id', (req, res) => {
+Router.post('/api/update_Coupon/:id', (req, res) => {
     try {
         const { id } = req.params;
         const { coupon_code, discount, start_date, expire_date, coupons_status, coupons_limit } = req.body;
@@ -685,6 +748,7 @@ Router.post('/api/InsertCoupons', (req, res) => {
 
 
 Router.get("/api/Industary", (req, res) => {
+    
     try {
 
         sqlDbconnect.query("SELECT * FROM industry where status = 1", (err, rows) => {
@@ -832,7 +896,7 @@ Router.post('/api/Add_Category', (req, res) => {
 });
 
 // update category
-Router.put('/api/Update_Category/:id', (req, res) => {
+Router.post('/api/Update_Category/:id', (req, res) => {
     try {
         const categoryId = req.params.id;
         const { category } = req.body;
@@ -862,9 +926,6 @@ Router.put('/api/Update_Category/:id', (req, res) => {
 });
 
 // end faq category
-
-
-
 
 // start faq question
 
@@ -958,7 +1019,7 @@ Router.post('/api/Add_question', (req, res) => {
 });
 
 // edit and update  question
-Router.put('/api/Update_Question/:id', (req, res) => {
+Router.post('/api/Update_Question/:id', (req, res) => {
     try {
         const { category_id, question, answer } = req.body;
         const { id } = req.params;
@@ -1060,6 +1121,29 @@ Router.get("/api/Order_Details", (req, res) => {
         res.status(502).json({ error: 'Internal Server Error' });
     }
 });
+Router.get('/api/order_details/:id', (req, res) => {
+    const Id = req.params.id;
+    try {
+        const query = `SELECT * FROM order_details WHERE id = ?`;
+
+        sqlDbconnect.query(query, [Id], (error, results) => {
+            if (error) {
+                console.error(error);
+                res.status(500).send('Internal Server Error');
+            } else {
+                if (results.length > 0) {
+                    res.json(results[0]); // Assuming you want to send the first row if found
+                } else {
+                    res.status(404).json({ error: 'Course not found' });
+                }
+            }
+        });
+    } catch (err) {
+        console.log(err);
+        res.status(502).json({ error: 'Internal Server Error' });
+    }
+});
+
 
 
 // Selling_option
@@ -1147,7 +1231,7 @@ Router.get("/api/selling_edit/:id", (req, res) => {
     }
 });
 
-Router.put('/api/update_option/:id', (req, res) => {
+Router.post('/api/update_option/:id', (req, res) => {
     try {
         const { id } = req.params;
         const { selling_category, name, price } = req.body;
@@ -1198,6 +1282,7 @@ Router.get("/api/Testimonial", (req, res) => {
 });
 
 Router.get("/api/Registration", (req, res) => {
+
     try {
         sqlDbconnect.query("SELECT * FROM registration", (err, rows) => {
             if (!err) {
@@ -1206,6 +1291,24 @@ Router.get("/api/Registration", (req, res) => {
                 console.log(err);
             }
         });
+    }
+    catch (error) {
+        console.error('Error updating category:', error);
+        res.status(502).json({ error: 'Internal Server Error' });
+    }
+});
+Router.get("/api/Registration/:id", (req, res) => {
+    try {
+        const { id } = req.params;
+        sqlDbconnect.query(`SELECT * FROM registration WHERE ID=?`, [id
+            ], (err, result) => {
+                if (!err) {
+                    res.send(result[0]);
+
+                } else{
+                    console.log(err);
+                }
+                });
     }
     catch (error) {
         console.error('Error updating category:', error);
@@ -1390,21 +1493,6 @@ Router.post('/api/save-image', async (req, res) => {
     }
 });
 
-//Speakers//
-Router.get("/api/speaker", (req, res) => {
-    try {
-        sqlDbconnect.query("SELECT * FROM speaker_info ", (err, result) => {
-            if (!err) {
-                res.status(200).json(result);
-            } else {
-                console.log(err);
-            }
-        });
-    } catch (error) {
-        console.error('Error processing image:', error);
-        res.status(502).send('Internal Server Error');
-    }
-})
 
 
 //Subscribe//
@@ -1632,15 +1720,17 @@ Router.get('/api/get_total_lengths', async (req, res) => {
         const query4 = 'SELECT COUNT(*) AS total4 FROM speaker_info';
         const query5 = 'SELECT COUNT(*) AS total5 FROM user_message';
         const query6 = 'SELECT COUNT(*) AS total6 FROM subscribe';
+        const query7 = 'SELECT SUM(grand_total) AS total7 FROM order_details';
 
         // Execute the queries asynchronously using Promise.all
-        const [result1, result2, result3, result4, result5, result6] = await Promise.all([
+        const [result1, result2, result3, result4, result5, result6, result7] = await Promise.all([
             queryAsync(query1),
             queryAsync(query2),
             queryAsync(query3),
             queryAsync(query4),
             queryAsync(query5),
-            queryAsync(query6)
+            queryAsync(query6),
+            queryAsync(query7),
         ]);
 
         // Extract the total lengths from the query results
@@ -1650,6 +1740,7 @@ Router.get('/api/get_total_lengths', async (req, res) => {
         const total4 = result4[0].total4;
         const total5 = result5[0].total5;
         const total6 = result6[0].total6;
+        const total7 = result7[0].total7;
 
         // Send JSON response with the total lengths
         res.json({
@@ -1658,7 +1749,8 @@ Router.get('/api/get_total_lengths', async (req, res) => {
             total_Register_users_table3: total3,
             total_Speaker_table4: total4,
             total_user_message_table5: total5,
-            total_New_Subscribe_table6: total6
+            total_New_Subscribe_table6: total6,
+            total_Amount_of_items_ordered_today__: total7,
         });
     } catch (error) {
         console.error('Error fetching total lengths:', error);
@@ -1671,7 +1763,7 @@ Router.post('/api/check-email', async (req, res) => {
     const { email } = req.body;
     console.log(email);
     try {
-        const result = await queryAsync('SELECT Count(*) AS count from  registration WHERE email =? ', [email]);
+        const result = await queryAsync('SELECT Count(*) AS count from  registration WHERE email = ? ', [email]);
         if (result[0].count > 0) {
             res.json({ exists: true });
         } else {
@@ -1700,10 +1792,10 @@ Router.get('/api/user/invoice', async (req, res) => {
         const UserOrder = await queryAsync('Select * from order_details where order_id = ? and user_id ', [order_id, id]);
 
         if (UserOrder.length > 0) {
-            
+
         }
-        else{
-            return res.status(200).send({success:false, message:"Invoice not found"});
+        else {
+            return res.status(200).send({ success: false, message: "Invoice not found" });
         }
 
         //getting data from  user info from user_id
@@ -1712,8 +1804,8 @@ Router.get('/api/user/invoice', async (req, res) => {
         if (resultInfo) {
             const datetime = new Date(UserOrder[0].trans_date);
             const date = moment(datetime).format('YYYY-MM-DD');
-             //ALL data that will be fetch in invoice pdf
-             let FinnalInvoiceData = {
+            //ALL data that will be fetch in invoice pdf
+            let FinnalInvoiceData = {
                 //company ditaile for company
                 CompanyName: 'CUE SERVICES',
                 Companywebsite: 'ceutrainers.com',
@@ -1726,7 +1818,7 @@ Router.get('/api/user/invoice', async (req, res) => {
                 User_Fname: UserOrder[0]?.FName || null,
                 User_lname: UserOrder[0]?.lName || null,
                 InvoiceNumber: UserOrder[0]?.order_id || null,
-                hash_id:UserOrder[0]?.hash_id || null,
+                hash_id: UserOrder[0]?.hash_id || null,
                 OrderDate: date,
                 Country: UserOrder[0]?.Country || null,
                 State: UserOrder[0]?.State || null,
@@ -1739,15 +1831,15 @@ Router.get('/api/user/invoice', async (req, res) => {
                 Discount: UserOrder[0]?.discount || 0,
                 CourseDetail: UserOrder[0]?.card_detail || null,
             }
-            
-            res.status(200).send({success:true, data:FinnalInvoiceData});
+
+            res.status(200).send({ success: true, data: FinnalInvoiceData });
             console.log(resultInfo, 'resultInfo');
         }
-        else{
-            return res.status(200).send({success:false, message:"Invoice not found"});
+        else {
+            return res.status(200).send({ success: false, message: "Invoice not found" });
         }
 
-    } catch(error) {
+    } catch (error) {
         console.error('Error processing image:', error);
         res.status(502).send('Internal Server Error');
     }

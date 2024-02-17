@@ -35,7 +35,7 @@ function Index() {
     e.preventDefault();
 
     try {
-      const response = await http.put(`/update_option/${id}`, {
+      const response = await http.post(`/update_option/${id}`, {
         selling_category,
         name,
         price,

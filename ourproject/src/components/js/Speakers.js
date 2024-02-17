@@ -47,8 +47,8 @@ function Speakers() {
 
                             {speakers.map((speaker) => (
 
-                                <div className="col-lg-4 col-md-6 col-12 mb-4" key={speaker.speaker_id} >
-                                    <div className='wrapper'>
+                                <div className="col-lg-4 col-md-6 col-12  mb-4" key={speaker.speaker_id} >
+                                    <div className='wrapper p-4'>
                                         <Link to={`/speaker/${speaker?.speaker_id}`}>
                                             <div className='pcard'>
                                                 <img src={`${IMGurl}/${speaker.images}`} className="ProfilePicture" alt='ProfilePicture' />

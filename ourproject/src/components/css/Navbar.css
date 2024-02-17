@@ -116,3 +116,28 @@
 .animated-text:hover .arrow {
     opacity: 1;
 }
+
+
+/* footer */
+.footer-text {
+    color: #000;
+    display: inline-block;
+    position: relative;
+    transition: transform 0.5s ease-out;
+    background-color: transparent;
+}
+
+.footer-text:hover {
+    color: #ff9b24;
+    transform: translateX(10%);
+}
+
+.arrow {
+    display: inline-block;
+    opacity: 0;
+    transition: opacity 0.5s ease-out;
+}
+
+.footer-text:hover .arrow {
+    opacity: 1;
+}

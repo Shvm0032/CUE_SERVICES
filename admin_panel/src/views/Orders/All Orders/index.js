@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import { jsPDF } from "jspdf";
 import 'jspdf-autotable'
 import http from "../../../utils/http-client";
+import { Link } from 'react-router-dom';
 
 export default function AllOrders() {
 
-  var [Orders, setOrders] = useState([]);
-  var getData = async () => {
+  const [Orders, setOrders] = useState([]);
+  console.log(Orders);
+  const getData = async () => {
     try {
       var res = await http.get("/Order_Details");
       console.log(res);
@@ -48,13 +49,13 @@ export default function AllOrders() {
                 <th scope="col">Order_Id</th>
                 {/* <th scope="col">Tracking_Id</th> */}
                 {/* <th scope="col">Bank_ref_no</th> */}
-                <th scope="col">Order_status</th>
                 {/* <th scope="col">Card_name</th> */}
                 {/* <th scope="col">Status_message</th> */}
                 <th scope="col">amount</th>
                 {/* <th scope="col">Selling_options</th> */}
                 <th scope="col">Trans_date</th>
                 {/* <th scope="col">hash</th> */}
+                <th scope="col">Order_status</th>
                 <th scope="col">Action</th>
               </tr>
             </thead>
@@ -67,21 +68,19 @@ export default function AllOrders() {
                   <td>{row.order_id}</td>
                   {/* <td>{row.tracking_id}</td> */}
                   {/* <td>{row.bank_ref_no}</td> */}
-                  <td>{row.order_status}</td>
                   {/* <td>{row.card_detail}</td> */}
                   {/* <td>{row.status_message}</td> */}
                   <td>${row.subtotal}</td>
                   {/* <td>{row.card_detail}</td> */}
                   <td>{row.trans_date}</td>
+                  <td>{row.order_status}</td>
                   {/* <td>{row.hash_id}</td> */}
                   <td>
                    
-                    <button type="submit" className="btn btn-outline-primary">
+                    <Link to={`/Orders/OrderDetails/${row.id}`} className="btn btn-outline-primary">
                       <i className="fa fa-eye"></i>
-                    </button> &nbsp;&nbsp;
-                    <button type="submit" className="btn btn-outline-danger">
-                      <i className="fa-solid fa-trash-can"></i>
-                    </button>
+                    </Link> &nbsp;&nbsp;
+                   
                    
                   </td>
                 </tr>

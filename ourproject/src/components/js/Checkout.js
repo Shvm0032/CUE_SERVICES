@@ -97,7 +97,7 @@ function Checkout() {
             <tbody>
                 <tr>
                     <td className='col border-0 fs-5'>{itemName}</td>
-                    <td className='col border-0 text-primary fs-5'>${itemPrice}</td>
+                    <td className='col border-0 text-primary text-end fs-5'>${itemPrice}</td>
                 </tr>
             </tbody>
         </table>
@@ -133,21 +133,21 @@ function Checkout() {
         console.log(errors);
         return Object.keys(errors).length === 0;
     };
-    
-  // useEffect to perform email existence check
+
+    // useEffect to perform email existence check
     useEffect(() => {
         // Perform the check only if the user is not logged in
         if (!isLoggedIn) {
-         //   checkEmailExists(formData.email);
+            //   checkEmailExists(formData.email);
         }
-    }, [formData.email, isLoggedIn]); 
+    }, [formData.email, isLoggedIn]);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormData(prevState => ({
             ...prevState, [name]: value
         }));
-        console.log(isLoggedIn,'isLoggedIn');
+        console.log(isLoggedIn, 'isLoggedIn');
         if (name == 'email') {
             checkEmailExists(value);
         }
@@ -168,9 +168,9 @@ function Checkout() {
         setIsLoading(false);
     };
 
-  
 
-  
+
+
     // console.log(getTotalPrice(), 'gt');
     // console.log(sum);
     // console.log(discount, 'discount-price');
@@ -212,8 +212,8 @@ function Checkout() {
 
     const stripe = stripePromise;
 
-    const handleCheckout = async () => {
-       
+    const handleCheckout = async (e) => {
+        e.preventDefault();
         setIsLoading(true);
         // console.log(validateForm())
         if (!validateForm()) {
@@ -275,7 +275,7 @@ function Checkout() {
     //     }).catch(e => {
     //         console.log(e.errors)
     //     })
-  
+
 
     return (
         <div><LoadingOverlay
@@ -285,49 +285,145 @@ function Checkout() {
         >
 
             <section className="h-100 gradient-custom " style={{ marginTop: '100px', marginBottom: "200px" }}>
-                <div className="container-fluid py-5">
+                <div className="container py-5">
                     <div className="row d-flex justify-content-center my-4">
-                        <div className="col-md-7">
-                            <div className="card mb-4">
-                                <div className="card-header py-3">
-                                    <h5 className="mb-0"><i className="fa-solid fa-cart-shopping"></i> Your Cart List</h5>
+                        <div className="col-md-5  col-12" >
+                            <div className="card-body" >
+                                <div className="card mb-4  " style={{ border: '2px solid #ff9b24' }} >
+                                    <form onSubmit={handleCheckout}>
+                                        <div className="card-header p-5">
+                                            <h5 className="text-center display-6 fw-bold" style={{ borderBottom: '2px solid #ff9b24' }}>Checkout Form</h5><br />
+                                            <div className='row'>
+                                                <div className='col'>
+                                                    <label htmlFor="firstName" class="form-label">First Name</label>
+                                                    <input type="text" required className="form-control form-control-lg" id="firstName" name="firstName" value={formData.firstName} onChange={handleInputChange} />
+                                                    {formErrors.firstName && <span className="error">{formErrors.firstName}</span>}
+                                                </div>
+                                                <div className='col'>
+                                                    <label htmlFor="lastname" class="form-label"> last Name</label>
+                                                    <input type="text" required className="form-control form-control-lg" id="lastName" name='lastName' value={formData.lastName} onChange={handleInputChange} />
+                                                    {formErrors.lastName && <span className="error">{formErrors.lastName}</span>}
+                                                </div>
+
+
+                                            </div><br />
+                                            <div className='row'>
+                                                <div className='col'>
+                                                    <label htmlFor="Companyname" class="form-label">Company Name</label>
+                                                    <input type="text" required class="form-control form-control-lg" id="companyName" name='companyName' value={formData.companyName} onChange={handleInputChange} />
+                                                    {formErrors.companyName && <span className="error">{formErrors.companyName}</span>}
+                                                </div>
+                                                <div className='col'>
+                                                    <label htmlFor="email" class="form-label">Email</label>
+                                                    <input type="email" required class="form-control form-control-lg" id="email" name='email' value={formData.email} onChange={handleInputChange} />
+                                                    {emailExists && <span className="text-danger">Email has already been used.</span>}
+                                                    {formErrors.email && <span className="error">{formErrors.email}</span>}
+                                                </div>
+                                            </div><br />
+                                            <div className='row'>
+                                                <div className='col'>
+                                                    <label htmlFor="jobTitle" class="form-label"> JOB TITLE*</label>
+                                                    <input type="text" required class="form-control form-control-lg" id="jobTitle" name='jobTitle' value={formData.jobTitle} onChange={handleInputChange} />
+                                                    {formErrors.jobTitle && <span className="error">{formErrors.jobTitle}</span>}
+                                                </div>
+                                            </div><br />
+                                            <div className='row'>
+                                                <div className='col'>
+                                                    <label htmlFor="Country" class="form-label"> Country/REGION</label>
+                                                    <input type="text" required class="form-control form-control-lg" id="country" name='country' value={formData.country} onChange={handleInputChange} />
+                                                    {formErrors.country && <span className="error">{formErrors.country}</span>}
+                                                </div>
+                                            </div><br />
+                                            <div className='row'>
+                                                <div className='col'>
+                                                    <label htmlFor="streetAddress" class="form-label">STREET ADDRESS *</label>
+                                                    <input type="text" required class="form-control form-control-lg" id="streetAddress" name='streetAddress' value={formData.streetAddress} onChange={handleInputChange} />
+                                                    {formErrors.streetAddress && <span className="error">{formErrors.streetAddress}</span>}
+                                                </div>
+
+                                            </div><br />
+                                            <div className='row'>
+                                                <div className='col'>
+                                                    <label htmlFor="city" class="form-label">City</label>
+                                                    <input type="text" required class="form-control form-control-lg" id="city" name='city' value={formData.city} onChange={handleInputChange} />
+                                                    {formErrors.city && <span className="error">{formErrors.city}</span>}
+                                                </div>
+                                                <div className='col'>
+                                                    <label htmlFor="state" class="form-label">State/Country</label>
+                                                    <input type="text" required class="form-control form-control-lg" id="state" name='state' value={formData.state} onChange={handleInputChange} />
+                                                    {formErrors.state && <span className="error">{formErrors.state}</span>}
+                                                </div>
+
+                                            </div><br />
+                                            <div className='row'>
+                                                <div className='col'>
+                                                    <label htmlFor="zip" class="form-label">Zip</label>
+                                                    <input type="text" required class="form-control form-control-lg" id="zip" name='zip' value={formData.zip} onChange={handleInputChange} />
+                                                    {formErrors.zip && <span className="error">{formErrors.zip}</span>}
+                                                </div>
+                                                <div className='col'>
+
+                                                    <label htmlFor="phone" class="form-label">Phone</label>
+                                                    <input type="Phone" required class="form-control form-control-lg" id="phone" name='phone' value={formData.phone} onChange={handleInputChange} />
+                                                    {formErrors.phone && <span className="error">{formErrors.phone}</span>}
+                                                </div>
+
+                                            </div><br />
+
+                                            <div className='row'>
+                                                <div className='col text-center mt-4'>
+                                                    {emailExists && !isLoggedIn ? (
+                                                        <button className="button2addtocark" onClick={() => navigate('/login')}>Login</button>
+                                                    ) : (
+                                                        <button type="submit" className="button2addtocark">Checkout</button>
+                                                    )}
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </form>
                                 </div>
-                                <div className="card-body">
-                                    <div className="table-responsive">
-                                        <table className="table table-bordered m-0" >
-                                            <thead className=' fs-5' style={{ background: '#FFAA33', borderRadius: '10px' }}>
+
+                            </div>
+                        </div>
+
+                        <div className="col-md-7 p-2 ">
+                            <div className="card-body bg-body ">
+                                <div className="table-responsive shadow">
+                                    <table className="table table-bordered m-0" >
+                                        <thead className=' fs-5' style={{ background: '#FFAA33', borderRadius: '10px', borderBottom: '2px solid #ff9b24' }}>
+                                            <tr>
+                                                {/* Set columns width */}
+                                                <th className="text-center py-3 px-4" style={{ minWidth: 300 }}>Product Name</th>
+                                                <th className="text-center py-3 px-4" style={{ minWidth: 350 }}>selling option</th>
+                                                <th className="text-right py-3 px-4" style={{ width: 120 }}>Price</th>
+                                                {/* <th className="text-center py-3 px-4" style={{ width: 120 }}>Quantity</th> */}
+                                                {/* <th className="text-right py-3 px-4" style={{ width: 120 }}>Total</th> */}
+                                                {/* <th className="text-center align-middle py-3 px-0" style={{ width: 140 }}>Remove </th> */}
+                                            </tr>
+                                        </thead>
+                                        {cartItems?.map((item) => (
+                                            <tbody key={item.id}>
                                                 <tr>
-                                                    {/* Set columns width */}
-                                                    <th className="text-center py-3 px-4" style={{ minWidth: 300 }}>Product Name</th>
-                                                    <th className="text-center py-3 px-4" style={{ minWidth: 300 }}>selling option</th>
-                                                    <th className="text-right py-3 px-4" style={{ width: 120 }}>Price</th>
-                                                    {/* <th className="text-center py-3 px-4" style={{ width: 120 }}>Quantity</th> */}
-                                                    {/* <th className="text-right py-3 px-4" style={{ width: 120 }}>Total</th> */}
-                                                    <th className="text-center align-middle py-3 px-0" style={{ width: 140 }}>Remove </th>
-                                                </tr>
-                                            </thead>
-                                            {cartItems?.map((item) => (
-                                                <tbody key={item.id}>
-                                                    <tr>
-                                                        <td className="p-4">
-                                                            <div className="media align-items-center">
-                                                                {/* <img src="https://bootdey.com/img/Content/avatar/avatar1.png" className="d-block ui-w-40 ui-bordered mr-4" alt /> */}
-                                                                <div className="media-body">
-                                                                    <Link to={`/Course_Detail/${item.course_id}`} onClick={() => { setSelectedCourseId(item.course_id); navigate(`/Course_Detail/${item.course_id}`); }} className="d-block fs-5 fw-4 card-link">{item?.course_title}</Link>
-                                                                </div>
+                                                    <td className="p-4">
+                                                        <div className="media align-items-center">
+                                                            {/* <img src="https://bootdey.com/img/Content/avatar/avatar1.png" className="d-block ui-w-40 ui-bordered mr-4" alt /> */}
+                                                            <div className="media-body">
+                                                                <Link to={`/Course_Detail/${item.course_id}`} onClick={() => { setSelectedCourseId(item.course_id); navigate(`/Course_Detail/${item.course_id}`); }} className="d-block fs-5 fw-4 card-link">{item?.course_title}</Link>
                                                             </div>
-                                                        </td>
-                                                        <td className='p-2'>
-                                                            {item.courseItems.map((item, index) => (
-                                                                <ItemComponent
-                                                                    key={index}
-                                                                    {...item}
-                                                                    id={item.id}
-                                                                />
-                                                            ))}
-                                                        </td>
-                                                        <td className="text-right fs-4 font-weight-semibold align-middle p-4"> ${item?.totalPrice}</td>
-                                                        {/*
+                                                        </div>
+                                                    </td>
+                                                    <td className='p-2'>
+                                                        {item.courseItems.map((item, index) => (
+                                                            <ItemComponent
+                                                                key={index}
+                                                                {...item}
+                                                                id={item.id}
+                                                            />
+                                                        ))}
+                                                    </td>
+                                                    <td className="text-right fs-4 font-weight-semibold align-middle p-4"> ${item?.totalPrice}</td>
+                                                    {/*
                                                             <td className="align-middle  d-flex p-4">
                                                             <button onClick={() => handleIncreaseQuantity(item?.course_id)}>+</button>
                                                             <input type="text" className="form-control text-center" placeholder={item?.qty} value={item?.qty} />
@@ -335,243 +431,127 @@ function Checkout() {
                                                             <td className="text-right fs-4 font-weight-semibold align-middle p-4"> ${item.totalPrice * item.qty}  </td>
                                                              */}
 
-                                                        <td className="text-center align-middle  px-0"><button className='btn btn-danger' onClick={() => handleRemove(item.course_id)}><i className="fas fa-trash-alt fa-lg"></i></button></td>
+                                                    {/* <td className="text-center align-middle  px-0"><button className='btn btn-danger' onClick={() => handleRemove(item.course_id)}><i className="fas fa-trash-alt fa-lg"></i></button></td> */}
+                                                </tr>
+                                            </tbody>
+                                        ))}
+                                    </table>
+                                </div>
+                                
+                               
+                                   
+                                    {/* coupan section  */}
+                                    <div className='row m-1 shadow border my-5 justify-content-end'>
+                                        <div className='row'>
+                                            <div className='col mt-4'>
+                                                {!applied ? (
+                                                    <div className="row p-2">
+                                                        {/* <label className="text-end fs-3 form-check-label-lg font-weight-normal">Promocode</label> */}
+                                                        <input type="text" placeholder="ABC" className="form-control form-control-lg" value={couponCode}
+                                                            onChange={(e) => setCouponCode(e.target.value)} />
+                                                    </div>
+
+
+                                                ) : null}
+                                                {!applied ? (
+
+                                                    <div className='row p-2'>
+
+                                                    <button className=" button2addtocark" onClick={handleApplyCoupon}  >
+                                                            Apply coupon
+                                                        </button>
+                                                    </div>
+
+                                                ) : null}
+                                            </div>
+                                            <div className='col mb-4 p-3'>
+
+                                                <div className='row  border-bottom-1 p-3'>
+                                                    <div className='col-6  text-start'><label className="text-muted fs-4 font-weight-normal m-0">Subtotal price</label></div>
+                                                    <div className='col-6 text-end'><div className="text-center text-danger fs-4" style={{ fontWeight: '500' }}>${sum}</div></div>
+                                                </div>
+                                            <div className='row  p-3'>
+                                                    <div className='col-6  text-start'><label className="text-muted fs-4 font-weight-normal m-0">Discount price</label></div>
+                                                    <div className='col-6 text-end'><div className="text-center text-danger fs-4" style={{ fontWeight: '500' }}>${discount}</div></div>
+                                                </div>
+                                                <div className='row p-3 border-top-0 rounded-3'>
+                                                    <div className='col-6 text-start'><label className="text-muted fs-4 font-weight-normal m-0" >Total price</label></div>
+                                                    <div className='col-6 text-end'><div className="text-center text-danger fs-4" style={{ fontWeight: '500' }}>${getTotalPrice()}</div></div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    <div>
+                                        <div className="card mb-4 mb-lg-0">
+                                            <div className="card-body">
+                                                <p>
+                                                    <strong>We accept</strong>
+                                                </p>
+                                                <img
+                                                    className="me-2"
+                                                    width="45px"
+                                                    src="https://mdbcdn.b-cdn.net/wp-content/plugins/woocommerce-gateway-stripe/assets/images/visa.svg"
+                                                    alt="Visa"
+                                                />
+                                                <img
+                                                    className="me-2"
+                                                    width="45px"
+                                                    src="https://mdbcdn.b-cdn.net/wp-content/plugins/woocommerce-gateway-stripe/assets/images/amex.svg"
+                                                    alt="American Express"
+                                                />
+                                                <img
+                                                    className="me-2"
+                                                    width="45px"
+                                                    src="https://mdbcdn.b-cdn.net/wp-content/plugins/woocommerce-gateway-stripe/assets/images/mastercard.svg"
+                                                    alt="Mastercard"
+                                                />
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </div>
+                                    {applied ? (
+                                        <div className="d-flex">
+                                            <table className=" table  text-end mt-4 ml-5">
+                                                <tbody>
+                                                    <tr>
+                                                        <td className='col'>
+                                                            <label className="fs-4 form-label m-0">Discount</label>
+                                                        </td>
+                                                        <td className='col'>
+                                                            <div className="text-large">
+                                                                <strong>${discount}</strong>
+                                                            </div></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <label className="fs-5 form-label m-0">Total price</label>
+                                                        </td>
+                                                        <td>
+                                                            <div className="text-large">
+                                                                <strong>${getTotalPrice()}</strong>
+                                                            </div>
+                                                        </td>
                                                     </tr>
                                                 </tbody>
-                                            ))}
-                                        </table>
-                                    </div>
-                                    {/* / Shopping cart table */}
-                                    <div className="d-flex= flex-wrap flex-column justify-content-end align-items-center pb-4">
-                                        <div className='row mt-5'>
-                                            <div className='col-4 offset-8  border text-center pt-2'>
-                                                <div className='row'>
-                                                    <div className='col mt-2'> <p className='fs-4'>Total price</p></div>
-                                                    <div className='col mt-2'><p className='fs-4'>${sum}</p></div>
-                                                </div>
-
-                                            </div>
+                                            </table>
                                         </div>
-                                        {/* coupan section  */}
-                                        <div className='row justify-content-end'>
-                                            <div className='row'>
-                                                <div className='col'>
-                                                    {!applied ? (
-                                                        <div className="row p-2">
-                                                            {/* <label className="text-end fs-3 form-check-label-lg font-weight-normal">Promocode</label> */}
-                                                            <input type="text" placeholder="ABC" className="form-control form-control-lg" value={couponCode}
-                                                                onChange={(e) => setCouponCode(e.target.value)} />
-                                                        </div>
 
-
-                                                    ) : null}
-                                                    {!applied ? (
-
-                                                        <div className='row p-2'>
-
-                                                            <button className='btn mt-2 btn-outline-success btn-lg' onClick={handleApplyCoupon}  >
-                                                                Apply coupon
-                                                            </button>
-                                                        </div>
-
-                                                    ) : null}
-                                                </div>
-                                            </div>
+                                    ) : null}
+                                    {applied ? (
+                                        <div className="d-flex justify-content-end mt-3">
+                                            <button className="btn btn-success" onClick={handleCancelCoupon}>
+                                                Cancel
+                                            </button>
                                         </div>
-                                        {applied ? (
-                                            <div className="d-flex">
-                                                <table className=" table  text-end mt-4 ml-5">
-                                                    <tbody>
-                                                        <tr>
-                                                            <td className='col'>
-                                                                <label className="fs-4 form-label m-0">Discount</label>
-                                                            </td>
-                                                            <td className='col'>
-                                                                <div className="text-large">
-                                                                    <strong>${discount}</strong>
-                                                                </div></td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>
-                                                                <label className="fs-5 form-label m-0">Total price</label>
-                                                            </td>
-                                                            <td>
-                                                                <div className="text-large">
-                                                                    <strong>${getTotalPrice()}</strong>
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        ) : null}
-                                        {applied ? (
-                                            <div className="d-flex justify-content-end mt-3">
-                                                <button className="btn btn-success" onClick={handleCancelCoupon}>
-                                                    Cancel
-                                                </button>
-                                            </div>
-                                        ) : null}
+                                    ) : null}
 
-                                    </div>
+                               
 
-                                </div>
                             </div>
                         </div>
-                        <div className="col-md-5  col-12">
-                            <div className="card mb-4">
-                                <div className="card-header py-3">
-                                    <h5 className="mb-0">Summary</h5>
-                                </div>
-                                <div className="card-body">
-                                    <div className='row'>
-                                        <div className='col mb-4 p-3'>
-
-                                            <div className='row border p-3 rounded-3'>
-                                                <div className='col-6  text-start'><label className="text-muted fs-4 font-weight-normal m-0">Subtotal price</label></div>
-                                                <div className='col-6 text-end'><div className="text-center text-danger fs-4" style={{ fontWeight: '500' }}>{cartItems?.length}</div></div>
-                                            </div>
-                                            <div className='row border p-3 border-top-0 rounded-3'>
-                                                <div className='col-6 text-start'><label className="text-muted fs-4 font-weight-normal m-0" >Total price</label></div>
-                                                <div className='col-6 text-end'><div className="text-center text-danger fs-4" style={{ fontWeight: '500' }}>${getTotalPrice()}</div></div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-
-                                    {/* <button type="button" className="btn btn-primary btn-lg btn-block" onClick={showRegistrationForm}>
-                                        Go to checkout
-                                    </button> */}
-                                    {/* showRegistration &&  */}
-
-
-                                    <div className="card mb-4">
-                                        <from >
-                                            <div className="card-header py-3">
-                                                <h5 className="mb-0">Registration Form</h5><br />
-                                                <div className='row'>
-                                                    <div className='col'>
-                                                        <label htmlFor="firstName" class="form-label">First Name</label>
-                                                        <input type="text" className="form-control form-control-lg" id="firstName" name="firstName" value={formData.firstName} onChange={handleInputChange} />
-                                                        {formErrors.firstName && <span className="error">{formErrors.firstName}</span>}
-                                                    </div>
-                                                    <div className='col'>
-                                                        <label htmlFor="lastname" class="form-label"> last Name</label>
-                                                        <input type="text" className="form-control form-control-lg" id="lastName" name='lastName' value={formData.lastName} onChange={handleInputChange} />
-                                                        {formErrors.lastName && <span className="error">{formErrors.lastName}</span>}
-                                                    </div>
-
-
-                                                </div><br />
-                                                <div className='row'>
-                                                    <div className='col'>
-                                                        <label htmlFor="Companyname" class="form-label">Company Name</label>
-                                                        <input type="text" class="form-control form-control-lg" id="companyName" name='companyName' value={formData.companyName} onChange={handleInputChange} />
-                                                        {formErrors.companyName && <span className="error">{formErrors.companyName}</span>}
-                                                    </div>
-                                                    <div className='col'>
-                                                        <label htmlFor="email" class="form-label">Email</label>
-                                                        <input type="email" class="form-control form-control-lg" id="email" name='email' value={formData.email} onChange={handleInputChange} />
-                                                        {emailExists && <span className="text-danger">Email has already been used.</span>}
-                                                        {formErrors.email && <span className="error">{formErrors.email}</span>}
-                                                    </div>
-                                                </div><br />
-                                                <div className='row'>
-                                                    <div className='col'>
-                                                        <label htmlFor="jobTitle" class="form-label"> JOB TITLE*</label>
-                                                        <input type="text" class="form-control form-control-lg" id="jobTitle" name='jobTitle' value={formData.jobTitle} onChange={handleInputChange} />
-                                                        {formErrors.jobTitle && <span className="error">{formErrors.jobTitle}</span>}
-                                                    </div>
-                                                </div><br />
-                                                <div className='row'>
-                                                    <div className='col'>
-                                                        <label htmlFor="Country" class="form-label"> Country/REGION</label>
-                                                        <input type="text" class="form-control form-control-lg" id="country" name='country' value={formData.country} onChange={handleInputChange} />
-                                                        {formErrors.country && <span className="error">{formErrors.country}</span>}
-                                                    </div>
-                                                </div><br />
-                                                <div className='row'>
-                                                    <div className='col'>
-                                                        <label htmlFor="streetAddress" class="form-label">STREET ADDRESS *</label>
-                                                        <input type="text" class="form-control form-control-lg" id="streetAddress" name='streetAddress' value={formData.streetAddress} onChange={handleInputChange} />
-                                                        {formErrors.streetAddress && <span className="error">{formErrors.streetAddress}</span>}
-                                                    </div>
-
-                                                </div><br />
-                                                <div className='row'>
-                                                    <div className='col'>
-                                                        <label htmlFor="city" class="form-label">City</label>
-                                                        <input type="text" class="form-control form-control-lg" id="city" name='city' value={formData.city} onChange={handleInputChange} />
-                                                        {formErrors.city && <span className="error">{formErrors.city}</span>}
-                                                    </div>
-                                                    <div className='col'>
-                                                        <label htmlFor="state" class="form-label">State/Country</label>
-                                                        <input type="text" class="form-control form-control-lg" id="state" name='state' value={formData.state} onChange={handleInputChange} />
-                                                        {formErrors.state && <span className="error">{formErrors.state}</span>}
-                                                    </div>
-
-                                                </div><br />
-                                                <div className='row'>
-                                                    <div className='col'>
-                                                        <label htmlFor="zip" class="form-label">Zip</label>
-                                                        <input type="text" class="form-control form-control-lg" id="zip" name='zip' value={formData.zip} onChange={handleInputChange} />
-                                                        {formErrors.zip && <span className="error">{formErrors.zip}</span>}
-                                                    </div>
-                                                    <div className='col'>
-
-                                                        <label htmlFor="phone" class="form-label">Phone</label>
-                                                        <input type="Phone" class="form-control form-control-lg" id="phone" name='phone' value={formData.phone} onChange={handleInputChange} />
-                                                        {formErrors.phone && <span className="error">{formErrors.phone}</span>}
-                                                    </div>
-
-                                                </div><br />
-
-                                                <div className='row'>
-                                                    <div className='col'>
-                                                        {emailExists && !isLoggedIn ? (
-                                                            <button className='btn btn-outline-success btn-lg' onClick={() => navigate('/login')}>Login</button>
-                                                        ) : (
-                                                            <button className='btn btn-outline-success btn-lg' onClick={handleCheckout}>Checkout</button>
-                                                        )}
-                                                    </div>
-                                                </div>
-
-                                            </div>
-                                        </from>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-
-                        <div>
-                            <div className="card mb-4 mb-lg-0">
-                                <div className="card-body">
-                                    <p>
-                                        <strong>We accept</strong>
-                                    </p>
-                                    <img
-                                        className="me-2"
-                                        width="45px"
-                                        src="https://mdbcdn.b-cdn.net/wp-content/plugins/woocommerce-gateway-stripe/assets/images/visa.svg"
-                                        alt="Visa"
-                                    />
-                                    <img
-                                        className="me-2"
-                                        width="45px"
-                                        src="https://mdbcdn.b-cdn.net/wp-content/plugins/woocommerce-gateway-stripe/assets/images/amex.svg"
-                                        alt="American Express"
-                                    />
-                                    <img
-                                        className="me-2"
-                                        width="45px"
-                                        src="https://mdbcdn.b-cdn.net/wp-content/plugins/woocommerce-gateway-stripe/assets/images/mastercard.svg"
-                                        alt="Mastercard"
-                                    />
-
-                                </div>
-                            </div>
-                        </div>
+                       
+                        
                     </div>
                 </div>
             </section>

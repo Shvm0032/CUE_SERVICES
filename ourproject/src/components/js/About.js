@@ -93,7 +93,7 @@ function About() {
 
             </div>
             <div className=" col-xl-6 col-lg-6 col-12 ps-lg-5   " style={{ borderRadius: '20px', textAlign:'justify' }}>
-              <h2 className="text-start">Welcome to CEU Services</h2>
+              <h3 className="display-4 fw-bold text-start">Welcome to CEU Services</h3>
               <h4><span >Enhance your skills with best Online courses</span> </h4>
               <p className=" text-start" >
                 You can start and finish one of these popular courses in under a day Check out the list below.. Take the course for free
@@ -102,7 +102,7 @@ function About() {
                 Our training programs are constantly updated to reflect the latest developments in the industry, ensuring that our clients have the knowledge and tools they need to stay compliant.</p>
               <div className="row">
                 <div className="col-lg-6 col-12">
-                  <ul>
+                  <ul  className="list-group list-group-flush" style={{listStyle:'none'}}>
                     <li className="mb-2">
                       <i className="fa-solid fa-angle-up fa-rotate-90 p-1" style={{ color: '#000', width: '26px', height: '26px', borderRadius: '50%', background: '#00bbae' }} />&emsp;
                       On-Demand Training</li>
@@ -112,7 +112,7 @@ function About() {
                   </ul>
                 </div>
                 <div className="col-lg-6 col-12">
-                  <ul>
+                  <ul className="list-group list-group-flush" style={{ listStyle: 'none' }}>
                     <li className="mb-2">
                       <i className="fa-solid fa-angle-up fa-rotate-90 p-1" style={{ color: '#000', width: '26px', height: '26px', borderRadius: '50%', background: '#00bbae' }} />&emsp;
                       E-Transcript</li>
@@ -204,7 +204,7 @@ function About() {
         <div className="container pt-5 mt-5 mb-5">
           <div className="row">
             <div className="col-lg-6 col-12 p-4" style={{ borderRadius: '20px', textAlign:'justify' }}>
-              <h2 className="py-2">Friendly atmosphere for all </h2>
+              <h3 className="display-4 fw-bold py-2">Friendly atmosphere for all </h3>
               <p className=" py-2">A Swiss follower of Jean-Jacques Rousseau’s belief in the inherent goodness of children helper.</p>
               <p>A Swiss follower of Jean-Jacques Rousseau’s belief in the inherent goodness of children helper.
                 The kindergarten was developed in the nineteenth century by Friedrich Froebel, a German reformer and educator. He built upon the ideas of Johann Heinrich Pestalozzi.</p>

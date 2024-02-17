@@ -1,11 +1,16 @@
 import React from 'react'
 import CIcon from '@coreui/icons-react'
 import {
-  cilCursor,
+  cilEducation,
   cilNotes,
-  cilPuzzle,
+  cilCash,
+  cilIndustry,
+  cilChatBubble,
   cilSpeedometer,
-  cilStar,
+  cilStar, cilPeople,
+  cilAddressBook,
+  cilVoiceOverRecord,
+  cilOpentype
 } from '@coreui/icons'
 import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
 
@@ -24,16 +29,16 @@ const _nav = [
     component: CNavGroup,
     name: ' Course',
     to: '/Cources/AddCourse',
-    icon: <CIcon icon={cilCursor} customClassName="nav-icon" />,
+    icon: <CIcon icon={cilEducation} customClassName="nav-icon" />,
     items: [
       {
         component: CNavItem,
-        name: 'View All',
+        name: 'All Courses',
         to: '/Cources/AllCources',
       },
       {
         component: CNavItem,
-        name: 'Add Cources',
+        name: 'Add New',
         to: '/Cources/AddCourse',
       },
       // {
@@ -47,13 +52,13 @@ const _nav = [
 
   {
     component: CNavGroup,
-    name: 'Industries/Categories',
+    name: 'Industries',
     to: '/Industary',
-    icon: <CIcon icon={cilPuzzle} customClassName="nav-icon" />,
+    icon: <CIcon icon={cilIndustry} customClassName="nav-icon" />,
     items: [
       {
         component: CNavItem,
-        name: 'List',
+        name: 'All Industary',
         to: '/Industary/viewIndustary',
       },
       {
@@ -61,22 +66,22 @@ const _nav = [
         name: 'Add New',
         to: '/Industary/NewIndustary',
       },
-      {
-        component: CNavItem,
-        name: 'Category wise list',
-        to: '/Industary/CatagoryIndustary',
-      },
+      // {
+      //   component: CNavItem,
+      //   name: 'Category wise list',
+      //   to: '/Industary/CatagoryIndustary',
+      // },
     ],
   },
   {
     component: CNavGroup,
     name: 'Speakers',
     to: '/Speakerss',
-    icon: <CIcon icon={cilCursor} customClassName="nav-icon" />,
+    icon: <CIcon icon={cilVoiceOverRecord} customClassName="nav-icon" />,
     items: [
       {
         component: CNavItem,
-        name: 'List',
+        name: 'All  Speaker',
         to: '/Speakers/AllSpeakers',
       },
       {
@@ -93,6 +98,13 @@ const _nav = [
     ],
   },
   {
+    component: CNavItem,
+    name: 'Users',
+    to: '/User/AllUser',
+    icon: <CIcon icon={cilPeople
+} customClassName="nav-icon" />,
+  },
+  {
     component: CNavGroup,
     name: 'Orders',
     to: '/Orders',
@@ -103,23 +115,23 @@ const _nav = [
         name: 'All Orders',
         to: '/Orders/All Orders',
       },
-      {
-        component: CNavItem,
-        name: 'Failed Orders',
-        to: '/Orders/Failed Orders',
-      },
-      {
-        component: CNavItem,
-        name: 'Pending Orders',
-        to: '/base/cards',
-      },
+      // {
+      //   component: CNavItem,
+      //   name: 'Failed Orders',
+      //   to: '/Orders/Failed Orders',
+      // },
+      // {
+      //   component: CNavItem,
+      //   name: 'Pending Orders',
+      //   to: '/base/cards',
+      // },
     ],
   },
   {
     component: CNavGroup,
     name: 'Copons',
     to: '/Copons',
-    icon: <CIcon icon={cilStar} customClassName="nav-icon" />,
+    icon: <CIcon icon={cilCash} customClassName="nav-icon" />,
     items: [
       {
         component: CNavItem,
@@ -128,7 +140,7 @@ const _nav = [
       },
       {
         component: CNavItem,
-        name: 'Add Coupans',
+        name: 'Add New',
         to: '/Copons/AddCopon',
       },
 //       {
@@ -149,13 +161,13 @@ const _nav = [
     items: [
       {
         component: CNavItem,
-        name: 'Add_catagory',
+        name: 'Faq catagory',
         to: '/Faq/Add_catagory',
       },
         
       {
         component: CNavItem,
-        name: 'Faq_list',
+        name: 'Faq Qestion',
         to: '/Faq/Faq_list',
       },
 
@@ -167,11 +179,11 @@ const _nav = [
     component: CNavGroup,
     name: 'Selling Options',
     to: '/Selling Opection',
-    icon: <CIcon icon={cilStar} customClassName="nav-icon" />,
+    icon: <CIcon icon={cilOpentype} customClassName="nav-icon" />,
     items: [
       {
         component: CNavItem,
-        name: 'AddSelling_Option',
+        name: 'Add New',
         to: '/Selling_Option/AddSelling_option',
       },
 
@@ -190,13 +202,13 @@ const _nav = [
     component: CNavItem,
     name: 'Subscribers',
     to: '/Subscribe',
-    icon: <CIcon icon={cilPuzzle} customClassName="nav-icon" />,
+    icon: <CIcon icon={cilAddressBook} customClassName="nav-icon" />,
   },
   {
     component: CNavItem,
     name: 'User Query',
     to: '/User_Message',
-    icon: <CIcon icon={cilPuzzle} customClassName="nav-icon" />,
+    icon: <CIcon icon={cilChatBubble} customClassName="nav-icon" />,
   },
 
   
