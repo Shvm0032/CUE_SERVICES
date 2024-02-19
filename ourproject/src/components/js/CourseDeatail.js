@@ -61,6 +61,7 @@ export default function CourseDetail() {
     );
     // ...
 
+    const [isItemSelected, setIsItemSelected] = useState(false);
 
     // ...
 
@@ -74,6 +75,7 @@ export default function CourseDetail() {
             setSelectedItems((prevItems) => [...prevItems, id]);
             setPrice((prevPrice) => prevPrice + parseInt(price));
         }
+        setIsItemSelected(selectedItems.length > 0);
     };
 
 
@@ -137,9 +139,9 @@ export default function CourseDetail() {
             setShowToast(false);
         }, 3000);
     };
-
-
     // your selected course
+
+
     const YourSelectedIitem = (optionId) => {
         const { id } = useParams();
         let course = cartItems.find(item => item.course_id === id);
@@ -328,11 +330,14 @@ export default function CourseDetail() {
                                                 </h3>
                                                 <center>
                                                     <Link to=''>
-                                                        <button onClick={handleAddToCart} className=" button2addtocark">
+                                                        <button onClick={handleAddToCart} disabled={!isItemSelected} className=" button2addtocark">
                                                             Add to Cart
                                                         </button>
                                                     </Link> &emsp;
                                                 </center>
+                                                {!isItemSelected && (
+                                                    <p className="text-danger">Please select at least one item before adding to cart.</p>
+                                                )}
                                                 <p className='lh-base mt-5 p-2 fs-5 text-primary text-start'>
                                                     <span className='text-danger fs-4 mt-5'>*</span>
                                                     Couldn't find the option you're looking for? Don't worry, let us know your requirements and we will get back to you SOON!

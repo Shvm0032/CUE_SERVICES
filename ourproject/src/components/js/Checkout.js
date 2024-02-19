@@ -276,7 +276,38 @@ function Checkout() {
     //         console.log(e.errors)
     //     })
 
+    if(cartItems.length === 0){
 
+        return <div>
+             <section className="h-100 gradient-custom " style={{ marginTop: '100px', marginBottom: "200px" }}>
+             <div class="container-fluid  mt-100">
+            <div class="row">
+
+              <div class="col-md-12">
+
+                <div class="row">
+
+                  <div class=" cart">
+                    <div class="col-sm-12 empty-cart-cls text-center">
+                      <img src="https://i.imgur.com/dCdflKN.png" width="130" alt='' height="130" class="img-fluid mb-4 mr-3" />
+                      <h3><strong>Your Cart is Empty</strong></h3>
+                      <h4>Add something to make me happy</h4>
+                      <Link to="/course" className=" button2addtocark" data-abc="true">continue shopping</Link>
+
+
+                    </div>
+                  </div>
+                </div>
+
+
+              </div>
+
+            </div>
+
+          </div>
+            </section>
+        </div>
+    }
     return (
         <div><LoadingOverlay
             active={isLoading}
@@ -316,7 +347,7 @@ function Checkout() {
                                                 <div className='col'>
                                                     <label htmlFor="email" class="form-label">Email</label>
                                                     <input type="email" required class="form-control form-control-lg" id="email" name='email' value={formData.email} onChange={handleInputChange} />
-                                                    {emailExists && <span className="text-danger">Email has already been used.</span>}
+                                                    {emailExists && !isLoggedIn ? (<span className="text-danger">Email has already been used.</span>) : null}
                                                     {formErrors.email && <span className="error">{formErrors.email}</span>}
                                                 </div>
                                             </div><br />
@@ -375,7 +406,7 @@ function Checkout() {
                                                     {emailExists && !isLoggedIn ? (
                                                         <button className="button2addtocark" onClick={() => navigate('/login')}>Login</button>
                                                     ) : (
-                                                        <button type="submit" className="button2addtocark">Checkout</button>
+                                                        <button type="submit" className="button2addtocark" disabled={cartItems.length === 0}>Checkout</button>
                                                     )}
                                                 </div>
                                             </div>
