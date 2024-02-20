@@ -16,7 +16,7 @@ import { useLocation } from 'react-router-dom';
 
 
 export default function NavbarP() {
-    
+
     const cartItems = useSelector(selectCartItems);
     const location = useLocation();
     const unique_id = uuid();
@@ -85,8 +85,7 @@ export default function NavbarP() {
 
     return (
         <>
-
-            <section className="d-flex justify-content-between p-2" style={{ background: '#13bbaf' }}>
+            <section sticky="top" className="d-flex justify-content-between p-2" style={{ background: '#13bbaf' }}>
                 {/* Left */}
                 <div className="me-5">
                     <span>Get connected with us on social networks:</span>
@@ -101,7 +100,7 @@ export default function NavbarP() {
 
             {(isMobile) ? (
                 // Mobile and Tablet Navbar with Sidebar
-                <Navbar bg="light" className='fixed-top' expand={false}>
+                <Navbar bg="light" className='' expand={false}>
                     <Container fluid>
                         <Navbar.Brand href="/"><img src={logo} width={170} height={70} alt='logo' /></Navbar.Brand>
                         <Navbar.Toggle aria-controls="offcanvasNavbar" />
@@ -193,80 +192,83 @@ export default function NavbarP() {
                 </Navbar>
             ) : (
                 // Desktop Navbar
-                <Navbar collapseOnSelect expand="lg" bg="light" variant="light" style={{ height: '80px' }}>
-                    <Container>
-                        <Navbar.Brand href="/"><img src={logo} width={170} height={70} alt='logo' /></Navbar.Brand>
-                        <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-                        <Navbar.Collapse id="responsive-navbar-nav">
-                            <Nav className="me-auto mx-auto" style={{ fontSize: '1.2rem' }}>
-                                <Nav.Link href="/">Home</Nav.Link>
-                                <Nav.Link href="/About" style={{ marginLeft: '12px' }}>About</Nav.Link>
-                                {dropdownData.map((dropdown, index) => (
-                                    <React.Fragment key={index} >
-                                        {index > 0 && <span className="divider"></span>}
-                                        {dropdown.sublinks ? (
-                                            <NavDropdown
+                <div class="position-relative">
+                    <Navbar class="sticky-top" collapseOnSelect expand="lg" bg="light" variant="light" style={{ height: '80px' }}>
+                        <Container>
+                            <Navbar.Brand href="/"><img src={logo} width={170} height={70} alt='logo' /></Navbar.Brand>
+                            <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+                            <Navbar.Collapse id="responsive-navbar-nav">
+                                <Nav className="me-auto mx-auto" style={{ fontSize: '1.2rem' }}>
+                                    <Nav.Link href="/">Home</Nav.Link>
+                                    <Nav.Link href="/About" style={{ marginLeft: '12px' }}>About</Nav.Link>
+                                    {dropdownData.map((dropdown, index) => (
+                                        <React.Fragment key={index} >
+                                            {index > 0 && <span className="divider"></span>}
+                                            {dropdown.sublinks ? (
+                                                <NavDropdown
 
-                                                title={dropdown.title}
-                                                id={`collapsible-nav-${dropdown.title.toLowerCase()}`}
-                                                show={openDropdownIndex === index}
-                                                {...createDropdownHandler(index, openDropdownIndex, setOpenDropdownIndex)}
-                                                style={{ marginLeft: '12px', background: 'transparent', textAlign: 'center' }}
+                                                    title={dropdown.title}
+                                                    id={`collapsible-nav-${dropdown.title.toLowerCase()}`}
+                                                    show={openDropdownIndex === index}
+                                                    {...createDropdownHandler(index, openDropdownIndex, setOpenDropdownIndex)}
+                                                    style={{ marginLeft: '12px', background: 'transparent', textAlign: 'center' }}
 
-                                            >
-                                                {dropdown.sublinks.map((sublink, subindex) => (
-                                                    <NavDropdown.Item className='animated-text bg-transparent text-white' style={{ width: '250px' }} key={subindex} href={sublink.link}>
-                                                        <span className="arrow">→</span>  {sublink.title}
-                                                    </NavDropdown.Item>
-                                                ))}
+                                                >
+                                                    {dropdown.sublinks.map((sublink, subindex) => (
+                                                        <NavDropdown.Item className='animated-text bg-transparent text-white' style={{ width: '250px' }} key={subindex} href={sublink.link}>
+                                                            <span className="arrow">→</span>  {sublink.title}
+                                                        </NavDropdown.Item>
+                                                    ))}
 
-                                            </NavDropdown>
-                                        ) : (
-                                            <Nav.Link style={{ marginLeft: '12px' }} href={dropdown.link}>{dropdown.title}</Nav.Link>
-                                        )}
-                                    </React.Fragment>
-                                ))}
-                            </Nav>
-                            <Nav className='me-auto mx-auto ' style={{ fontSize: '1.2rem' }}>
-                                <Nav.Link href="/Add_cart" className="cart-icon">
-                                    <i className="fas fa-shopping-cart fa-lg" style={{ color: '#00bbae' }}></i>
-                                    <span class="badge badge-primary cart-badge">{cartItems.length}</span>
-                                </Nav.Link>
-                                {isLoggedIn ? (
-                                    <>
-                                        <Nav.Link eventKey={2} href="/Dashboard" style={{ marginLeft: '15px' }}>
+                                                </NavDropdown>
+                                            ) : (
+                                                <Nav.Link style={{ marginLeft: '12px' }} href={dropdown.link}>{dropdown.title}</Nav.Link>
+                                            )}
+                                        </React.Fragment>
+                                    ))}
+                                </Nav>
+                                <Nav className='me-auto mx-auto ' style={{ fontSize: '1.2rem' }}>
+                                    <Nav.Link href="/Add_cart" className="cart-icon">
+                                        <i className="fas fa-shopping-cart fa-lg" style={{ color: '#00bbae' }}></i>
+                                        <span class="badge badge-primary cart-badge">{cartItems.length}</span>
+                                    </Nav.Link>
+                                    {isLoggedIn ? (
+                                        <>
+                                            <Nav.Link eventKey={2} href="/Dashboard" style={{ marginLeft: '15px' }}>
                                                 <i class="far fa-user fa-lg"></i>
-                                        </Nav.Link>
-                                        <Nav.Link href="/login" eventKey={2} style={{ marginLeft: '15px' }} onClick={handleLogout}>
+                                            </Nav.Link>
+                                            <Nav.Link href="/login" eventKey={2} style={{ marginLeft: '15px' }} onClick={handleLogout}>
+                                                <div className="button">
+                                                    <div className="button-wrapper">
+                                                        <div className="text">Logout</div>
+                                                        <span className="icon">
+                                                            Logout
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </Nav.Link>
+                                        </>
+                                    ) : (
+                                        <Nav.Link href="/login" eventKey={2} style={{ marginLeft: '15px' }}>
                                             <div className="button">
                                                 <div className="button-wrapper">
-                                                    <div className="text">Logout</div>
+                                                    <div className="text">Login</div>
                                                     <span className="icon">
-                                                        Logout
+                                                        Login
                                                     </span>
                                                 </div>
                                             </div>
                                         </Nav.Link>
-                                    </>
-                                ) : (
-                                    <Nav.Link href="/login" eventKey={2} style={{ marginLeft: '15px' }}>
-                                        <div className="button">
-                                            <div className="button-wrapper">
-                                                <div className="text">Login</div>
-                                                <span className="icon">
-                                                    Login
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </Nav.Link>
-                                )}
+                                    )}
 
 
-                            </Nav>
-                        </Navbar.Collapse>
-                    </Container>
-                </Navbar>
+                                </Nav>
+                            </Navbar.Collapse>
+                        </Container>
+                    </Navbar>
+                </div>
             )}
+
         </>
     );
 }

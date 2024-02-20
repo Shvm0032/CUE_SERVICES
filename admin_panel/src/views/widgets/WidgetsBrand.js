@@ -254,7 +254,7 @@ const WidgetsBrand = ({ withCharts }) => {
           icon={<CIcon icon={cilStar} height={52} className="my-4 text-warning" />}
           values={[
             { title: 'Total Sale', },
-            { value: Summary.total_Amount_of_items_ordered_today__  },
+            { value: "$" + Summary.total_Amount_of_items_ordered_today__  },
           ]}
         />
       </CCol>

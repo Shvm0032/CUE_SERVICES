@@ -347,7 +347,7 @@ Router.post('/api/update/:course_id', upload.single('file'), async (req, res) =>
       SET industries = ?, speaker = ?, title = ?, description = ?, duration = ?, time = ?, date = ?, selling_option = ?
       WHERE id = ?
     `;
- 
+
         const fieldsData = JSON.parse(fields);
         console.log(req.body, 'fieldsData');
         console.log(req.file, 'thumbnail')
@@ -547,22 +547,22 @@ Router.post('/api/update_speaker/:speaker_id', upload.single('image'), async (re
         console.log(res.body)
         // Handle file upload
         const image = req.file ? req.file.filename : null;
+
         let updateQuery = `
         UPDATE speaker_info
         SET name=?, email=?, phone_no=?, bio=?, designation=?, experience=?
-        WHERE speaker_id=?
-    `;
+        WHERE speaker_id=?`;
         valueArray = [name, email, phone_no, bio, designation, experience, speaker_id];
-        if (image){
+        
+        if (image) {
             updateQuery = `
         UPDATE speaker_info
         SET name=?, email=?, phone_no=?, bio=?, designation=?, experience=?, images=?
-        WHERE speaker_id=?
-    `;
+        WHERE speaker_id=?`;
             valueArray = [name, email, phone_no, bio, designation, experience, image, speaker_id];
         }
 
-      //  console.log(valueArray,'valueArray');
+        //  console.log(valueArray,'valueArray');
         sqlDbconnect.query(
             updateQuery,
             valueArray,
@@ -748,7 +748,7 @@ Router.post('/api/InsertCoupons', (req, res) => {
 
 
 Router.get("/api/Industary", (req, res) => {
-    
+
     try {
 
         sqlDbconnect.query("SELECT * FROM industry where status = 1", (err, rows) => {
@@ -815,21 +815,28 @@ Router.post("/api/Industary_add", upload.single("file"), (req, res) => {
     }
 });
 
-
-
-Router.put('/api/edite_industry/:id', upload.single('image'), (req, res) => {
+Router.post('/api/edite_industry/:id', upload.single('image'), (req, res) => {
     try {
         const industryId = req.params.id;
         const { industry_name } = req.body;
-        const image = req.file; // The uploaded image file
+        const image = req.file ? req.file.filename : null; // The uploaded image file
 
         if (!industry_name || typeof industry_name !== 'string') {
             return res.status(400).json({ error: 'Invalid industry data' });
         }
 
-        const query = 'UPDATE industry SET industry_name = ?, image = ? WHERE id = ?';
+        let query = `UPDATE industry SET industry_name = ? WHERE id = ?`;
+        valueArray = [industry_name, industryId]
 
-        sqlDbconnect.query(query, [industry_name, image ? image.filename : null, industryId], (error, result) => {
+
+        if (image) {
+             query = `UPDATE industry SET industry_name = ?, image = ? WHERE id = ?`;
+            valueArray = [industry_name, image, industryId]
+
+
+        }
+
+        sqlDbconnect.query(query, valueArray, (error, result) => {
             if (error) {
                 console.error('Error updating industry:', error);
                 res.status(500).json({ error: 'Internal Server Error' });
@@ -1301,14 +1308,14 @@ Router.get("/api/Registration/:id", (req, res) => {
     try {
         const { id } = req.params;
         sqlDbconnect.query(`SELECT * FROM registration WHERE ID=?`, [id
-            ], (err, result) => {
-                if (!err) {
-                    res.send(result[0]);
+        ], (err, result) => {
+            if (!err) {
+                res.send(result[0]);
 
-                } else{
-                    console.log(err);
-                }
-                });
+            } else {
+                console.log(err);
+            }
+        });
     }
     catch (error) {
         console.error('Error updating category:', error);
