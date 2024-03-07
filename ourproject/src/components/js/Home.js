@@ -9,11 +9,20 @@ import { v4 as uuid } from "uuid";
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchCourses } from '../../redux/courseSlice';
 import { fetchSpeakers } from '../../redux/speakerSlice';
+import Homeimg1 from '../../assets/Home/curved-line-2.webp';
+//images 
+import Homeimg2 from '../../assets/Home/Home2.webp';
+import Homeimg3 from '../../assets/Home/Home3.webp';
+import Homeimg4 from '../../assets/Home/Home4.webp';
+import Homeimg5 from '../../assets/Home/Home5.jpg';
+import Homeicon1 from '../../assets/Home/Homeicon1.gif';
+import Homeicon2 from '../../assets/Home/Homeicon2.gif';
+import Homeicon3 from '../../assets/Home/Homeicon3.gif';
 const Home = () => {
   const IMGurl = process.env.REACT_APP_IMG_URL;
-  console.log(IMGurl);
+  //console.log(IMGurl);
 
-  
+
   const dispatch = useDispatch();
   const courses = useSelector((state) => state.course.courses);
   const speakers = useSelector((state) => state.speaker.speakers);
@@ -22,7 +31,7 @@ const Home = () => {
 
 
   useEffect(() => {
-    
+
     // Fetch courses data when the component mounts
     dispatch(fetchCourses());
     dispatch(fetchSpeakers());
@@ -110,21 +119,21 @@ const Home = () => {
           <div className="row py-4 align-items-center">
             <div className=" col-lg-6 col-md-6 col-12  p-lg-5 p-5  ">
               <div className=" d-sm-none d-lg-flex" style={{ width: '100px', marginLeft: "75%", }}>
-                <img src="img/curved-line-2.webp" class=" w-100 h-100 BouncingImg" alt="img" />
+                <img src={Homeimg1} class=" w-100 h-100 BouncingImg" alt="img" />
               </div>
               <div className="row my-lg-3 my-md-3 my-3">
                 <span className="" style={{ color: "rgb(19, 187, 175)", fontSize: "23px", fontWeight: '600' }}>CEU Services<br /></span>
                 <h1 >Best Online Courses</h1>
                 {/* <h5>{localStorage.getItem('unique_id')}</h5> */}
                 <div class="p-lg-2 p-2">
-                  <Link to="/Webinar"><button class="button1 rounded-pill"> View All Cources</button></Link> &emsp; &emsp;
+                  <Link to="/course"><button class="button1 rounded-pill"> View All Cources</button></Link> &emsp; &emsp;
                 </div>
               </div>
             </div>
 
             <div className="col-lg-6 col-md-6 col-12 p-lg-2 px-lg-2  p-2">
               <div className=" align-items-center">
-                <img src="img/2.webp" className="shapesimg" alt="" style={{ mixBlendMode: "darken" }} />
+                <img src={Homeimg2} className="shapesimg" alt="" style={{ mixBlendMode: "darken" }} />
               </div>
             </div>
           </div>
@@ -177,13 +186,16 @@ const Home = () => {
                         </div>
                         <div className="row offer-card-detail text-center my-2 justify-content-center">
                           <h3>
-                            On Demands
+                            Live
                           </h3>
                           <p className='mt-2'>
-                            We provide on demand services for your business.
+                            Browse wide-range of CEU Webinars  and  Training Session
+                            {/* We provide on demand services for your business. */}
                           </p>
                           <div className="col my-2">
-                            <button class="View-Details-btn">View Details</button>
+                            <Link to='/course'>
+                              <button class="View-Details-btn">View Details</button>
+                            </Link>
                           </div>
                         </div>
 
@@ -205,11 +217,15 @@ const Home = () => {
                             On Demands
                           </h3>
                           <p className='mt-2'>
-                            We provide on demand services for your business.
+                            Allow you to learn anytime, anywhere
+                            {/* We provide on demand services for your business. */}
                           </p>
                           <div className="col my-2">
-                            <button class="View-Details-btn">View Details</button>
+                            <Link to='/course'>
+                              <button class="View-Details-btn">View Details</button>
+                            </Link>
                           </div>
+
                         </div>
 
                       </div>
@@ -227,13 +243,16 @@ const Home = () => {
                         </div>
                         <div className="row offer-card-detail text-center my-2 justify-content-center">
                           <h3>
-                            On Demands
+                            E-Transcript
                           </h3>
                           <p className='mt-2'>
-                            We provide on demand services for your business.
+                            Learn from the top subject-matter-Experts
+                            {/* We provide on demand services for your business. */}
                           </p>
                           <div className="col my-2">
-                            <button class="View-Details-btn">View Details</button>
+                            <Link to='/course'>
+                              <button class="View-Details-btn">View Details</button>
+                            </Link>
                           </div>
                         </div>
 
@@ -257,13 +276,14 @@ const Home = () => {
           <div className="row align-items-center">
             <div className="col-lg-6  ">
               <div className="HeroImage me-5 ">
-                <img src="img/3.webp" alt="" style={{ width: "100%", }} />
+                <img src={Homeimg3} alt="" style={{ width: "100%", }} />
               </div>
             </div>
             <div className="col-lg-6">
               <div className="row" style={{ textAlign: 'justify' }}>
                 <h2 className="text-start my-3 " style={{}}>Best for Level-up</h2>
-                <p className="text-start my-3  lh-base" style={{ lineHeight: "30px" }}>Being brave isn’t always a grand gesture sometimes it just means having a go attempting that difficult question, offering an answer in a lesson when you’re simply really trying new.</p>
+                <p className="text-start my-3  lh-base" style={{ lineHeight: "30px" }}>
+                  Craft engaging webinars with relevant topics, visuals, and actionable insights. Encourage interaction, feature guest speakers, provide follow-up resources, and collect feedback for improvement.                </p>
               </div>
               <div className="my-3">
                 <div className="d-flex  flex-column flex-lg-row flex-md-row  justify-content-around p-3 border" style={{ backgroundColor: '#00bbae', borderRadius: '25px' }}>
@@ -289,15 +309,16 @@ const Home = () => {
               </div>
               <ul className="mt-3 p-0 list-unstyled">
                 <li className="">
-                  <p> <i className="fa-solid fa-angle-up fa-rotate-90 p-1" style={{ color: '#000', width: '26px', height: '26px', borderRadius: '50%', background: '#00bbae' }} />&emsp; We believe every child is intelligent so we care.</p>
+                  <p> <i className="fa-solid fa-angle-up fa-rotate-90 p-1" style={{ color: '#000', width: '26px', height: '26px', borderRadius: '50%', background: '#00bbae' }} />&emsp;  Look for trending topics in your industry or niche.</p>
                 </li>
                 <li>
-                  <p> <i className="fa-solid fa-angle-up fa-rotate-90  p-1" style={{ color: '#000', width: '26px', height: '26px', borderRadius: '50%', background: '#00bbae' }} />&emsp; We believe every child is intelligent so we care.</p>
+                  <p> <i className="fa-solid fa-angle-up fa-rotate-90  p-1" style={{ color: '#000', width: '26px', height: '26px', borderRadius: '50%', background: '#00bbae' }} />&emsp; Share real-life examples and success stories to illustrate key points.</p>
                 </li>
               </ul>
               <div className="row mt-5">
-                <button class="Applynow type1">
-                </button>
+                <Link to='/Contactus'>
+                  <button class="Applynow type1"></button>
+                </Link>
               </div>
             </div>
           </div>
@@ -337,19 +358,19 @@ const Home = () => {
               {/* first card */}
               {courses.map((course) => (
                 <div style={{ margin: '0 12px' }} key={course.id}>
-                  <div className='col-lg-4 col-md-6 col-12 mb-5' style={{ width: '27rem' }}>
-                    <Link to={`/Course_Detail/${course?.id}`}>
+                  <div className='col-lg-4 col-md-6 col-12 mb-5' style={{ width: '28rem' }}>
+                    <Link to={`/Course_Detail/${course?.slug}`}>
                       <div className='newsCard news-Slide-up '>
                         <div className='img-div'>
                           <img src={`${IMGurl}/${course.course_thumbail}`} className='course-img' alt="Course_thumnail" />
                         </div>
                         <div className='newsCaption'>
-                          <div className='d-flex'>
+                          <div className='d-flex gap-4'>
                             <p className='newsCaption-content mb-3' >
                               <i class="fas fa-chalkboard-teacher fa-lg" style={{ color: '#00bbae' }}></i>&emsp;{course.name}
                             </p>
-                            <p className='newsCaption-content mb-3 ms-5'>
-                              <i class="fas fa-clock fa-lg" style={{ color: '#00bbae' }}></i>&emsp;{course.time}min
+                            <p className='newsCaption-content mb-3'>
+                              <i class="fas fa-clock fa-lg" style={{ color: '#00bbae' }}></i>&emsp;{course.est_time}
                             </p>
                           </div>
                           <div className='newsCaption-title'>
@@ -359,10 +380,10 @@ const Home = () => {
                             <div className="p-4">
                               <div className="d-flex justify-content-center align-items-center p-3 text-center mstt">
                                 <div className="col boder-4">
-                                  <h5 className=''><i class="fa-solid fa-calendar-days fa-lg"></i>&emsp;</h5>
+                                  <h5 className=''><i class="fa-solid fa-calendar-days fa-lg"></i>&emsp; {course.date}</h5>
                                 </div>
                                 {/* <div className="col border-end boder-4"><h6>Date<br /></h6></div> */}
-                                <div className="col border-start text-center"><h5><i className="fa-solid fa-stopwatch-20 fa-lg"></i>&emsp;{course.duration}min </h5>
+                                <div className="col border-start text-center"><h5><i className="fa-solid fa-stopwatch-20 fa-lg"></i>&emsp;{course.duration} min </h5>
                                 </div>
                               </div>
                             </div>
@@ -407,31 +428,33 @@ const Home = () => {
                   <div class="accordion-item">
                     <h2 class="accordion-header" id="flush-headingOne">
                       <button class="accordion-button collapsed " style={{ background: '#ff9b24', borderRadius: '10px' }} type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
-                        Accordion Item #1
+                        Who we are ?
                       </button>
                     </h2>
                     <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
-                      <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> class. This is the first item's accordion body.</div>
+                      <div class="accordion-body">We are a team of experienced professionals, passionate about providing high-quality CEU Webinars on statutory and regulatory compliance areas. With years of experience in the industry, we have developed a deep understanding of the challenges faced by organizations in meeting their compliance obligations.</div>
                     </div>
                   </div>
                   <div class="accordion-item">
                     <h2 class="accordion-header" id="flush-headingTwo">
                       <button class="accordion-button collapsed " style={{ borderRadius: '10px' }} type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
-                        Accordion Item #2
+                        What we do ?
                       </button>
                     </h2>
                     <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
-                      <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> class. This is the second item's accordion body. Let's imagine this being filled with some actual content.</div>
+                      <div class="accordion-body">
+                        At CEU Trainers, we believe in providing a personalized experience for our clients. Keeping the unique compliance needs in the mind, we offer tailored trainings to meet the specific needs of individuals and organizations, ensuring knowledge & tools needed to stay compliant.                        </div>
                     </div>
                   </div>
                   <div class="accordion-item">
                     <h2 class="accordion-header" id="flush-headingThree">
                       <button class="accordion-button collapsed" style={{ borderRadius: '10px' }} type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
-                        Accordion Item #3
+                        Our Mission & Vision
                       </button>
                     </h2>
                     <div id="flush-collapseThree" class="accordion-collapse collapse" aria-labelledby="flush-headingThree" data-bs-parent="#accordionFlushExample">
-                      <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> class. This is the third item's accordion body. Nothing more exciting happening here in terms of content, but just filling up the space to make it look, at least at first glance, a bit more representative of how this would look in a real-world application.</div>
+                      <div class="accordion-body">
+                        Our mission is to help organizations and individuals stay up-to-date with the latest compliance issues and minimize their risk of non-compliance and earn CEU Credits in that process.                        </div>
                     </div>
                   </div>
                 </div>
@@ -439,7 +462,7 @@ const Home = () => {
             </div>
             <div className="col-md-6 col-12  " data-aos="fade-up">
               <div className="HeroImage ms-5 mt-lg-0 mt-5">
-                <img src="img/1.webp" alt="..." style={{ width: "100%" }} />
+                <img src={Homeimg4} alt="..." style={{ width: "100%" }} />
               </div>
             </div>
           </div>
@@ -454,10 +477,12 @@ const Home = () => {
             <div className='row'>
               <div className='mt-4 col-12 col-md-8 offset-md-2 text-center text-white'>
                 <h2 className=" mt-3 fw-bold text-white" data-aos="fade-up ">Join Our New Session</h2>
-                <p className=" text-white my-4">Kindedo believes that good questions drive good answers. Whether it's a query
+                <p className=" text-white my-4">CEU believes that good questions drive good answers. Whether it's a query
                   about the world around us or a challenge.</p>
                 {/* <div className='row imgarrow text-center '></div> */}
-                <button className='my-5 button-Join rounded-pill shadow'>Purchase Now</button>
+                <Link to='/Contactus'>
+                  <button className='my-5 button-Join rounded-pill shadow'>Purchase Now</button>
+                </Link>
               </div>
             </div>
           </div>
@@ -500,7 +525,7 @@ const Home = () => {
               >
                 {speakers.map((speaker) => (
                   <div>
-                    <div className="col-12 col-sm-6 col-md-6 col-lg-3" style={{width:'22rem'}} >
+                    <div className="col-12 col-sm-6 col-md-6 col-lg-3" style={{ width: '22rem' }} >
                       <Link to={`/speaker/${speaker?.speaker_id}`}>
                         <div className="our-team" >
                           <div className="picture ">
@@ -544,7 +569,7 @@ const Home = () => {
           <div className="container ">
             <div className="row align-item-center pt-5cy" >
               <div className="col-lg-6 col-md-12 col-12 my-5 ">
-                <img src="img/friend.jpg" alt="" style={{ height: "400px", width: "100%", borderRadius: "25px" }} />
+                <img src={Homeimg5} alt="" style={{ height: "400px", width: "100%", borderRadius: "25px" }} />
               </div>
               <div className="col-lg-6 col-md-12v col-12 mb-5">
                 <h2 className="text-start   text-white mt-5">What Students Say</h2>
@@ -660,8 +685,10 @@ const Home = () => {
             <div className="col-lg-8 offset-lg-2 col-12  text-center mt-2">
               <h2 className="mt-5" data-aos="fade-up">
                 Achieve Your Goals with Us</h2>
-              <p className=" text-center">Lorem ipsum odor amet, consectetuer adipiscing elit. Duis consectetur blandit mi. Non sapien scelerisque maximus. Duis ligula cras lacinia.
-                Aliquam scelerisque dictumst luctus.</p>
+              <p className=" text-center">
+                Unlock your potential and achieve your Goals with our innovative approach to Learning.
+                We provide a comprehensive solution for modern learners, empowering them to succeed in their careers and beyond.
+              </p>
             </div>
           </div>
 
@@ -670,13 +697,15 @@ const Home = () => {
               <div className="Offer-card-bg" style={{ padding: '40px' }}>
                 <div className="row d-flex align-items-center  justify-content-center  justify-content-center   " >
                   <div className="card-icon">
-                    <img src="images/book.gif " className="rounded-circle" style={{ width: '100%' }} alt="" />
+                    <img src={Homeicon1} className="rounded-circle" style={{ width: '100%' }} alt="" />
                   </div>
                   <div className="row offer-card-detail text-center my-2 justify-content-center">
                     <h3>Essential Skills</h3>
                     <p className='mt-2'>Keep up your skills to meet industry standards.</p>
                     <div className="col my-2">
-                      <button class="View-Details-btn">View Details</button>
+                      <Link to='/course'>
+                        <button class="View-Details-btn">View Details</button>
+                      </Link>
                     </div>
                   </div>
 
@@ -688,7 +717,7 @@ const Home = () => {
               <div className="Offer-card-bg" style={{ padding: '40px' }}>
                 <div className="row d-flex align-items-center  justify-content-center  justify-content-center   " >
                   <div className="card-icon">
-                    <img src="images/job-seeking.gif" className="rounded-circle" style={{ width: '100%' }} alt="" />
+                    <img src={Homeicon2} className="rounded-circle" style={{ width: '100%' }} alt="" />
 
                   </div>
                   <div className="row offer-card-detail text-center my-2 justify-content-center">
@@ -697,7 +726,10 @@ const Home = () => {
                       With high demands in mastering new skills
                     </p>
                     <div className="col my-2">
-                      <button class="View-Details-btn">View Details</button>
+                      <Link to='/course'>
+
+                        <button class="View-Details-btn">View Details</button>
+                      </Link>
                     </div>
                   </div>
 
@@ -709,7 +741,7 @@ const Home = () => {
               <div className="Offer-card-bg" style={{ padding: '40px' }}>
                 <div className="row d-flex align-items-center  justify-content-center  justify-content-center   " >
                   <div className="card-icon">
-                    <img src='images/safe.gif' className="rounded-circle" style={{ width: '100%' }} alt="" />
+                    <img src={Homeicon3} className="rounded-circle" style={{ width: '100%' }} alt="" />
                   </div>
                   <div className="row offer-card-detail text-center my-2 justify-content-center">
                     <h3>Earn Credits</h3>
@@ -717,7 +749,9 @@ const Home = () => {
                       From the Regulators and the Accreditors File
                     </p>
                     <div className="col my-2">
-                      <button class="View-Details-btn">View Details</button>
+                      <Link to='/course'>
+                        <button class="View-Details-btn">View Details</button>
+                      </Link>
                     </div>
                   </div>
 

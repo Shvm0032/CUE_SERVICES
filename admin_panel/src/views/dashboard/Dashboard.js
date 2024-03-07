@@ -35,13 +35,12 @@ const Dashboard = () => {
     getData();
   }, []);
 
-  
- 
+
+
 
   return (
     <>
-      <WidgetsDropdown />
-<br/><br/>
+      {/* <WidgetsDropdown /> */}
       <WidgetsBrand withCharts />
 
       <CRow>
@@ -51,7 +50,7 @@ const Dashboard = () => {
             <CCardBody>
               <br />
 
-               <CTable align="middle" className="mb-0 border" hover responsive>
+              <CTable align="middle" className="mb-0 border" hover responsive>
                 <CTableHead color="light" className='text-center'>
                   <CTableRow>
                     <CTableHeaderCell className="text-center overflow-auto">
@@ -63,30 +62,30 @@ const Dashboard = () => {
                     <CTableHeaderCell>Price</CTableHeaderCell>
                     <CTableHeaderCell className="text-center">Status</CTableHeaderCell>
                     <CTableHeaderCell className="text-center">Action</CTableHeaderCell>
-                  
+
                   </CTableRow>
                 </CTableHead>
                 <CTableBody className='text-center'>
-                
-                    {Orders.map((row, index) => (
-                      <tr key={index}>
-                        <th>{index + 1}</th>
-                        <td>{row.order_id}</td>
-                        <td>{row.Email}</td>
-                        <td>{row.trans_date}</td>
-                        <td>${row.subtotal}</td>
-                        <td>{row.order_status}</td>
-                        
-                        <td>
-                          <Link to={`/Orders/OrderDetails/${row.id}`} className="btn btn-outline-primary">
-                            <i className="fa fa-eye"></i>
-                          </Link>
-                        </td>
-                      </tr>
-                    ))}
-                 
+
+                  {Orders.map((row, index) => (
+                    <tr key={index}>
+                      <th>{index + 1}</th>
+                      <td>{row.order_id}</td>
+                      <td>{row.Email}</td>
+                      <td>{row.trans_date}</td>
+                      <td>${row.subtotal}</td>
+                      <td>{row.order_status}</td>
+
+                      <td>
+                        <Link to={`/Orders/OrderDetails/${row.id}`} className="btn btn-outline-primary">
+                          <i className="fa fa-eye"></i>
+                        </Link>
+                      </td>
+                    </tr>
+                  ))}
+
                 </CTableBody>
-              </CTable> 
+              </CTable>
             </CCardBody>
           </CCard>
         </CCol>

@@ -10,6 +10,8 @@ import Footer from './components/js/Footer';
 import { Toaster } from 'react-hot-toast';
 import { Provider } from 'react-redux';
 import store from './redux/store';
+import ScrollButton from './components/js/ScrollButton';
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
@@ -19,6 +21,7 @@ root.render(
         <AppRouter />
         <Toaster />
         <Footer />
+      <ScrollButton/>
       </BrowserRouter>
     </Provider>
   </React.StrictMode>

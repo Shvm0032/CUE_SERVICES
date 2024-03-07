@@ -3,13 +3,14 @@ import 'jspdf-autotable'
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import http from "../../../utils/http-client";
+import {CTooltip } from "@coreui/coreui";
 
 function AllCourses() {
   const [courses, setCourses] = useState([]);
   const getData = async () => {
     try {
       var res = await http.get("/Course");
-      console.log(res);
+     // console.log(res);
       setCourses(res.data);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -72,16 +73,19 @@ function AllCourses() {
               {courses.map((row, index) => (
                 <tr key={index}>
                   <th>{index + 1}</th>
-                  <td><Link to={`/Cources/CourseDetails/${row.id}`} className=''> {row.title} </Link></td>
+
+                  <td>
+                    <Link to={`/Cources/CourseDetails/${row.id}`} className=' data-bs-toggle '> {row.title} </Link>
+                  </td>
                   {/* <td>{row.description}</td> */}
                   {/* <td>{row.date}</td>
                   <td>{row.time}</td> */}
                   {/* <td>{row.selling_option}</td> */}
                   {/* <td>{row.course_thumbail}</td> */}
-                  <td className='d-flex'>
+                  <td  className='d-flex' >
                     <Link to={`/Cources/EditCources/${row.id}`} className='btn btn-outline-success'>
                       <i className="fa fa-edit"></i>
-                    </Link>&emsp;
+                    </Link> &emsp;
                     <button onClick={() => deleteFunc(row)} type="submit" className="btn btn-outline-danger">
                       <i className="fa fa-trash-alt"></i>
                     </button>
@@ -93,9 +97,10 @@ function AllCourses() {
           </table>
         ) : (
           <p>Loading...</p>
-        )}
-      </div>
-    </div>
+        )
+        }
+      </div >
+    </div >
   );
 }
 

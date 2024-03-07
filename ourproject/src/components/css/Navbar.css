@@ -83,16 +83,26 @@
 
 .dropdown-menu {
     border-radius: 1rem !important;
-    background: #00bbae !important;
+    background: #04b4a8 !important;
     border-bottom: 1px #000 solid !important;
+   
 }
 
 .nav-link {
-    color: #000 !important
+    color: #000 !important;
+    font-size: 20px !important;
+    
 }
 
 .nav-link:hover {
     color: #ff9b24 !important
+}
+
+.navbar-custom {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    /* Ensure it's above other content */
 }
 
 /* nav arrow in dropdown link*/
@@ -132,7 +142,7 @@
     transform: translateX(10%);
 }
 
-.arrow {
+.footer-text .arrow {
     display: inline-block;
     opacity: 0;
     transition: opacity 0.5s ease-out;
@@ -140,4 +150,13 @@
 
 .footer-text:hover .arrow {
     opacity: 1;
+}
+.footericon{
+    color: #00bbae;
+    font-size: 22px;
+
+}
+.footericon:hover{
+    color: #ff9b24;
+
 }

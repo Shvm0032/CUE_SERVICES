@@ -19,7 +19,7 @@ function Checkout() {
     const [discount, setDiscount] = useState(0);
     const cartItems = useSelector(selectCartItems);
     const [emailExists, setEmailExists] = useState(false);
-    console.log(cartItems);
+    // console.log(cartItems);
     // console.log();
     const dispatch = useDispatch();
 
@@ -468,50 +468,50 @@ function Checkout() {
                                         ))}
                                     </table>
                                 </div>
-                                
-                               
-                                   
-                                    {/* coupan section  */}
-                                    <div className='row m-1 shadow border my-5 justify-content-end'>
-                                        <div className='row'>
-                                            <div className='col mt-4'>
-                                                {!applied ? (
-                                                    <div className="row p-2">
-                                                        {/* <label className="text-end fs-3 form-check-label-lg font-weight-normal">Promocode</label> */}
-                                                        <input type="text" placeholder="ABC" className="form-control form-control-lg" value={couponCode}
-                                                            onChange={(e) => setCouponCode(e.target.value)} />
-                                                    </div>
 
 
-                                                ) : null}
-                                                {!applied ? (
 
-                                                    <div className='row p-2'>
+                                {/* coupan section  */}
+                                <div className='row m-1 shadow border my-5 justify-content-end'>
+                                    <div className='row'>
+                                        <div className='col mt-4'>
+                                            {!applied ? (
+                                                <div className="row p-2">
+                                                    {/* <label className="text-end fs-3 form-check-label-lg font-weight-normal">Promocode</label> */}
+                                                    <input type="text" placeholder="ABC" className="form-control form-control-lg" value={couponCode}
+                                                        onChange={(e) => setCouponCode(e.target.value)} />
+                                                </div>
+
+
+                                            ) : null}
+                                            {!applied ? (
+
+                                                <div className='row p-2'>
 
                                                     <button className=" button2addtocark" onClick={handleApplyCoupon}  >
-                                                            Apply coupon
-                                                        </button>
-                                                    </div>
-
-                                                ) : null}
-                                            </div>
-                                            <div className='col mb-4 p-3'>
-
-                                                <div className='row  border-bottom-1 p-3'>
-                                                    <div className='col-6  text-start'><label className="text-muted fs-4 font-weight-normal m-0">Subtotal price</label></div>
-                                                    <div className='col-6 text-end'><div className="text-center text-danger fs-4" style={{ fontWeight: '500' }}>${sum}</div></div>
+                                                        Apply coupon
+                                                    </button>
                                                 </div>
-                                            <div className='row  p-3'>
-                                                    <div className='col-6  text-start'><label className="text-muted fs-4 font-weight-normal m-0">Discount price</label></div>
-                                                    <div className='col-6 text-end'><div className="text-center text-danger fs-4" style={{ fontWeight: '500' }}>${discount}</div></div>
-                                                </div>
-                                                <div className='row p-3 border-top-0 rounded-3'>
-                                                    <div className='col-6 text-start'><label className="text-muted fs-4 font-weight-normal m-0" >Total price</label></div>
-                                                    <div className='col-6 text-end'><div className="text-center text-danger fs-4" style={{ fontWeight: '500' }}>${getTotalPrice()}</div></div>
-                                                </div>
-                                            </div>
 
+                                            ) : null}
                                         </div>
+                                        <div className='col mb-4 p-3'>
+
+                                            <div className='row  border-bottom-1 p-3'>
+                                                <div className='col-6  text-start'><label className="text-muted fs-4 font-weight-normal m-0">Subtotal price</label></div>
+                                                <div className='col-6 text-end'><div className="text-center text-danger fs-4" style={{ fontWeight: '500' }}>${sum}</div></div>
+                                            </div>
+                                            <div className='row  p-3'>
+                                                <div className='col-6  text-start'><label className="text-muted fs-4 font-weight-normal m-0">Discount price</label></div>
+                                                <div className='col-6 text-end'><div className="text-center text-danger fs-4" style={{ fontWeight: '500' }}>${discount}</div></div>
+                                            </div>
+                                            <div className='row p-3 border-top-0 rounded-3'>
+                                                <div className='col-6 text-start'><label className="text-muted fs-4 font-weight-normal m-0" >Total price</label></div>
+                                                <div className='col-6 text-end'><div className="text-center text-danger fs-4" style={{ fontWeight: '500' }}>${getTotalPrice()}</div></div>
+                                            </div>
+                                        </div>
+
+                                    </div>
                                     <div>
                                         <div className="card mb-4 mb-lg-0">
                                             <div className="card-body">
@@ -540,49 +540,49 @@ function Checkout() {
                                             </div>
                                         </div>
                                     </div>
+                                </div>
+                                {applied ? (
+                                    <div className="d-flex">
+                                        <table className=" table  text-end mt-4 ml-5">
+                                            <tbody>
+                                                <tr>
+                                                    <td className='col'>
+                                                        <label className="fs-4 form-label m-0">Discount</label>
+                                                    </td>
+                                                    <td className='col'>
+                                                        <div className="text-large">
+                                                            <strong>${discount}</strong>
+                                                        </div></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <label className="fs-5 form-label m-0">Total price</label>
+                                                    </td>
+                                                    <td>
+                                                        <div className="text-large">
+                                                            <strong>${getTotalPrice()}</strong>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
                                     </div>
-                                    {applied ? (
-                                        <div className="d-flex">
-                                            <table className=" table  text-end mt-4 ml-5">
-                                                <tbody>
-                                                    <tr>
-                                                        <td className='col'>
-                                                            <label className="fs-4 form-label m-0">Discount</label>
-                                                        </td>
-                                                        <td className='col'>
-                                                            <div className="text-large">
-                                                                <strong>${discount}</strong>
-                                                            </div></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>
-                                                            <label className="fs-5 form-label m-0">Total price</label>
-                                                        </td>
-                                                        <td>
-                                                            <div className="text-large">
-                                                                <strong>${getTotalPrice()}</strong>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
 
-                                    ) : null}
-                                    {applied ? (
-                                        <div className="d-flex justify-content-end mt-3">
-                                            <button className="btn btn-success" onClick={handleCancelCoupon}>
-                                                Cancel
-                                            </button>
-                                        </div>
-                                    ) : null}
+                                ) : null}
+                                {applied ? (
+                                    <div className="d-flex justify-content-end mt-3">
+                                        <button className="btn btn-success" onClick={handleCancelCoupon}>
+                                            Cancel
+                                        </button>
+                                    </div>
+                                ) : null}
 
-                               
+
 
                             </div>
                         </div>
-                       
-                        
+
+
                     </div>
                 </div>
             </section>

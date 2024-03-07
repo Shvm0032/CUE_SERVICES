@@ -15,17 +15,21 @@ export default function CourseDetail() {
     const [mins, setMinutes] = useState(0);
     const [secs, setSeconds] = useState(0);
     const [pr, setPrice] = useState(0);
-    const deadline = "October,21,2023";
+    
     const { slug } = useParams();
     const dispatch = useDispatch();
     const courses = useSelector((state) => state.course.courses);
     const course = courses.find((c) => c.slug.toString() === slug);
     const [selectedItems, setSelectedItems] = useState([]);
     const [selectedCourseId, setSelectedCourseId] = useState(null);
-    console.log(cartItems)
-    // ...
+   // console.log(course);
 
+
+
+    
     const getTime = () => {
+        //console.log(course,'course');
+        const deadline = course.date + ' '+ course.est_time;
         const time = Date.parse(deadline) - Date.now();
         setDays(Math.floor(time / (1000 * 60 * 60 * 24)));
         setHours(Math.floor(time / (1000 * 60 * 60) % 24));
@@ -34,17 +38,17 @@ export default function CourseDetail() {
     };
 
     useEffect(() => {
-        // const interval = setInterval(getTime, 1000);
-        // return () => clearInterval(interval);
+        const interval = setInterval(getTime, 1000);
+        return () => clearInterval(interval);
     }, []);
 
 
 
     const ItemComponent = ({ id, name, price, selected, onSelect }) => (
-        <table className='table  table-hover '>
+        <table className='table table-striped table-hover '>
             <tbody>
                 <tr>
-                    <td className='col border-0'>
+                    <td className='col text-start border-0'>
                         <input
                             className="form-check-input"
                             type="checkbox"
@@ -53,7 +57,7 @@ export default function CourseDetail() {
                             checked={selected}
                         />
                     </td>
-                    <td className='col border-0 text-start'>{name}</td>
+                    <td className='col-12 border-0' style={{ textAlign: 'justify' }}>{name}</td>
                     <td className='col border-0 text-danger text-end fs-4'>${price}</td>
                 </tr>
             </tbody>
@@ -175,12 +179,12 @@ export default function CourseDetail() {
                                     <div className='col-12 mt-3'>
                                         <div className='d-flex gap-5 flex-row align-item-center justify-content-center mt-4'>
                                             <div className='d-flex align-item-center justify-content-start'><i className="far fa-user fa-2x"></i>&emsp;<span className='fs-5'>{course.name}</span></div>
-                                            <div className='d-flex align-item-center justify-content-start'><i className="fas fa-stopwatch fa-2x"></i>&emsp;<span className='fs-5'>{course.duration} </span></div>
+                                            <div className='d-flex align-item-center justify-content-start'><i className="fas fa-stopwatch fa-2x"></i>&emsp;<span className='fs-5'>{course.duration}min</span></div>
                                             <div className='d-flex align-item-center justify-content-start'><i className="fas fa-calendar-alt fa-2x"></i>&emsp;<span className='fs-5'>{course.date} </span></div>
                                         </div>
                                         <div className='d-flex gap-lg-5 gap-5 align-item-center justify-content-center mt-4'>
                                             <div className='d-flex align-item-center justify-content-start'>
-                                                <i class="far fa-clock fa-2x"></i>&emsp;<span className='fs-5'>{course.time} min</span>
+                                                <i class="far fa-clock fa-2x"></i>&emsp;<span className='fs-5'> {course.est_time} (EST) | {course.cst_time} (CST) | {course.mst_time} (MST) | {course.pst_time} (PST)</span>
                                             </div>
                                         </div>
                                     </div>
@@ -236,7 +240,6 @@ export default function CourseDetail() {
                                             <div className='col-lg-12 col-12 p-3'>
                                                 <div className='float-left w-25'>
                                                     <img src={`${IMGurl}/${course.images}`} alt="Speaker" style={{ width: '270px', height: '270px', float: 'left', borderRadius: '50%' }} />
-
                                                 </div>
                                                 <div className='float-none'>
                                                     <h4 className='my-2'>{course.name}</h4>

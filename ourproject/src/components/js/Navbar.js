@@ -9,14 +9,16 @@ import { selectIsLoggedIn, logout } from '../../redux/authSlice'; // Update the 
 import authService from '../../services/auth.service';
 // Update the path
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Navbar, Container, Nav, NavDropdown, Offcanvas } from 'react-bootstrap';
+import Nav from 'react-bootstrap/Nav';
+import Navbar from 'react-bootstrap/Navbar';
+import { Container, NavDropdown, Offcanvas } from 'react-bootstrap';
 import { useMediaQuery } from 'react-responsive';
 import logo from '../../assets/Logo.png';
 import { useLocation } from 'react-router-dom';
 
 
 export default function NavbarP() {
-    
+
     const cartItems = useSelector(selectCartItems);
     const location = useLocation();
     const unique_id = uuid();
@@ -85,22 +87,28 @@ export default function NavbarP() {
 
     return (
         <>
+            <section style={{ background: '#13bbaf' }}>
+                <div className='container p-2'>
+                    <div sticky="top" className="d-flex justify-content-between p-2" >
+                        {/* Left */}
+                        <div className="me-5">
+                            <Link className='text-dark' href="tel:+ (702)-605-0095"><i class="icon-phone"></i>Call:(702)-605-0095</Link>
 
-            <section className="d-flex justify-content-between p-2" style={{ background: '#13bbaf' }}>
-                {/* Left */}
-                <div className="me-5">
-                    <span>Get connected with us on social networks:</span>
+                        </div>
+                        {/* Left */}
+                        {/* Right */}
+                        <div>
+                            <Link className='text-dark'  href="mailto:info@ceutrainers.com" target="_blank"><i class="icon-envelope"></i>Email:
+                                support@ceutrainers.com</Link>
+                        </div>
+                        {/* Right */}
+                    </div>
                 </div>
-                {/* Left */}
-                {/* Right */}
-                <div>
 
-                </div>
-                {/* Right */}
             </section>
-
             {(isMobile) ? (
                 // Mobile and Tablet Navbar with Sidebar
+
                 <Navbar bg="light" className='fixed-top' expand={false}>
                     <Container fluid>
                         <Navbar.Brand href="/"><img src={logo} width={170} height={70} alt='logo' /></Navbar.Brand>
@@ -117,7 +125,7 @@ export default function NavbarP() {
                             </Offcanvas.Header>
                             <Offcanvas.Body>
                                 <Nav className="justify-content-end flex-grow-1 pe-3" style={{ fontSize: '1.2rem' }}>
-                                    <Nav.Link href="/public" style={{ marginLeft: '10px', marginTop: '10px', borderBottom: '1px black solid', position: 'relative' }}>Home</Nav.Link>
+                                    <Nav.Link href="/" style={{ marginLeft: '10px', marginTop: '10px', borderBottom: '1px black solid', position: 'relative' }}>Home</Nav.Link>
 
                                     <Nav.Link href="/about" style={{ marginLeft: '10px', marginTop: '10px', borderBottom: '1px black solid', position: 'relative' }}>About</Nav.Link>
 
@@ -193,7 +201,11 @@ export default function NavbarP() {
                 </Navbar>
             ) : (
                 // Desktop Navbar
-                <Navbar collapseOnSelect expand="lg" bg="light" variant="light" style={{ height: '80px' }}>
+
+
+
+                <Navbar sticky="top"
+                    collapseOnSelect expand="lg" bg="light" variant="light" style={{ height: '70px' }}>
                     <Container>
                         <Navbar.Brand href="/"><img src={logo} width={170} height={70} alt='logo' /></Navbar.Brand>
                         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
@@ -235,7 +247,7 @@ export default function NavbarP() {
                                 {isLoggedIn ? (
                                     <>
                                         <Nav.Link eventKey={2} href="/Dashboard" style={{ marginLeft: '15px' }}>
-                                                <i class="far fa-user fa-lg"></i>
+                                            <i class="far fa-user fa-lg"></i>
                                         </Nav.Link>
                                         <Nav.Link href="/login" eventKey={2} style={{ marginLeft: '15px' }} onClick={handleLogout}>
                                             <div className="button">
@@ -266,7 +278,9 @@ export default function NavbarP() {
                         </Navbar.Collapse>
                     </Container>
                 </Navbar>
+
             )}
+
         </>
     );
 }

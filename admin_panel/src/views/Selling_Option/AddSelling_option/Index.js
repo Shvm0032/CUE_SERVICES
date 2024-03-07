@@ -26,10 +26,11 @@ export default function Index() {
 
     const fetchData = async () => {
         try {
-            const response = await fetch('http://localhost:8000/api/GetsellingOptions');
-            if (response.ok) {
-                const data = await response.json();
-                setSellingOptions(data);
+            const response = await http.get('/GetsellingOptions');
+            //console.log(response.data);
+            if (response?.data) {
+                //const data = await response.json();
+                setSellingOptions(response.data);
             } else {
                 console.error('Error fetching data from MySQL:', response.statusText);
             }
@@ -52,24 +53,18 @@ export default function Index() {
         }
 
         try {
-            const response = await fetch('http://localhost:8000/api/AddSellingOption', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData),
-            });
+            const response = await http.post('/AddSellingOption', formData );
 
-            if (response.ok) {
+            if (response.data) {
                 console.log('Data inserted successfully');
                 setSuccessMessage('Data inserted successfully');
                 handleShow();
 
                 // Fetch the updated selling options data after insertion
-                const updatedResponse = await fetch('http://localhost:8000/api/GetsellingOptions');
-                if (updatedResponse.ok) {
-                    const updatedData = await updatedResponse.json();
-                    setSellingOptions(updatedData);
+                const updatedResponse = await http.get('/GetsellingOptions');
+                if (updatedResponse.data) {
+                    //const updatedData = await updatedResponse.json();
+                    setSellingOptions(updatedResponse.data);
                 } else {
                     console.error('Error fetching updated data from MySQL:', updatedResponse.statusText);
                 }

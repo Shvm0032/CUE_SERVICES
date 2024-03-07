@@ -1,15 +1,25 @@
 import React, { useEffect, useState } from 'react'
 import { jsPDF } from "jspdf";
-import 'jspdf-autotable'
+import 'jspdf-autotable';
+import http from "../../utils/http-client";
+
 export default function Index() {
     const [userdata, setUserdata] = useState([]);
     useEffect(() => {
+       
         const getUserdata = async () => {
-            const reqData = await fetch("http://localhost:8000/api/user_message");
-            const resData = await reqData.json();
-            setUserdata(resData);
-            console.log(resData);
-
+            try {
+                const response = await http.get("/User_message");
+              //  console.log("response", response);
+                if (response.success) {
+                    setUserdata(response.data);
+                } else {
+                    alert('loging');
+                }
+                setUserdata(response.data);
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
         }
         getUserdata();
     }, []);
