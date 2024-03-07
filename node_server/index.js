@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const util = require('util');
 const jwt = require('jsonwebtoken');
-const { sendEmail } = require("./lib/mail");
+
 const moment = require('moment');
 
 app.use(express.json({ limit: '50mb' }));
@@ -55,41 +55,42 @@ app.post('/api/create-checkout-session', async (req, res) => {
         userId = decoded.userId;
     }
     else{
-        const alphanumeric = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-        let password = '';
-        for (let i = 0; i < 7; i++) {
-            password += alphanumeric.charAt(Math.floor(Math.random() * alphanumeric.length));
-        }
-        let userRegister = [
-            userDetail.firstName,
-            userDetail.lastName,
-            userDetail.email,
-            userDetail.email,
-            userDetail.phone,
-            null,
-            userDetail.zip,
-            userDetail.streetAddress,
-            userDetail.country,
-            userDetail.state,
-            userDetail.city,
-            password
-        ];
-        const sqlr = `INSERT INTO registration (fname, lname, uname, email,phone,gender,pincode,address1,country,state,city, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-        const result = await queryAsync(sqlr, userRegister);
-        console.log(result, 'result');
-        if (result && result.affectedRows) {
-            userId = result.insertId;
+        // user register on create the payment
+        // const alphanumeric = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        // let password = '';
+        // for (let i = 0; i < 7; i++) {
+        //     password += alphanumeric.charAt(Math.floor(Math.random() * alphanumeric.length));
+        // }
+        // let userRegister = [
+        //     userDetail.firstName,
+        //     userDetail.lastName,
+        //     userDetail.email,
+        //     userDetail.email,
+        //     userDetail.phone,
+        //     null,
+        //     userDetail.zip,
+        //     userDetail.streetAddress,
+        //     userDetail.country,
+        //     userDetail.state,
+        //     userDetail.city,
+        //     password
+        // ];
+        // const sqlr = `INSERT INTO registration (fname, lname, uname, email,phone,gender,pincode,address1,country,state,city, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+        // const result = await queryAsync(sqlr, userRegister);
+        // console.log(result, 'result');
+        // if (result && result.affectedRows) {
+        //     userId = result.insertId;
 
-            let emailObject = {
-                user_name: userDetail.email,
-                receiver: userDetail.email,
-                subject: 'Account Created successfully.',
-                password: password,
-                content: '',
-                login: process.env.LOGIN_URL
-            };
-           sendEmail(emailObject);
-        }
+        //     let emailObject = {
+        //         user_name: userDetail.email,
+        //         receiver: userDetail.email,
+        //         subject: 'Account Created successfully.',
+        //         password: password,
+        //         content: '',
+        //         login: process.env.LOGIN_URL
+        //     };
+        //    sendEmail(emailObject);
+        // }
     }
 
     const values = [
@@ -121,7 +122,7 @@ app.post('/api/create-checkout-session', async (req, res) => {
 
     try {
         const result = await queryAsync(sql, values);
-        console.log(result, 'result');
+     //   console.log(result, 'result');
         if (result && result.affectedRows) {
 
             let orderId = result.insertId;
@@ -166,7 +167,7 @@ app.post('/api/create-checkout-session', async (req, res) => {
                 success_url: process.env.STRIPE_SUCCESS_URL,
                 cancel_url: process.env.STRIPE_FAILED_URL
             });
-            console.log(orderItemsResults, 'orderItemsResults');
+          //  console.log(orderItemsResults, 'orderItemsResults');
             const updateCourseQuery = `UPDATE order_details SET hash_id = ? WHERE id = ?`;
             const itemValuesU = [
                 session.id,

@@ -19,6 +19,8 @@ export default function Subscribe() {
           color: response.data.success ? '#4CAF50' : '#FF3232',
         },
       });
+      // Reset email state
+      setEmail('');
     } catch (error) {
       console.error('Error:', error);
       toast.error('An error occurred during subscription', { duration: 4000 });
@@ -37,12 +39,12 @@ export default function Subscribe() {
             <div className="row p-lg-2 p-1 align-items-center">
               <form
                 onSubmit={handleSubscribe}
-                className="p-lg-3 col-12 col-lg-8 offset-lg-2 d-flex bg-body justify-content-center rounded-pill"
+                className="p-lg-3 col-12 col-lg-8 gap-3 offset-lg-2 d-flex bg-body justify-content-center rounded-pill"
               >
                 <input
                   type="email"
                   placeholder="Your email"
-                  className="form-control rounded-pill border-0"
+                  className="form-control  form-control-lg rounded-pill border-0"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
@@ -51,7 +53,6 @@ export default function Subscribe() {
                 </button>
               </form>
             </div>
-            <div className="col"></div>
           </div>
         </div>
       </div>

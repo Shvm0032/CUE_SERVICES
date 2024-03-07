@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
+
 import 'react-quill/dist/quill.snow.css';
 import ReactQuill from 'react-quill';
 
 // import Dropify from 'dropify';
 import { useNavigate } from 'react-router';
 import http from "../../../utils/http-client";
+
 
 const modules = {
     toolbar: [
@@ -58,10 +60,10 @@ export default function AddCourse() {
 
     const fetchData = async () => {
         try {
-            const response = await fetch('http://localhost:8000/api/GetsellingOptions');
-            if (response.ok) {
-                const data = await response.json();
-                setSellingOptions(data);
+            const response = await http.get('/GetsellingOptions');
+            //console.log(response);
+            if (response?.status === 200) {
+                setSellingOptions(response?.data);
             } else {
                 console.error('Error fetching data from MySQL:', response.statusText);
             }
@@ -89,15 +91,13 @@ export default function AddCourse() {
         setFormFields([...formFields, object]);
     }
 
-   
- 
     //console.log(industry);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const response = await http.get('/Industary');
-                console.log(response);
+               // console.log(response);
                 if (response?.status == '200') {
                     // const responseData = await response.json();
                     setIndustry(response.data); 
@@ -118,8 +118,8 @@ export default function AddCourse() {
         const fetchData = async () => {
             try {
                 const response = await http.get('/speaker');
-                console.log(response.data);
-                if (response?.status == '200') {
+               // console.log(response.data);
+                if (response?.status =='200') {
                     // const responseData = await response.json();
                     setSpeaker(response.data?.data);
                     //console.log(responseData);
@@ -163,24 +163,20 @@ export default function AddCourse() {
     function submitForm(e) {
         e.preventDefault();
 
-        console.log("Selling Options:", sellingOptions);
+       // console.log("Selling Options:", sellingOptions);
         const result = Object.groupBy(sellingOptions, ({ selling_category }) => selling_category);
         const lp = result["Live Options"]
         const ssp = result["Super Saver Options"]
         const rc = result["Recording & Combos"]
 
-        console.log("Live Option")
-        console.log(lp)
-        console.log("SS Option")
-        console.log(ssp)
-        console.log("Recording")
-        console.log(rc)
-
-
-
-      
-
-        console.log("Pussing data")
+        // console.log("Live Option")
+        // console.log(lp)
+        // console.log("SS Option")
+        // console.log(ssp)
+        // console.log("Recording")
+        // console.log(rc);
+        // console.log("Pussing data");
+       
         
 
         let selling = sellingOptions.map((ele) => ({
@@ -201,8 +197,9 @@ export default function AddCourse() {
         data.append('fields', JSON.stringify(selling));
         data.append('file', filedata);
         data.append('slug', slug);
-        console.log(data, 'data');
+      //  console.log(data.slug, 'data');
         http.post('/Course_add', data)
+
 
             .then(response => {
                 if (response.status === 200) {
@@ -223,19 +220,16 @@ export default function AddCourse() {
             <section>
                 <div className="container-fluid">
                     <div className="row">
-                        <div className="col-12 p-4">
+                        <div className="col-12 p-lg-g-4">
                             <h4 className="text-center mt-2">Add New Course</h4>
-                            <form className='shadow p-5 bg-light ' onSubmit={submitForm}>
+                            <form className='shadow p-lg-5 p-3 bg-light ' onSubmit={submitForm}>
                                 <div className='row'>
-                                    <div className='col-2'>
-                                        <label>Industry</label>
-                                    </div>
                                     <div className='col'>
+                                        <label className="from-label ">Industry</label>
                                         <select required={true} onChange={(e) => {
                                             setCourse((previous) => ({
                                                 ...previous,
                                                 Industry: e.target.value,
-                                            
                                             }))
                                         }} className="form-select" name='Industry' aria-label="Industry Select">
                                             <option defaultValue>Select an Industry</option>
@@ -244,18 +238,14 @@ export default function AddCourse() {
                                             ))}
                                         </select>
                                     </div>
-                                </div><br />
-                                <div className='row'>
-                                    <div className='col-2'>
-                                        <label>Speaker</label>
-                                    </div>
                                     <div className='col'>
+                                        <label className="from-label ">Speaker</label>
                                         <select required={true} onChange={(e) => {
                                             setCourse((previous) => ({
                                                 ...previous,
                                                 Speaker: e.target.value
                                             }))
-                                        }} className="form-select" name='Speaker' aria-label="Speaker Select">
+                                        }} className="form-select " name='Speaker' aria-label="Speaker Select">
                                             <option defaultValue>Select a Speaker</option>
                                             {speaker.map((ele) => (
                                                 <option key={ele.id} value={ele.speaker_id}>{ele.name}</option>
@@ -264,10 +254,12 @@ export default function AddCourse() {
                                     </div>
                                 </div><br />
                                 <div className='row'>
-                                    <div className='col-2'>
-                                        <label>Name</label>
-                                    </div>
+                                   
+                                   
+                                </div><br />
+                                <div className='row'>
                                     <div className='col'>
+                                        <label className="from-label">Name</label>
                                         <input
                                             onChange={handleTitleChange}
                                             type="text"
@@ -277,14 +269,9 @@ export default function AddCourse() {
                                             required
                                         />
                                     </div>
-                                </div><br />
-                                <div className='row'>
-                                    <div className='col-2'>
-                                        <label>Url</label>
-                                    </div>
                                     <div className='col'>
-
-                                        <div className="input-group">
+                                        <label className="from-label">Url</label>
+                                        <div className="input-group ">
                                             <div className="input-group-prepend">
                                                 <div className="input-group-text">http://localhost:3000/course</div>
                                             </div>
@@ -302,7 +289,7 @@ export default function AddCourse() {
                                 </div><br />
                                 <div className='row'>
                                     <div className='col-2'>
-                                        <label>Description</label>
+                                        <label className="from-label ">Description</label>
                                     </div>
                                     <div className='col'>
                                         <ReactQuill
@@ -322,15 +309,13 @@ export default function AddCourse() {
                                     </div>
                                 </div><br />
                                 <div className='row'>
-                                    <div className='col-2 mt-4'>
-                                        <label>Thumbnail</label>
-                                    </div>
                                     <div className='col'>
+                                        <label className='from-label '>Thumbnail</label> <br/>
                                         <input
                                             onChange={(e) => { setFiledata(e.target.files[0]) }}
                                             type="file"
                                             name='thumbnail'
-                                            className="dropify"
+                                            className="form-control" 
                                             id="customFile" 
                                             required
                                         />
@@ -357,12 +342,11 @@ export default function AddCourse() {
 
 
                                     </div>
-                                </div><br />
+                                </div>
                                 <div className='row'>
-                                    <div className='col-2'>
-                                        <label>Duration</label>
-                                    </div>
+                        
                                     <div className='col'>
+                                        <label className="from-label ">Duration</label>
                                         <input
                                             onChange={(e) => {
                                                 setCourse((previous) => ({
@@ -372,17 +356,13 @@ export default function AddCourse() {
                                             }}
                                             type="text"
                                             name='duration'
-                                            className="form-control"
+                                            className="form-control "
                                             placeholder="Duration" 
                                             required
                                         />
                                     </div>
-                                </div><br />
-                                <div className='row'>
-                                    <div className='col-2'>
-                                        <label>CST Date</label>
-                                    </div>
                                     <div className='col'>
+                                        <label className="from-label">CST Date</label>
                                         <input
                                             onChange={(e) => {
                                                 setCourse((previous) => ({
@@ -396,12 +376,8 @@ export default function AddCourse() {
                                             required
                                         />
                                     </div>
-                                </div><br />
-                                <div className='row'>
-                                    <div className='col-2'>
-                                        <label>Time</label>
-                                    </div>
                                     <div className='col'>
+                                        <label className="from-label">Time</label>
                                         <input
                                             onChange={(e) => {
                                                 setCourse((previous) => ({
@@ -412,15 +388,17 @@ export default function AddCourse() {
                                             type="time"
                                             name='time'
                                             className="form-control"
+                                            step="1"  // Set step to 1 second
+                                            pattern="[0-9]{2}:[0-9]{2}:[0-9]{2}"
                                             required
                                         />
                                     </div>
-                                </div><br />
+                                </div>
+                              <br />
                                 <div className='row'>
-                                    <div className='col-2'>
-                                        <label>Selling Option</label>
-                                    </div>
                                     <div className='col'>
+                                        <label className="from-label">Selling Option</label>
+
                                         <table className='table  table-striped table-light shadow  table-hover'>
                                             <thead>
                                                 <tr className='fw-bold'>

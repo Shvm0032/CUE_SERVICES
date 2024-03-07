@@ -67,10 +67,11 @@ function Login() {
                         <div className='row form Form-Container shadow align-item-center p-5'>
                             <div className='col'>
                                 <p className='fs-3 fw-bold' >Sign in to your account</p>
-                                <form  onSubmit={handleSubmit}>
+                                <form onSubmit={handleSubmit}>
                                     <div className=' mb-3 log-form'>
                                         <label htmlFor='exampleInputEmail1' className='form-label'>Your Email</label>
                                         <input
+                                            required
                                             type='email'
                                             className='form-control form-control-lg'
                                             placeholder='Email'
@@ -83,6 +84,7 @@ function Login() {
                                         <label htmlFor='exampleInputEmail1' className='form-label'> Password</label>
                                         <div className='input-icon-container'>
                                             <input
+                                                required
                                                 type={showPassword ? 'text' : 'password'}
                                                 className='form-control form-control-lg '
                                                 placeholder='Password'

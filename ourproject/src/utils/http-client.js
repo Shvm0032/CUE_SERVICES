@@ -10,6 +10,7 @@ instance.interceptors.request.use((config) => {
     if (authUser) {
         config.headers['authorization'] = `Bearer ${authUser}`;
     }
+    config.headers['Access-Control-Allow-Origin'] = "*";
     return config;
 }, (error) => {
     return Promise.reject(error);

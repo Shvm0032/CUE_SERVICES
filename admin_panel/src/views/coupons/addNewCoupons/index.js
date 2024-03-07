@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { useHistory, useNavigate } from 'react-router-dom';
-
+import { useNavigate } from 'react-router-dom';
+import http from "../../../utils/http-client";
 const AddCoupon = () => {
   const navigate = useNavigate();
 
@@ -62,19 +62,10 @@ const AddCoupon = () => {
     }
 
     try {
-      const response = await fetch('http://localhost:8000/api/InsertCoupons', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (response.ok) {
+      const response = await http.post('/InsertCoupons', formData);
+      if (response?.status == '200') {
         console.log('Form data successfully submitted to the server.');
         setSuccessMessage('Coupon added successfully');
-
-        // Navigate to all coupons page after a short delay (e.g., 2 seconds)
         navigate('/Copons/AllCopons');
       } else {
         console.error('Failed to submit form data to the server.');

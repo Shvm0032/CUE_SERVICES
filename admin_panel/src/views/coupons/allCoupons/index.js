@@ -10,7 +10,7 @@ export default function AllCopons() {
   var getData = async () => {
     try {
       const res = await http.get("/Coupan");
-      console.log(res);
+     // console.log(res);
       setCoupans(res.data);
     } catch (error) {
       console.error("Error fetching data:", error);

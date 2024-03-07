@@ -5,6 +5,7 @@ dotenv.config();
 const util = require('util');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const moment = require('moment');
+const { sendEmail } = require("../lib/mail");
 const { sendInvoiceEmail } = require("../lib/invoiceEmail");
 async function paymentUpdate() {
 
@@ -19,10 +20,10 @@ async function paymentUpdate() {
             return Promise.resolve();
         }
         const session = await stripe.checkout.sessions.retrieve(hashId);
-        console.log(session, 'session');
+      //  console.log(session, 'session');
         if (session) {
             const sessionStatus = session.payment_status;
-            console.log(session, 'sessionStatus');
+        //    console.log(session, 'sessionStatus');
             let paymentUpdateStatus = '';
             if (sessionStatus == 'paid') {
                 paymentUpdateStatus = 'Paid';
@@ -42,17 +43,63 @@ async function paymentUpdate() {
             const updateCourseQueryc = ` UPDATE order_course SET status = ? WHERE hash_id = ?`;
             let response = await queryAsync(updateCourseQuery, itemValuesU);
             let responseUpdate = await queryAsync(updateCourseQueryc, itemValuesU);
-
-            //getting order data from  database using hash_id
-            const UserOrder = await queryAsync('Select * from order_details where hash_id = ? ', [hashId]);
+            let UserOrder = await queryAsync('Select * from order_details where hash_id = ? ', [hashId]);
             if (UserOrder) {
-                console.log(UserOrder, "userorder");
+                if (paymentUpdateStatus == 'Paid') {
+                    const alphanumeric = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+                    let password = '';
+                    for (let i = 0; i < 7; i++) {
+                        password += alphanumeric.charAt(Math.floor(Math.random() * alphanumeric.length));
+                    }
+                    let userRegister = [
+                        UserOrder[0]?.FName,
+                        UserOrder[0]?.lName,
+                        UserOrder[0]?.Email,
+                        UserOrder[0]?.Email,
+                        UserOrder[0]?.Phone,
+                        null,
+                        UserOrder[0]?.Zip,
+                        UserOrder[0]?.Street_Address,
+                        UserOrder[0]?.Country,
+                        UserOrder[0]?.State,
+                        UserOrder[0]?.City,
+                        password
+                    ];
+                    const sqlr = `INSERT INTO registration (fname, lname, uname, email,phone,gender,pincode,address1,country,state,city, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+                    const result = await queryAsync(sqlr, userRegister);
+                  //  console.log(result, 'result');
+                    if (result && result.affectedRows) {
+                        const updateUserIdQuery = ` UPDATE order_details SET user_id = ? WHERE hash_id = ?`;
+                        const itemValuesUser = [
+                            result.insertId,
+                            hashId
+                        ];
+                        await queryAsync(updateUserIdQuery, itemValuesUser);
+                        let emailObject = {
+                            user_name: UserOrder[0]?.Email,
+                            receiver: UserOrder[0]?.Email,
+                            subject: 'Account Created successfully.',
+                            password: password,
+                            content: '',
+                            login: process.env.LOGIN_URL
+                        };
+                        sendEmail(emailObject);
+                    }
+                }
+             //   console.log(UserOrder, "userorder");
             }
 
+
+            //getting order data from  database using hash_id
+            // const UserOrder = await queryAsync('Select * from order_details where hash_id = ? ', [hashId]);
+            // if (UserOrder) {
+            //     console.log(UserOrder, "userorder");
+            // }
+            UserOrder = await queryAsync('Select * from order_details where hash_id = ? ', [hashId]);
             //getting data from  user info from user_id
             const userId = UserOrder[0].user_id || 0;
             const resultInfo = await queryAsync('SELECT * from registration WHERE id =? ', [userId]);
-            console.log(resultInfo);
+           // console.log(resultInfo);
             if (resultInfo) {
                 console.log(resultInfo, 'resultInfo');
             }
@@ -88,7 +135,7 @@ async function paymentUpdate() {
                 CourseDetail: UserOrder[0]?.card_detail || null,
             }
 
-            console.log(FinnalInvoiceData, 'information');
+           // console.log(FinnalInvoiceData, 'information');
             let emailObject = {
                 user_name: resultInfo[0]?.uname || UserOrder[0].Email,
                 receiver: UserOrder[0].Email,

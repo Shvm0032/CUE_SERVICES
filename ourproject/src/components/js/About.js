@@ -2,11 +2,15 @@
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import '../css/About.modules.css';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchSpeakers } from '../../redux/speakerSlice';
 import { Link } from "react-router-dom";
 import CountUp from 'react-countup';
-import aboutImage1 from '../../assets/about1.webp';
-import aboutImage2 from '../../assets/about2.webp';
-import aboutImage3 from '../../assets/about3.webp';
+import aboutImage1 from '../../assets/About/about1.webp';
+import aboutImage2 from '../../assets/About/about2.webp';
+import aboutImage3 from '../../assets/About/about3.webp';
+import aboutImage4 from '../../assets/About/about4.webp';
+import aboutImage5 from '../../assets/About/about5.jpg';
 const responsive = {
   // const IMGurl = process.env.REACT_APP_IMG_URL;
   
@@ -30,28 +34,41 @@ const responsive = {
   }
 };
 
-const SpeakerSlider = {
+const Siderresponsive = {
   superLargeDesktop: {
     // the naming can be any, depends on you.
     breakpoint: { max: 4000, min: 3000 },
     items: 3,
-    autoPlay: true
+    autoPlay: false,
+    slidesToSlide: 1,
+
+
   },
   desktop: {
     breakpoint: { max: 3000, min: 1024 },
-    items: 4
+    items: 3,
+    slidesToSlide: 1,
+
+
   },
   tablet: {
     breakpoint: { max: 1024, min: 564 },
-    items: 2
+    items: 2,
+    slidesToSlide: 1
+
   },
   mobile: {
     breakpoint: { max: 564, min: 0 },
-    items: 1
+    items: 1,
+    slidesToSlide: 1
+
   }
 };
 
 function About() {
+  const IMGurl = process.env.REACT_APP_IMG_URL;
+  const speakers = useSelector((state) => state.speaker.speakers);
+
   return (
     <>
       <section className="WaveHeaderBox">
@@ -238,7 +255,7 @@ function About() {
             </div>
             <div className="col-lg-6 col-12 p-5">
               <div className="row p-3">
-                <img src="imgs/pexels-cottonbro-studio-3584926.jpg" className="" alt="" height={"400px"} width={"100%"} style={{ "borderRadius": "0px 80px 0px 80px" }} />
+                <img src={aboutImage5} className="" alt="" height={"400px"} width={"100%"} style={{ "borderRadius": "0px 80px 0px 80px" }} />
               </div>
             </div>
           </div>
@@ -433,135 +450,56 @@ function About() {
               have opportunities to confidently take risks.</p>
           </div>
           <div className="">
-            <Carousel additionalTransfrom={0}
-              arrows
+            <Carousel
+              additionalTransfrom={0}
+              arrows={false}
               autoPlay={true}
               autoPlaySpeed={2000}
               centerMode={false}
-              className=""
+              className="carousel-container" // Add a class to the container
               containerClass="container-with-dots"
-              dotListClass=""
+              dotListClass="dot"
               draggable
-              focusOnSelect={false}
+              focusOnSelect={true}
               infinite
               itemClass=""
               keyBoardControl
               minimumTouchDrag={80}
               renderButtonGroupOutside={false}
-              renderDotsOutside={false} responsive={SpeakerSlider}>
+              showDots={false}
+              renderDotsOutside={false}
+              partialVisible={true}
+              responsive={Siderresponsive}
+            >
+              {speakers.map((speaker) => (
+                <div>
+                  <div className="col-12 col-sm-6 col-md-6 col-lg-3" style={{ width: '22rem' }} >
+                    <Link to={`/speaker/${speaker?.speaker_id}`}>
+                      <div className="our-team" >
+                        <div className="picture ">
+                          <img className="img-fluid" alt='Speaker' src={`${IMGurl}/${speaker.images}`} />
+                        </div>
 
-              {/* 1card */}
-              <div>
-                <div className="col mt-2">
-                  <div className='wrapper p-2'>
-                    <div className='pcard '>
-                      <img src='./images/speaker1.jpg' className="ProfilePicture" alt='ProfilePicture' />
-                      <div className='ProfileName'>
-                        <h5 className="text-center">Tom Curuse</h5>
-                        <p className="text-center">Ceo</p>
-                        <h5 className=""></h5>
-                        <ul className="SocialIcon  ">
-                          <li><a href="https://codepen.io/collection/XdWJOQ/" className="fab fa-facebook" />
+                        <div className="team-content">
+                          <h3 className="name">{speaker.name}</h3>
+                          <h4 className="title">{speaker.title}</h4>
+                        </div>
+                        <ul className="social">
+                          <li><Link to="/" className="fab fa-facebook" aria-hidden="true" />
                           </li>
-                          <li><a href="https://codepen.io/collection/XdWJOQ/" className="fab fa-twitter" />
+                          <li><Link to="/" className="fab fa-twitter" aria-hidden="true" />
                           </li>
-                          <li><a href="https://codepen.io/collection/XdWJOQ/" className="fab fa-google-plus" /></li>
-                          <li><a href="https://codepen.io/collection/XdWJOQ/" className="fab fa-linkedin" /></li>
+                          <li><Link to="/" className="fab fa-google-plus" aria-hidden="true" /></li>
+                          <li><Link to="/" className="fab fa-linkedin" aria-hidden="true" />
+                          </li>
                         </ul>
                       </div>
-                    </div>
+                    </Link>
                   </div>
                 </div>
-              </div>
-              <div>
-                <div className="col">
-                  <div className='wrapper p-2'>
-                    <div className='pcard'>
-                      <img src='./images/speaker3.jpg' className="ProfilePicture" alt='ProfilePicture' />
-                      <div className='ProfileName'>
-                        <h5 className="text-center">Tom Curuse</h5>
-                        <p className="text-center">Ceo</p>
-                        <h5 className=""></h5>
-                        <ul className="SocialIcon  ">
-                          <li><a href="https://codepen.io/collection/XdWJOQ/" className="fab fa-facebook" />
-                          </li>
-                          <li><a href="https://codepen.io/collection/XdWJOQ/" className="fab fa-twitter" />
-                          </li>
-                          <li><a href="https://codepen.io/collection/XdWJOQ/" className="fab fa-google-plus" /></li>
-                          <li><a href="https://codepen.io/collection/XdWJOQ/" className="fab fa-linkedin" /></li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div>
-                <div className="col">
-                  <div className='wrapper p-2'>
-                    <div className='pcard'>
-                      <img src='./images/speaker4.jpg' className="ProfilePicture" alt='ProfilePicture' />
-                      <div className='ProfileName'>
-                        <h5 className="text-center">Tom Curuse</h5>
-                        <p className="text-center">Ceo</p>
-                        <h5 className=""></h5>
-                        <ul className="SocialIcon  ">
-                          <li><a href="https://codepen.io/collection/XdWJOQ/" className="fab fa-facebook" />
-                          </li>
-                          <li><a href="https://codepen.io/collection/XdWJOQ/" className="fab fa-twitter" />
-                          </li>
-                          <li><a href="https://codepen.io/collection/XdWJOQ/" className="fab fa-google-plus" /></li>
-                          <li><a href="https://codepen.io/collection/XdWJOQ/" className="fab fa-linkedin" /></li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div>
-                <div className="col">
-                  <div className='wrapper p-2'>
-                    <div className='pcard'>
-                      <img src='./images/speaker5.jpg' className="ProfilePicture" alt='ProfilePicture' />
-                      <div className='ProfileName'>
-                        <h5 className="text-center">Tom Curuse</h5>
-                        <p className="text-center">Ceo</p>
-                        <h5 className=""></h5>
-                        <ul className="SocialIcon  ">
-                          <li><a href="https://codepen.io/collection/XdWJOQ/" className="fab fa-facebook" />
-                          </li>
-                          <li><a href="https://codepen.io/collection/XdWJOQ/" className="fab fa-twitter" />
-                          </li>
-                          <li><a href="https://codepen.io/collection/XdWJOQ/" className="fab fa-google-plus" /></li>
-                          <li><a href="https://codepen.io/collection/XdWJOQ/" className="fab fa-linkedin" /></li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div>
-                <div className="col">
-                  <div className='wrapper p-2'>
-                    <div className='pcard'>
-                      <img src='./images/speaker6.jpg' className="ProfilePicture" alt='ProfilePicture' />
-                      <div className='ProfileName'>
-                        <h5 className="text-center">Tom Curuse</h5>
-                        <p className="text-center">Ceo</p>
-                        <h5 className=""></h5>
-                        <ul className="SocialIcon  ">
-                          <li><a href="https://codepen.io/collection/XdWJOQ/" className="fab fa-facebook" />
-                          </li>
-                          <li><a href="https://codepen.io/collection/XdWJOQ/" className="fab fa-twitter" />
-                          </li>
-                          <li><a href="https://codepen.io/collection/XdWJOQ/" className="fab fa-google-plus" /></li>
-                          <li><a href="https://codepen.io/collection/XdWJOQ/" className="fab fa-linkedin" /></li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              ))}
             </Carousel>
+
           </div>
         </div>
       </section >

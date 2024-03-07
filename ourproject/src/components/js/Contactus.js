@@ -21,6 +21,8 @@ function Contact() {
       let res = await http.post("user_message", { ...formValue });
       if (res.status === 200) {
         toast.success(res.data.success, { duration: 4000 });
+        // Reset form values
+        setFormValue({ username: '', phone: '', email: '', message: '' });
       } else {
         toast.error("Some error occurred", { duration: 4000 });
       }
@@ -58,21 +60,21 @@ function Contact() {
               <div className="d-flex justify-content-center align-items-center p-4 " style={{ background: '#0eada3', borderRadius: "50%", width: "130px", }}>
                 <i className="fa-solid fa-phone fa-4x rounded-circle" style={{ color: '#fff' }} />
               </div>
-              <p className="text-center mt-3 fs-5 fw-4">907-200-3462</p>
+              <p className="text-center mt-3 fs-5 fw-4">(702)-605-0095</p>
             </div>
 
             <div className="d-flex flex-column p-4 justify-content-center align-items-center contcard boxmodel mb-5">
               <div className="d-flex justify-content-center align-items-center p-4 " style={{ background: 'rgb(249, 138, 11)', borderRadius: "50%", width: "130px", }}>
                 <i className="fa-solid fa-map-marker-alt fa-4x rounded-circle" style={{ color: '#fff' }} />
               </div>
-              <p className="text-center mt-3 fs-5 fw-4">Kilix Home Tower</p>
+              <p className="text-center mt-3 fs-5 fw-4">304 S.Jones Blvd #5255,LasVegas,NV,89107 US</p>
             </div>
 
             <div className="d-flex flex-column p-4 justify-content-center align-items-center contcard boxmodel mb-5">
               <div className="d-flex justify-content-center align-items-center p-4 " style={{ background: '#ff577b', borderRadius: "50%", width: "130px", }}>
                 <i className="fa-solid fa-envelope fa-4x rounded-circle" style={{ color: '#fff' }} />
               </div>
-              <p className="text-center mt-3 fs-5 fw-4">CUEServices.com</p>
+              <p className="text-center mt-3 fs-5 fw-4">info@ceutrainers.com</p>
             </div>
           </div>
         </div>
@@ -92,22 +94,22 @@ function Contact() {
 
                   <div className="mb-3 input-group-lg">
                     <label className="form-label">Name</label>
-                    <input type="text" className="form-control" placeholder="Name" name="username" value={formValue.username} onChange={handleInput} required />
+                    <input type="text" className="form-control form-control-lg" placeholder="Name" name="username" value={formValue.username} onChange={handleInput} required />
                   </div>
 
                   <div className="mb-3 input-group-lg">
                     <label className="form-label">Phone</label>
-                    <input type="text" className="form-control" placeholder="Phone Number" name="phone" value={formValue.phone} onChange={handleInput} required />
+                    <input type="tel" className="form-control form-control-lg" placeholder="Phone Number" name="phone" value={formValue.phone} onChange={handleInput} required />
                   </div>
 
                   <div className="mb-3 input-group-lg">
                     <label className="form-label">Email</label>
-                    <input type="text" className="form-control" placeholder="Email" name="email" value={formValue.email} onChange={handleInput} required />
+                    <input type="email" className="form-control form-control-lg" placeholder="Email" name="email" value={formValue.email} onChange={handleInput} required />
                   </div>
 
                   <div className="mb-3">
                     <label htmlFor="floatingTextarea2" className="form-label">Write your message here</label>
-                    <textarea typeof="text" className="form-control" name="message" value={formValue.message} onChange={handleInput} placeholder="Leave a comment here" id="floatingTextarea2" style={{ height: "100px" }}></textarea>
+                    <textarea required typeof="text" className="form-control" name="message" value={formValue.message} onChange={handleInput} placeholder="Leave a comment here" id="floatingTextarea2" style={{ height: "100px" }}></textarea>
                   </div>
 
                   <div className="col mt-4 text-center">

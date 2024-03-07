@@ -91,7 +91,7 @@ const Accordion = () => {
             <section >
 
                 <div className='row fw-bold text-center'>
-                    <h3>Have Any  Question?</h3>
+                    <h3 className='display-3 mb-5 fw-bold'>Have Any  Question?</h3>
                 </div>
                 <div className='row'>
                     {

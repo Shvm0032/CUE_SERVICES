@@ -206,6 +206,7 @@ Router.delete("/api/delete_course", async (req, res) => {
 
 Router.get('/api/coursesData', (req, res) => {
     try {
+        const moment = require('moment-timezone');
         const query = `SELECT * FROM course_detail LEFT OUTER JOIN speaker_info ON course_detail.speaker = speaker_info.speaker_id;`;
 
         sqlDbconnect.query(query, (error, results) => {
@@ -213,7 +214,22 @@ Router.get('/api/coursesData', (req, res) => {
                 console.error(error);
                 res.status(500).send('Internal Server Error');
             } else {
-                res.json(results);
+                
+
+                let updatedResults = results.map(res=>{
+                    const timeIST = moment.tz(res.time, 'HH:mm:ss', 'Asia/Kolkata');
+                    const timeEST = timeIST.clone().tz('America/New_York');
+                    const timeCST = timeIST.clone().tz('America/Chicago');
+                    const timeMST = timeIST.clone().tz('America/Denver');
+                    const timePST = timeIST.clone().tz('America/Los_Angeles');
+                    res.est_time = timeEST.format('HH:mm:ss A');
+                    res.cst_time = timeCST.format('HH:mm:ss A');
+                    res.mst_time = timeMST.format('HH:mm:ss A');
+                    res.pst_time = timePST.format('HH:mm:ss A');
+                    return res;
+                });
+                console.log(results,'results')
+                res.json(updatedResults);
 
             }
         });
@@ -259,6 +275,7 @@ Router.get('/api/coursesData', (req, res) => {
                 console.error(error);
                 res.status(500).send('Internal Server Error');
             } else {
+                console.log(results,'results');
                 res.json(results);
 
             }
@@ -271,10 +288,11 @@ Router.get('/api/coursesData', (req, res) => {
 });
 
 
-
 Router.post("/api/Course_add", upload.single("file"), async (req, res) => {
+
     try {
-        console.log(req.body, 'req.body');
+        
+       
         const { industry, speaker, name, description, duration, time, cstdate, fields, slug } = req.body;
         const filename = req.file.filename; // Assuming your file is uploaded correctly
         const fieldsData = JSON.parse(fields);
