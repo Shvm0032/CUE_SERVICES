@@ -5,6 +5,7 @@ import { addToCart } from '../../redux/cartSlice';
 import parse from 'html-react-parser';
 import { selectCartItems } from '../../redux/cartSlice';
 import { Toaster, toast } from 'react-hot-toast';
+import CountdownTimer from '../js/CountdownTimer';
 
 export default function CourseDetail() {
     const IMGurl = process.env.REACT_APP_IMG_URL;
@@ -15,34 +16,14 @@ export default function CourseDetail() {
     const [mins, setMinutes] = useState(0);
     const [secs, setSeconds] = useState(0);
     const [pr, setPrice] = useState(0);
-    
     const { slug } = useParams();
     const dispatch = useDispatch();
     const courses = useSelector((state) => state.course.courses);
     const course = courses.find((c) => c.slug.toString() === slug);
+    const expiryDate = course?.date; // Example expiry date
+    const expiryTime = course?.est_time; // Example expiry time
     const [selectedItems, setSelectedItems] = useState([]);
     const [selectedCourseId, setSelectedCourseId] = useState(null);
-   // console.log(course);
-
-
-
-    
-    const getTime = () => {
-        //console.log(course,'course');
-        const deadline = course.date + ' '+ course.est_time;
-        const time = Date.parse(deadline) - Date.now();
-        setDays(Math.floor(time / (1000 * 60 * 60 * 24)));
-        setHours(Math.floor(time / (1000 * 60 * 60) % 24));
-        setMinutes(Math.floor((time / 1000 / 60) % 60));
-        setSeconds(Math.floor((time / 1000) % 60));
-    };
-
-    useEffect(() => {
-        const interval = setInterval(getTime, 1000);
-        return () => clearInterval(interval);
-    }, []);
-
-
 
     const ItemComponent = ({ id, name, price, selected, onSelect }) => (
         <table className='table table-striped table-hover '>
@@ -91,8 +72,8 @@ export default function CourseDetail() {
     const handleAddToCart = () => {
 
         if (course) {
-            const data = JSON.parse(course.selling_option);
-            const courseInfo = courses.find((c) => c.id.toString() === course.id);
+            const data = JSON.parse(course?.selling_option);
+            const courseInfo = courses.find((c) => c.id.toString() === course?.id);
             let itemsInfo = [];
             let totalPrice = 0;
             Object.keys(selectedItems).map(selectedItem => {
@@ -161,7 +142,6 @@ export default function CourseDetail() {
 
     }
 
-
     return (
         <div>
             <section className='Cource-Detail'>
@@ -170,43 +150,40 @@ export default function CourseDetail() {
                         <div className='row  p-2'>
                             <div className='col-12'>
                                 <h3 className=' mt-5' style={{ fontSize: '36px', fontStyle: 'normal' }}>
-                                    {course.title}
+                                    {course ? course.title : "Loading..."}
                                 </h3>
-
                             </div>
-                            <div className='col-lg-6'>
+                            <div className='col'>
                                 <div className='row d-flex justify'>
-                                    <div className='col-12 mt-3'>
+                                    <div className='col-6 mt-3'>
                                         <div className='d-flex gap-5 flex-row align-item-center justify-content-center mt-4'>
-                                            <div className='d-flex align-item-center justify-content-start'><i className="far fa-user fa-2x"></i>&emsp;<span className='fs-5'>{course.name}</span></div>
-                                            <div className='d-flex align-item-center justify-content-start'><i className="fas fa-stopwatch fa-2x"></i>&emsp;<span className='fs-5'>{course.duration}min</span></div>
-                                            <div className='d-flex align-item-center justify-content-start'><i className="fas fa-calendar-alt fa-2x"></i>&emsp;<span className='fs-5'>{course.date} </span></div>
+                                            <div className='d-flex align-item-center justify-content-start'><i className="far fa-user fa-2x"></i>&emsp;<span className='fs-5'>{course?.name}</span></div>
+                                            <div className='d-flex align-item-center justify-content-start'><i className="fas fa-stopwatch fa-2x"></i>&emsp;<span className='fs-5'>{course?.duration}min</span></div>
+                                            <div className='d-flex align-item-center justify-content-start'><i className="fas fa-calendar-alt fa-2x"></i>&emsp;<span className='fs-5'>{course?.date} </span></div>
                                         </div>
-                                        <div className='d-flex gap-lg-5 gap-5 align-item-center justify-content-center mt-4'>
+                                        
+                                        <div className='d-flex align-item-center justify-content-center mt-4'>
                                             <div className='d-flex align-item-center justify-content-start'>
-                                                <i class="far fa-clock fa-2x"></i>&emsp;<span className='fs-5'> {course.est_time} (EST) | {course.cst_time} (CST) | {course.mst_time} (MST) | {course.pst_time} (PST)</span>
+                                                <i class="far fa-clock fa-2x"></i>&emsp;<span className='fs-5'> {course?.est_time} (EST) | {course?.cst_time} (CST) | {course?.mst_time} (MST) | {course?.pst_time} (PST)</span>
                                             </div>
                                         </div>
+                                        <div className='row m-3'>
+                                            {expiryDate && expiryTime && <CountdownTimer expiryDate={expiryDate} expiryTime={expiryTime} />}
+                                        </div>
+
                                     </div>
-                                    <div className='col-12 '>
-                                        <div className='col-lg-12 col-12 mt-3 d-flex   text-center align-item-center justify-content-lg-around justify-content-sm-start p-lg-3  gap-2 p-3' style={{ borderRadius: '10px', color: '#fff' }}>
-                                            <div className='Clock-box d-flex flex-column  justify-content-center align-items-center border border-4 border-danger  shadow-lg'><span className='text-dark' style={{ color: 'black', fontSize: '27px!important', fontWeight: '600' }}>Days</span><span className='text-dark' style={{ color: 'black', fontSize: '27px !important', fontWeight: '600' }}>{days < 10 ? "0" + days : days}</span></div>
-                                            <div className='Clock-box d-flex  flex-column justify-content-center align-items-center border border-4 border-danger  shadow-lg'><span className='text-dark' style={{ color: 'black', fontSize: '27px!important', fontWeight: '600' }}>Hours</span><span className='text-dark' style={{ color: 'black', fontSize: '27px !important', fontWeight: '600' }}>{days < 10 ? "0" + hours : hours}</span></div>
-                                            <div className='Clock-box d-flex  flex-column justify-content-center align-items-center border border-4 border-danger  shadow-lg'><span className='text-dark' style={{ color: 'black', fontSize: '27px!important', fontWeight: '600' }}>Mins</span><span className='text-dark' style={{ color: 'black', fontSize: '27px !important', fontWeight: '600' }}>{days < 10 ? "0" + mins : mins}</span></div>
-                                            <div className='Clock-box d-flex  flex-column justify-content-center align-items-center border border-4 border-danger  shadow-lg'><span className='text-dark' style={{ color: 'black', fontSize: '27px!important', fontWeight: '600' }}>Sec</span><span className='text-dark' style={{ color: 'black', fontSize: '27px !important', fontWeight: '600' }}>{days < 10 ? "0" + secs : secs}</span></div>
+                                    <div className='col'>
+                                        <div className='row m-3'>
+                                            <img src={`${IMGurl}/${course?.course_thumbail}`} className='course-img' style={{ borderRadius: "32px" }} height={330} width={100} alt="Course_thumnail" />
                                         </div>
                                     </div>
                                 </div>
-
+                                <div className='row'>
+                                   
+                                    
+                                </div>
                             </div>
-
-
                         </div>
-                        {/* <div className="row  start-50  position-absolute top-100 translate-middle" style={{ width: '100%', height: '40px' }}>
-                            <img src="/imgs/wave-section-break.webp" className="img-fluid" width={"100%"}></img>
-                        </div> */}
-
-
                     </div>
                 </div>
 
@@ -238,34 +215,34 @@ export default function CourseDetail() {
                                         <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab"><div className='row p-3' >
 
                                             <div className='col-lg-12 col-12 p-3'>
-                                                <div className='float-left w-25'>
-                                                    <img src={`${IMGurl}/${course.images}`} alt="Speaker" style={{ width: '270px', height: '270px', float: 'left', borderRadius: '50%' }} />
+                                                <div className='row w-25'>
+                                                    <img src={`${IMGurl}/${course?.images}`} alt="Speaker" />
                                                 </div>
-                                                <div className='float-none'>
-                                                    <h4 className='my-2'>{course.name}</h4>
+                                                <div className=''>
+                                                    <h4 className='my-2'>{course?.name}</h4>
                                                     <h5 className='my-2'>Speaker</h5>
                                                     <p className='my-2 text-dark ' style={{ textAlign: 'justify' }}>
-                                                        {course?.bio ? parse(course.bio) : ''}
+                                                        {course?.bio ? parse(course?.bio) : ''}
                                                     </p>
                                                 </div>
                                                 <div className='d-flex gap-2 p-'>
                                                     <div className='p-2'>
                                                         <span >Follow Me:</span>
                                                     </div>
-                                                    <div className=' rounded-circle p-2' style={{ width: '40px', height: '40px', background: '#00bbae' }}>
+                                                    <div className='d-flex align-items-center justify-content-center rounded-circle p-2' style={{ width: '40px', height: '40px', background: '#00bbae' }}>
                                                         <i class="fab fa-facebook fa-lg text-white" ></i>
                                                     </div>
-                                                    <div className=' rounded-circle p-2' style={{ width: '40px', height: '40px', background: '#00bbae' }}>
+                                                    <div className='d-flex align-items-center justify-content-center rounded-circle p-2' style={{ width: '40px', height: '40px', background: '#00bbae' }}>
                                                         <i class="fab fa-instagram fa-lg text-center     text-white" ></i>
                                                     </div>
 
-                                                    <div className=' rounded-circle p-2' style={{ width: '40px', height: '40px', background: '#00bbae' }}>
+                                                    <div className='d-flex align-items-center justify-content-center rounded-circle p-2' style={{ width: '40px', height: '40px', background: '#00bbae' }}>
                                                         <i class="fab fa-youtube fa-lg text-white" ></i>
                                                     </div>
 
                                                 </div>
                                             </div>
-                                            <div className='col-12 mt-3 p-3' >
+                                            {/* <div className='col-12 mt-3 p-3' >
                                                 <table className='table'>
                                                     <h3 className='p-2'>Personal Info :</h3>
                                                     <tr>
@@ -289,7 +266,7 @@ export default function CourseDetail() {
                                                         <td className=' text-end'>The Kids with Creative Mind</td>
                                                     </tr>
                                                 </table>
-                                            </div>
+                                            </div> */}
                                         </div></div>
                                         <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">Certification</div>
                                         <div class="tab-pane fade" id="pills-faq" role="tabpanel" aria-labelledby="pills-faq-tab">FAQ</div>
@@ -301,10 +278,8 @@ export default function CourseDetail() {
 
                             </div>
 
-                            <div className='col-lg-5  col-12 p-5 fs-5' style={{ marginTop: '-370px' }}>
-                                <div className='row'>
-                                    <img src={`${IMGurl}/${course.course_thumbail}`} className='course-img' style={{ borderRadius: "32px" }} height={330} width={100} alt="Course_thumnail" />
-                                </div>
+                            <div className='col-lg-5  col-12 p-5 fs-5' style={{ marginTop: '-70px' }}>
+
                                 <div className='row bg-light  p-2 shadow-lg '>
                                     <h3 className=' display-6 text-center p-3 mt-2 ' style={{ fontWeight: '600', color: '#ff9b24', borderBottom: '2px solid #ff9b24' }}>Registration Options</h3>
                                     <div className='row  p-2'>
