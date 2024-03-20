@@ -40,10 +40,8 @@ const AppRouter = () => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-
         dispatch(fetchCourses());
         dispatch(fetchSpeakers());
-
     }, [dispatch]);
 
     return (

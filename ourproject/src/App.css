@@ -39,8 +39,6 @@ h1 {
   }
 
 }
-
-
 h2 {
   color: #1b1b1b;
   font-size: 64px !important;
@@ -1553,8 +1551,8 @@ img:hover {
 }
 
 .Clock-box {
-  width: 120px;
-  height: 120px;
+  width: 100px;
+  height: 100px;
   border-radius: 50%;
   /* font-size: 18px; */
 }
@@ -1627,4 +1625,33 @@ img:hover {
   -webkit-box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.15) inset;
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.15) inset;
   vertical-align: middle;
+}
+
+
+.card {
+  background-color: dodgerblue;
+  color: white;
+  padding: 1rem;
+  height: 4rem;
+}
+
+.cards {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-gap: 1rem;
+}
+
+/* Screen larger than 600px? 2 column */
+@media (min-width: 600px) {
+  .cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Screen larger than 900px? 3 columns */
+@media (min-width: 900px) {
+  .cards {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
