@@ -5,3 +5,8 @@
     width: 100%;
     background-color: aqua;
 }
+
+.course-details-tittle{
+    fontSize: '36px';
+     fontStyle: 'normal';
+}

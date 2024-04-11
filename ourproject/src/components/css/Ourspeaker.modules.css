@@ -83,3 +83,12 @@
     color: #ff9b24;
     background-color: #f7f5ec;
 }
+
+.spearker-details-page{
+    width: "500px";
+ height: "500px";
+}
+
+speaker-about-des{
+    textAlign: 'justify';
+}

@@ -37,7 +37,7 @@ export default function Cources() {
         <div className='row  faq-heads'>
           <div className='row faq-headers p-5 mt-5'>
             <div className='col-md-12 faq mains '>
-              <h1 className="mt-5  text-white" style={{ fontSize: "80px", marginBottom: "5px", fontWeight: '500' }}>Programs</h1>
+              <h1 className="program-header mt-5 text-white">Programs</h1>
               <Link to='/' className='text-white'><i class="fa-solid fa-house" style={{ "color": "#719dea;" }}></i> CuService - Programs</Link>
             </div>
           </div>
@@ -93,9 +93,9 @@ export default function Cources() {
           </div>
           <div className='row'>
             {courses.map((course) => (
-              <div className='col-sm-6 col-lg-4 col-md-4' key={course.id}>
+              <div className='col-sm-6 col-lg-4 col-md-4 mb-5' key={course.id}>
                 <Link to={`/Course_Detail/${course?.slug}`}>
-                  <div className='newsCard  news-Slide-up'>
+                  <div className='newsCard course news-Slide-up'>
                     <div className='img-div'>
                       <img src={`${IMGurl}/${course.course_thumbail}`} className='course-img' alt="Course_thumnail" />
                     </div>
@@ -115,10 +115,9 @@ export default function Cources() {
                         <div className="p-4">
                           <div className="d-flex justify-content-center align-items-center p-3 text-center mstt">
                             <div className="col boder-4">
-                              <h5 className=''><i class="fa-solid fa-calendar-days fa-md"></i>&emsp;{course.date}</h5>
+                              <h5 className='time-text'><i class="fa-solid fa-calendar-days fa-md"></i>&emsp;{course.date}</h5>
                             </div>
-                            {/* <div className="col border-end boder-4"><h6>Date<br /></h6></div> */}
-                            <div className="col border-start text-center"><h5><i className="fa-solid fa-stopwatch-20 fa-lg"></i>&emsp;{course.duration} min </h5>
+                            <div className=" time-text col border-start text-center"><h5><i className="fa-solid fa-stopwatch-20 fa-lg"></i>&emsp;{course.duration} min </h5>
                             </div>
                           </div>
                         </div>

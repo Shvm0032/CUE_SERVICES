@@ -149,22 +149,22 @@ export default function CourseDetail() {
                     <div className='container p-2'>
                         <div className='row  p-2'>
                             <div className='col-12'>
-                                <h3 className=' mt-5' style={{ fontSize: '36px', fontStyle: 'normal' }}>
+                                <h3 className='course-details-tittle mt-5'>
                                     {course ? course.title : "Loading..."}
                                 </h3>
                             </div>
                             <div className='col'>
                                 <div className='row d-flex justify'>
-                                    <div className='col-6 mt-3'>
+                                    <div className='col-6 time-card-row  mt-3' >
                                         <div className='d-flex gap-5 flex-row align-item-center justify-content-center mt-4'>
                                             <div className='d-flex align-item-center justify-content-start'><i className="far fa-user fa-2x"></i>&emsp;<span className='fs-5'>{course?.name}</span></div>
                                             <div className='d-flex align-item-center justify-content-start'><i className="fas fa-stopwatch fa-2x"></i>&emsp;<span className='fs-5'>{course?.duration}min</span></div>
                                             <div className='d-flex align-item-center justify-content-start'><i className="fas fa-calendar-alt fa-2x"></i>&emsp;<span className='fs-5'>{course?.date} </span></div>
                                         </div>
                                         
-                                        <div className='d-flex align-item-center justify-content-center mt-4'>
-                                            <div className='d-flex align-item-center justify-content-start'>
-                                                <i class="far fa-clock fa-2x"></i>&emsp;<span className='fs-5'> {course?.est_time} (EST) | {course?.cst_time} (CST) | {course?.mst_time} (MST) | {course?.pst_time} (PST)</span>
+                                        <div className='d-flex align-item-center justify-content-center '>
+                                            <div className='d-flex align-item-center  justify-content-start'>
+                                                <i class="far fa-clock fa-2x"></i>&emsp;<span className='fs-5 clock-time'> {course?.est_time} (EST) | {course?.cst_time} (CST) | {course?.mst_time} (MST) | {course?.pst_time} (PST)</span>
                                             </div>
                                         </div>
                                         <div className='row m-3'>
@@ -173,7 +173,7 @@ export default function CourseDetail() {
 
                                     </div>
                                     <div className='col'>
-                                        <div className='row m-3'>
+                                        <div className='row course-details-img m-3'>
                                             <img src={`${IMGurl}/${course?.course_thumbail}`} className='course-img' style={{ borderRadius: "32px" }} height={330} width={100} alt="Course_thumnail" />
                                         </div>
                                     </div>
@@ -278,7 +278,7 @@ export default function CourseDetail() {
 
                             </div>
 
-                            <div className='col-lg-5  col-12 p-5 fs-5' style={{ marginTop: '-70px' }}>
+                            <div className='col-lg-5 rejistration-servives  col-12 p-5 fs-5' style={{ marginTop: '-70px' }}>
 
                                 <div className='row bg-light  p-2 shadow-lg '>
                                     <h3 className=' display-6 text-center p-3 mt-2 ' style={{ fontWeight: '600', color: '#ff9b24', borderBottom: '2px solid #ff9b24' }}>Registration Options</h3>

@@ -56,21 +56,22 @@
 .Offer-card-bg .card-icon:hover {
     background: #ff9b24;
     color: #ffffff;
+
 }
 
 .Offer-card-body h3:hover {
     color: #ff9c24f5;
 }
-.Offer-card-bg {
-    padding: 40px;
-    border-radius: 32px;
-    color: #040404;
-    
+
+.Offer-card-bg{
+    height: 400px;
+
 }
 
 .Offer-card-bg:hover {
     background-color: #02c8bbdc;
     border-radius: 32px;
+    height: 400px !important;
     color: #ffff;
     
 }
@@ -111,6 +112,8 @@
     transition: all 0.5s 0.1s cubic-bezier(0.55, 0, 0.1, 1);
     z-index: -1;
 }
+
+
 
 .View-Details-btn:after {
     content: "";

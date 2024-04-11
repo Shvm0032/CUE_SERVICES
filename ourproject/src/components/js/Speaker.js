@@ -28,8 +28,8 @@ export default function Speaker() {
           <div className="d-inline-flex flex-lg-row flex-column align-item-center gap-5 justify-content-start p-5" >
             <div className="offset-lg-1 offset-0">
               <div
-                className=""
-                style={{ width: "500px", height: "500px" }}
+                className="spearker-details-page"
+                style={{}}
               >
                 <img
                   src={`${IMGurl}/${speaker.images}`}
@@ -46,7 +46,7 @@ export default function Speaker() {
 
 
               <h3 className="mt-lg-4  text-dark my-4 fw-4">About me</h3>
-              <p className='text-secondary' style={{ textAlign: 'justify' }}>{parse(speaker.bio)}</p>
+              <p className='text-secondary speaker-about-des'>{parse(speaker.bio)}</p>
 
               <table className="table">
                 <tr>

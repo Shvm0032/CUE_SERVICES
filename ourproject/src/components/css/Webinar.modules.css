@@ -202,7 +202,7 @@
 
 .newsCard {
     position: relative;
-    width: 100%;
+    width: 325px;
     height: 450px;
     /* margin: 5rem auto; */
     /* background-color: #FFF1D7; */
@@ -249,6 +249,7 @@
 
 .newsCaption-content {
     margin: 0;
+    font-size: 14px !important;
 }
 
 .newsCaption-link {
@@ -379,4 +380,73 @@
     width: 220px;
     height: 220px;
     opacity: 1;
+}
+
+.time-text{
+    font-size: 14px;
+}
+h1.program-header {
+    font-size: 80px;
+    margin-top: 5px;
+    font-weight: 500;
+}
+
+@media only screen and (max-width: 767px) {
+    .newsCard.course {
+        margin-left: 30px !important;
+        margin-top: 20px;
+    }
+
+
+.newsCard.carosel-card{
+    margin-left: -20px !important;
+    margin-top: 20px;
+}
+
+.our-team{
+    margin-left: 20px;
+    width: 100%;
+}
+
+.AboutCard{
+    height: 400px;
+}
+
+.pcard{
+    height: 33rem !important;
+}
+
+.spearker-details-page img{
+
+    height: 344px;
+    width: 340px !important;
+}
+.speaker-about-des{
+
+    width: 374px;
+}
+
+.boxmodel{
+    height: 281px;
+    width: 200px;
+}
+.course-img{
+    margin-top: 201px !important;
+    width: 247px !important;
+    position: absolute;
+    height: 169px;
+    margin-left: -238px;
+    
+}
+.time-card-row{
+    margin-left: 82px;
+}
+
+.clock-time{
+    font-size: 12px;
+}
+
+.rejistration servives{
+    width: 233px;
+}
 }

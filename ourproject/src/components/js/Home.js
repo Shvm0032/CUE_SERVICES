@@ -179,8 +179,8 @@ const Home = () => {
                 {/* 1 card  */}
                 <div style={{ margin: '0 12px' }}>
                   <div className="Offer-card-body">
-                    <div className="Offer-card-bg" style={{ padding: '40px' }}>
-                      <div className="row d-flex align-items-center  justify-content-center  justify-content-center   " >
+                    <div className="Offer-card-bg">
+                      <div className="row d-flex align-items-center mt-4 pt-5  justify-content-center  justify-content-center   " >
                         <div className="card-icon">
                           <i className="fa fa-user fa-3x  "></i>
                         </div>
@@ -207,8 +207,8 @@ const Home = () => {
                 {/* 2card */}
                 <div style={{ margin: '0 12px' }}>
                   <div className="Offer-card-body">
-                    <div className="Offer-card-bg" style={{ padding: '40px' }}>
-                      <div className="row d-flex align-items-center  justify-content-center  justify-content-center   " >
+                    <div className="Offer-card-bg">
+                      <div className="row d-flex align-items-center mt-4 pt-5  justify-content-center  justify-content-center   " >
                         <div className="card-icon">
                           <i class="fab fa-line fa-3x"></i>
                         </div>
@@ -236,8 +236,8 @@ const Home = () => {
                 {/* 3 card */}
                 <div style={{ margin: '0 12px' }}>
                   <div className="Offer-card-body">
-                    <div className="Offer-card-bg" style={{ padding: '40px' }}>
-                      <div className="row d-flex align-items-center  justify-content-center  justify-content-center   " >
+                    <div className="Offer-card-bg">
+                      <div className="row d-flex align-items-center mt-4 pt-5  justify-content-center  justify-content-center   " >
                         <div className="card-icon">
                           <i className="fa fa-video fa-3x  "></i>
                         </div>
@@ -358,9 +358,9 @@ const Home = () => {
               {/* first card */}
               {courses.map((course) => (
                 <div style={{ margin: '0 12px' }} key={course.id}>
-                  <div className='col-lg-4 col-md-6 col-12 mb-5' style={{ width: '28rem' }}>
+                  <div className='col-lg-4 col-md-6 col-12 mb-5 ms-4'  >
                     <Link to={`/Course_Detail/${course?.slug}`}>
-                      <div className='newsCard news-Slide-up '>
+                      <div className='newsCard news-Slide-up carosel-card'>
                         <div className='img-div'>
                           <img src={`${IMGurl}/${course.course_thumbail}`} className='course-img' alt="Course_thumnail" />
                         </div>
@@ -369,7 +369,7 @@ const Home = () => {
                             <p className='newsCaption-content mb-3' >
                               <i class="fas fa-chalkboard-teacher fa-lg" style={{ color: '#00bbae' }}></i>&emsp;{course.name}
                             </p>
-                            <p className='newsCaption-content mb-3'>
+                            <p className='newsCaption-content  mb-3'>
                               <i class="fas fa-clock fa-lg" style={{ color: '#00bbae' }}></i>&emsp;{course.est_time}
                             </p>
                           </div>
@@ -380,10 +380,10 @@ const Home = () => {
                             <div className="p-4">
                               <div className="d-flex justify-content-center align-items-center p-3 text-center mstt">
                                 <div className="col boder-4">
-                                  <h5 className=''><i class="fa-solid fa-calendar-days fa-lg"></i>&emsp; {course.date}</h5>
+                                  <h5 className='time-text'><i class="fa-solid fa-calendar-days fa-lg"></i>&emsp; {course.date}</h5>
                                 </div>
                                 {/* <div className="col border-end boder-4"><h6>Date<br /></h6></div> */}
-                                <div className="col border-start text-center"><h5><i className="fa-solid fa-stopwatch-20 fa-lg"></i>&emsp;{course.duration} min </h5>
+                                <div className=" .time-text col border-start text-center"><h5><i className="fa-solid fa-stopwatch-20 fa-lg"></i>&emsp;{course.duration} min </h5>
                                 </div>
                               </div>
                             </div>
@@ -420,7 +420,7 @@ const Home = () => {
 
       <div className="container-fluid " style={{ paddingBottom: '120px', }}>
         <div className="container">
-          <div className="row pt-5 align-items-center my-5" >
+          <div className="row pt-5 align-items-center my-5 " >
             <div className="col-xl-6  col-lg-6 col-12">
               <h2 className="text-start my-5 lh-base" style={{}}>Know More<br /> About CuService</h2>
               <div className="row">
